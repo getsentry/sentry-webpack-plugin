@@ -1,0 +1,14 @@
+{
+  "name": "sentry-cli-webpack-plugin-example",
+  "version": "0.0.1",
+  "description": "Sentry CLI Webpack Plugin Example",
+  "main": "app.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack"
+  },
+  "dependencies": {
+    "webpack": "^3.6.0",
+    "sentry-cli-webpack-plugin": "*"
+  }
+}
