@@ -1,15 +1,15 @@
-var childProcess = require('child_process');
-var sentryCli = require('sentry-cli-binary').getPath();
+var SentryCli = require('./sentry-cli');
 
 function SentryCliPlugin(options) {
   options = options || {};
   this.release = options.release;
   this.paths =
     options.paths && (Array.isArray(options.paths) ? options.paths : [options.paths]);
-  if (typeof options.config === 'string') process.env.SENTRY_PROPERTIES = options.config;
+  this.config = options.config;
 }
 
 SentryCliPlugin.prototype.apply = function(compiler) {
+  var sentryCli = new SentryCli(this.config);
   var release = this.release;
   var paths = this.paths;
 
@@ -26,12 +26,13 @@ SentryCliPlugin.prototype.apply = function(compiler) {
       release = release(compilation.hash);
     }
 
-    return createRelease(release)
+    return sentryCli
+      .createRelease(release)
       .then(function() {
-        return uploadSourceMaps(release, paths);
+        return sentryCli.uploadSourceMaps(release, paths);
       })
       .then(function() {
-        return finalizeRelease(release);
+        return sentryCli.finalizeRelease(release);
       })
       .then(function() {
         return cb();
@@ -41,38 +42,5 @@ SentryCliPlugin.prototype.apply = function(compiler) {
       });
   });
 };
-
-function executeSentryCli(args) {
-  return new Promise(function(resolve, reject) {
-    childProcess.execFile(sentryCli, args, function(err, stdout) {
-      if (err) return reject(err);
-      console.log(stdout);
-      return resolve();
-    });
-  });
-}
-
-function createRelease(release) {
-  return executeSentryCli(['releases', 'new', release]);
-}
-
-function finalizeRelease(release) {
-  return executeSentryCli(['releases', 'finalize', release]);
-}
-
-function uploadSourceMaps(release, paths) {
-  return Promise.all(
-    paths.map(function(path) {
-      return executeSentryCli([
-        'releases',
-        'files',
-        release,
-        'upload-sourcemaps',
-        path,
-        '--rewrite'
-      ]);
-    })
-  );
-}
 
 module.exports = SentryCliPlugin;
