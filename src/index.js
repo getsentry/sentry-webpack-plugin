@@ -1,5 +1,45 @@
-const childProcess = require('child_process');
-const sentryCli = require('sentry-cli-binary').getPath();
+var childProcess = require('child_process');
+var sentryCli = require('sentry-cli-binary').getPath();
+
+function SentryCliPlugin(options) {
+  options = options || {};
+  this.release = options.release;
+  this.paths =
+    options.paths && (Array.isArray(options.paths) ? options.paths : [options.paths]);
+}
+
+SentryCliPlugin.prototype.apply = function(compiler) {
+  var release = this.release;
+  var paths = this.paths;
+
+  compiler.plugin('after-emit', function(compilation, cb) {
+    function handleError(message, cb) {
+      compilation.errors.push(`Sentry CLI Plugin: ${message}`);
+      return cb();
+    }
+
+    if (!release) return handleError('`release` option is required', cb);
+    if (!paths) return handleError('`paths` option is required', cb);
+
+    if (typeof release === 'function') {
+      release = release(compilation.hash);
+    }
+
+    return createRelease(release)
+      .then(function() {
+        return uploadSourceMaps(release, paths);
+      })
+      .then(function() {
+        return finalizeRelease(release);
+      })
+      .then(function() {
+        return cb();
+      })
+      .catch(function(err) {
+        return handleError(err.message, cb);
+      });
+  });
+};
 
 function executeSentryCli(args) {
   return new Promise(function(resolve, reject) {
@@ -11,54 +51,27 @@ function executeSentryCli(args) {
   });
 }
 
-module.exports = class SentryPlugin {
-  constructor(options = {}) {
-    this.release = options.release;
-    this.paths = Array.isArray(options.paths) ? options.paths : [options.paths];
-  }
+function createRelease(release) {
+  return executeSentryCli(['releases', 'new', release]);
+}
 
-  apply(compiler) {
-    compiler.plugin('after-emit', (compilation, cb) => {
-      if (!this.release) return this.handleError('`release` option is required', cb);
-      if (!this.paths) return this.handleError('`paths` option is required', cb);
+function finalizeRelease(release) {
+  return executeSentryCli(['releases', 'finalize', release]);
+}
 
-      if (typeof this.release === 'function') {
-        this.release = this.release(compilation.hash);
-      }
+function uploadSourceMaps(release, paths) {
+  return Promise.all(
+    paths.map(function(path) {
+      return executeSentryCli([
+        'releases',
+        'files',
+        release,
+        'upload-sourcemaps',
+        path,
+        '--rewrite'
+      ]);
+    })
+  );
+}
 
-      return this.createRelease(this.release)
-        .then(_ => this.uploadSourceMaps(this.release, this.paths))
-        .then(_ => this.finalizeRelease(this.release))
-        .then(_ => cb())
-        .catch(err => this.handleError(err.message, cb));
-    });
-  }
-
-  handleError(message, cb) {
-    compilation.errors.push(`Sentry CLI Plugin: ${message}`);
-    return cb();
-  }
-
-  createRelease(release) {
-    return executeSentryCli(['releases', 'new', release]);
-  }
-
-  finalizeRelease(release) {
-    return executeSentryCli(['releases', 'finalize', release]);
-  }
-
-  uploadSourceMaps(release, paths) {
-    return Promise.all(
-      paths.map(path =>
-        executeSentryCli([
-          'releases',
-          'files',
-          release,
-          'upload-sourcemaps',
-          path,
-          '--rewrite'
-        ])
-      )
-    );
-  }
-};
+module.exports = SentryCliPlugin;
