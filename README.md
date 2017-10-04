@@ -31,7 +31,8 @@ const config = {
      release: function (hash) {
         return 'Release #' + hash.slice(0, 5)
      },
-     paths: 'dist'
+     paths: 'dist',
+     config: '~/.env/my-project/sentrycli.properties'
    })
  ]
 }
@@ -41,4 +42,5 @@ const config = {
 
 * `release [required]` - unique name of a release, can be either a `string` or a `function` which will expose you a compilation hash as it's first argument, which is 20-char long string, unique for a given codebase
 * `paths [required]` - a `string` or an `array` of paths describing where Sentry CLI should look for source maps and source files. It'll look recursively for all files with `.map` extension and match appropriate `.js` files to them itself
+* `config [optional]` - a `string` path to Sentry CLI config properties, as described in https://docs.sentry.io/learn/cli/configuration/#properties-files. By default, the config file is looked for upwards from the current path and defaults from `~/.sentryclirc` are always loaded.
 

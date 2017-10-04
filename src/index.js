@@ -6,6 +6,7 @@ function SentryCliPlugin(options) {
   this.release = options.release;
   this.paths =
     options.paths && (Array.isArray(options.paths) ? options.paths : [options.paths]);
+  if (typeof options.config === 'string') process.env.SENTRY_PROPERTIES = options.config;
 }
 
 SentryCliPlugin.prototype.apply = function(compiler) {
