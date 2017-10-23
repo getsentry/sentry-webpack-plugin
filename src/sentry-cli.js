@@ -1,9 +1,11 @@
 var childProcess = require('child_process');
 var sentryCli = require('sentry-cli-binary').getPath();
 
-function SentryCli(config) {
+var DEFAULT_IGNORE = ['node_modules'];
+
+function SentryCli(configFile) {
   this.env = {};
-  if (typeof config === 'string') this.env.SENTRY_PROPERTIES = config;
+  if (typeof configFile === 'string') this.env.SENTRY_PROPERTIES = configFile;
 }
 
 SentryCli.prototype.execute = function(args) {
@@ -26,21 +28,49 @@ SentryCli.prototype.finalizeRelease = function(release) {
   return this.execute(['releases', 'finalize', release]);
 };
 
-SentryCli.prototype.uploadSourceMaps = function(release, paths) {
+SentryCli.prototype.uploadSourceMaps = function(options) {
   return Promise.all(
-    paths.map(
+    options.include.map(
       function(path) {
-        return this.execute([
+        var command = [
           'releases',
           'files',
-          release,
+          options.release,
           'upload-sourcemaps',
           path,
           '--rewrite'
-        ]);
+        ];
+
+        if (options.ignoreFile) {
+          command = command.concat(['--ignore-file', options.ignoreFile]);
+        }
+
+        if (options.ignore) {
+          command = command.concat(transformIgnore(options.ignore));
+        }
+
+        if (!options.ignoreFile && !options.ignore) {
+          command = command.concat(transformIgnore(DEFAULT_IGNORE));
+        }
+
+        return this.execute(command);
       }.bind(this)
     )
   );
 };
+
+function transformIgnore(ignore) {
+  if (Array.isArray(ignore)) {
+    return ignore
+      .map(function(value) {
+        return ['--ignore', value];
+      })
+      .reduce(function(acc, value) {
+        return acc.concat(value);
+      }, []);
+  } else {
+    return ['--ignore' + ignore];
+  }
+}
 
 module.exports = SentryCli;
