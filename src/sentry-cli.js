@@ -69,7 +69,7 @@ function transformIgnore(ignore) {
         return acc.concat(value);
       }, []);
   } else {
-    return ['--ignore' + ignore];
+    return ['--ignore', ignore];
   }
 }
 
