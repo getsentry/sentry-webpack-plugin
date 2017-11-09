@@ -3,7 +3,7 @@
         <img src="https://sentry-brand.storage.googleapis.com/sentry-logo-black.png" width="280">
     </a>
 <br/>
-    <h1>Sentry CLI Webpack Plugin</h1>
+    <h1>Sentry Webpack Plugin</h1>
 </p>
 
 [![Travis](https://img.shields.io/travis/getsentry/sentry-webpack-plugin.svg?maxAge=2592000)](https://travis-ci.org/getsentry/sentry-webpack-plugin)
