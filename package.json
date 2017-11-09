@@ -1,5 +1,5 @@
 {
-  "name": "sentry-cli-webpack-plugin",
+  "name": "@sentry/webpack-plugin",
   "description": "Official webpack plugin for Sentry CLI https://sentry.io",
   "keywords": [
     "sentry",
@@ -10,8 +10,8 @@
   "author": "Kamil Ogórek <kamil.ogorek@gmail.com>",
   "version": "0.0.1",
   "license": "MIT",
-  "repository": "git@github.com:getsentry/sentry-cli-webpack-plugin.git",
-  "homepage": "https://github.com/getsentry/sentry-cli-webpack-plugin",
+  "repository": "git@github.com:getsentry/sentry-webpack-plugin.git",
+  "homepage": "https://github.com/getsentry/sentry-webpack-plugin",
   "main": "src/index.js",
   "scripts": {
     "precommit": "lint-staged"

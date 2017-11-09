@@ -1,4 +1,20 @@
-# Sentry CLI Webpack Plugin
+<p align="center">
+    <a href="https://sentry.io" target="_blank" align="center">
+        <img src="https://sentry-brand.storage.googleapis.com/sentry-logo-black.png" width="280">
+    </a>
+<br/>
+    <h1>Sentry CLI Webpack Plugin</h1>
+</p>
+
+[![Travis](https://img.shields.io/travis/getsentry/sentry-webpack-plugin.svg?maxAge=2592000)](https://travis-ci.org/getsentry/sentry-webpack-plugin)
+[![npm version](https://img.shields.io/npm/v/@sentry/webpack-plugin.svg)](https://www.npmjs.com/package/@sentry/webpack-plugin)
+[![npm dm](https://img.shields.io/npm/dm/@sentry/webpack-plugin.svg)](https://www.npmjs.com/package/@sentry/webpack-plugin)
+[![npm dt](https://img.shields.io/npm/dt/@sentry/webpack-plugin.svg)](https://www.npmjs.com/package/@sentry/webpack-plugin)
+
+[![deps](https://david-dm.org/getsentry/sentry-webpack-plugin/status.svg)](https://david-dm.org/getsentry/sentry-webpack-plugin?view=list)
+[![deps dev](https://david-dm.org/getsentry/sentry-webpack-plugin/dev-status.svg)](https://david-dm.org/getsentry/sentry-webpack-plugin?type=dev&view=list)
+[![deps peer](https://david-dm.org/getsentry/sentry-webpack-plugin/peer-status.svg)](https://david-dm.org/getsentry/sentry-webpack-plugin?type=peer&view=list)
+
 
 A webpack plugin acting as an interface to [Sentry CLI](https://docs.sentry.io/learn/cli/).
 
@@ -7,13 +23,13 @@ A webpack plugin acting as an interface to [Sentry CLI](https://docs.sentry.io/l
 Using npm:
 
 ```
-$ npm install sentry-cli-webpack-plugin
+$ npm install @sentry/webpack-plugin
 ```
 
 Using yarn:
 
 ```
-$ yarn add sentry-cli-webpack-plugin
+$ yarn add @sentry/webpack-plugin
 ```
 
 ### CLI Configuration
@@ -23,7 +39,7 @@ You can use either `.sentryclirc` file or ENV variables described here https://d
 ### Usage
 
 ```js
-const SentryCliPlugin = require('sentry-cli-webpack-plugin')
+const SentryCliPlugin = require('@sentry/webpack-plugin')
 
 const config = {
  plugins: [
