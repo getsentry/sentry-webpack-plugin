@@ -1,0 +1,19 @@
+language: node_js
+node_js: 8
+script: npm pack
+
+if: tag IS blank
+
+after_success:
+  - npm install -g zeus-ci
+  - zeus-ci upload *.tgz "application/tar+npm"
+
+notifications:
+  webhooks:
+    urls:
+      - https://zeus.ci/hooks/ad511932-ca25-11e7-a96d-0a580a280309/public/provider/travis/webhook
+    on_success: always
+    on_failure: always
+    on_start: always
+    on_cancel: always
+    on_error: always
