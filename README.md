@@ -45,12 +45,12 @@ const config = {
  plugins: [
    new SentryCliPlugin({
      release: function (hash) {
-        return 'Release #' + hash.slice(0, 5)
+        return hash.slice(0, 5)
      },
      include: '.',
      ignoreFile: '.sentrycliignore',
      ignore: ['node_modules', 'webpack.config.js'],
-     configFile: '~/.env/my-project/sentrycli.properties'
+     configFile: 'sentry.properties'
    })
  ]
 }
