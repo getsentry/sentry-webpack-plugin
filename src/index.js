@@ -1,4 +1,4 @@
-var SentryCli = require('./sentry-cli');
+var SentryCli = require('@sentry/cli');
 
 function SentryCliPlugin(options) {
   options = options || {};
