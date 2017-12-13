@@ -1,15 +1,32 @@
 var SentryCli = require('@sentry/cli');
 
+var SOURCEMAPS_OPTIONS = [
+  'release',
+  'configFile',
+  'include',
+  'ignore',
+  'ignoreFile',
+  'noSourceMapReference',
+  'stripPrefix',
+  'stripCommonPrefix',
+  'validate',
+  'urlPrefix',
+  'ext'
+];
+
 function SentryCliPlugin(options) {
   options = options || {};
-  this.release = options.release;
-  this.include =
-    options.include &&
-    (Array.isArray(options.include) ? options.include : [options.include]);
-  this.configFile = options.configFile;
-  this.ignoreFile = options.ignoreFile;
-  this.ignore =
-    options.ignore && (Array.isArray(options.ignore) ? options.ignore : [options.ignore]);
+
+  SOURCEMAPS_OPTIONS.forEach(sourceMapOption => {
+    if (typeof options[sourceMapOption] !== 'undefined') {
+      if (sourceMapOption === 'ignore' || sourceMapOption == 'include') {
+        this[sourceMapOption] = Array.isArray(options[sourceMapOption])
+          ? options[sourceMapOption]
+          : (this[sourceMapOption] = [options[sourceMapOption]]);
+      }
+      this[sourceMapOption] = options[sourceMapOption];
+    }
+  });
 }
 
 SentryCliPlugin.prototype.apply = function(compiler) {
@@ -35,12 +52,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
     return sentryCli
       .createRelease(release)
       .then(function() {
-        return sentryCli.uploadSourceMaps({
-          release: release,
-          include: include,
-          ignoreFile: ignoreFile,
-          ignore: ignore
-        });
+        return sentryCli.uploadSourceMaps(this);
       })
       .then(function() {
         return sentryCli.finalizeRelease(release);
@@ -53,5 +65,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
       });
   });
 };
+
+module.exports = SentryCliPlugin;
 
 module.exports = SentryCliPlugin;
