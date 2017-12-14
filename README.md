@@ -15,7 +15,6 @@
 [![deps dev](https://david-dm.org/getsentry/sentry-webpack-plugin/dev-status.svg)](https://david-dm.org/getsentry/sentry-webpack-plugin?type=dev&view=list)
 [![deps peer](https://david-dm.org/getsentry/sentry-webpack-plugin/peer-status.svg)](https://david-dm.org/getsentry/sentry-webpack-plugin?type=peer&view=list)
 
-
 A webpack plugin acting as an interface to [Sentry CLI](https://docs.sentry.io/learn/cli/).
 
 ### Installation
@@ -39,21 +38,21 @@ You can use either `.sentryclirc` file or ENV variables described here https://d
 ### Usage
 
 ```js
-const SentryCliPlugin = require('@sentry/webpack-plugin')
+const SentryCliPlugin = require('@sentry/webpack-plugin');
 
 const config = {
- plugins: [
-   new SentryCliPlugin({
-     release: function (hash) {
-        return hash.slice(0, 5)
-     },
-     include: '.',
-     ignoreFile: '.sentrycliignore',
-     ignore: ['node_modules', 'webpack.config.js'],
-     configFile: 'sentry.properties'
-   })
- ]
-}
+  plugins: [
+    new SentryCliPlugin({
+      release: function(hash) {
+        return hash.slice(0, 5);
+      },
+      include: '.',
+      ignoreFile: '.sentrycliignore',
+      ignore: ['node_modules', 'webpack.config.js'],
+      configFile: 'sentry.properties'
+    })
+  ]
+};
 ```
 
 #### Options
@@ -63,3 +62,11 @@ const config = {
 * `ignoreFile [optional]` - `string`, path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with same format
 * `ignore [optional]` - `string` or `array`, one or more paths to ignore during upload. Overrides entries in `ignoreFile` file. If neither `ignoreFile` or `ignore` are present, defaults to `['node_modules']`
 * `configFile [optional]` - `string`, path to Sentry CLI config properties, as described in https://docs.sentry.io/learn/cli/configuration/#properties-files. By default, the config file is looked for upwards from the current path and defaults from `~/.sentryclirc` are always loaded
+* `ext [optional]` - `string`, adds an additional file extension to be considered. By default the following file extensions are processed: js, map, jsbundle and bundle.
+* `urlPrefix [optional]` - `string`, this sets an URL prefix in front of all files. This defaults to ~/ but you might want to set this to the full URL. This is also useful if your files are stored in a sub folder. eg: --url-prefix '~/static/js'
+* `validate [optional]` - `boolean`, this attempts sourcemap validation before upload when rewriting is not enabled. It will spot a variety of issues with source maps and cancel the upload if any are found. This is not the default as this can cause false positives.
+* `stripPrefix | stripCommonPrefix` - `string`, when paired with `--rewrite` this will chop-off a prefix from uploaded files. For instance you can use this to remove a path that is build machine specific.
+* `noSourceMapReference` - `boolean`, this prevents the automatic detection of sourcemap references.
+
+You can find more information about these options in our official docs: https://docs.sentry.io/learn/cli/releases/#upload-source-maps
+
