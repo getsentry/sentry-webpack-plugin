@@ -1,23 +1,19 @@
 var SentryCli = require('@sentry/cli');
 
-function SentryCliPlugin(options) {
-  options = options || {};
-  this.release = options.release;
-  this.include =
+function SentryCliPlugin(options = {}) {
+  this.options = options;
+  this.options.release = options.release;
+  this.options.include =
     options.include &&
     (Array.isArray(options.include) ? options.include : [options.include]);
-  this.configFile = options.configFile;
-  this.ignoreFile = options.ignoreFile;
-  this.ignore =
+  this.options.ignore =
     options.ignore && (Array.isArray(options.ignore) ? options.ignore : [options.ignore]);
 }
 
 SentryCliPlugin.prototype.apply = function(compiler) {
-  var sentryCli = new SentryCli(this.configFile);
-  var release = this.release;
-  var include = this.include;
-  var ignoreFile = this.ignoreFile;
-  var ignore = this.ignore;
+  var sentryCli = new SentryCli(this.options.configFile);
+  var release = this.options.release;
+  var include = this.options.include;
 
   compiler.plugin('after-emit', function(compilation, cb) {
     function handleError(message, cb) {
@@ -35,12 +31,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
     return sentryCli
       .createRelease(release)
       .then(function() {
-        return sentryCli.uploadSourceMaps({
-          release: release,
-          include: include,
-          ignoreFile: ignoreFile,
-          ignore: ignore
-        });
+        return sentryCli.uploadSourceMaps(this.options);
       })
       .then(function() {
         return sentryCli.finalizeRelease(release);
