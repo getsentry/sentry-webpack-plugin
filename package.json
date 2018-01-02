@@ -17,7 +17,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "@sentry/cli": "^1.26.0"
+    "@sentry/cli": "^1.27.0"
   },
   "devDependencies": {
     "husky": "^0.14.3",
