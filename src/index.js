@@ -14,6 +14,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
   var sentryCli = new SentryCli(this.options.configFile);
   var release = this.options.release;
   var include = this.options.include;
+  var options = this.options;
 
   compiler.plugin('after-emit', function(compilation, cb) {
     function handleError(message, cb) {
@@ -31,7 +32,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
     return sentryCli
       .createRelease(release)
       .then(function() {
-        return sentryCli.uploadSourceMaps(this.options);
+        return sentryCli.uploadSourceMaps(options);
       })
       .then(function() {
         return sentryCli.finalizeRelease(release);
