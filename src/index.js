@@ -27,8 +27,11 @@ SentryCliPlugin.prototype.apply = function(compiler) {
 
     if (typeof release === 'function') {
       release = release(compilation.hash);
-      options.release=release;
+      options.release = release;
     }
+
+    // We want to always enable rewrite for sourcemaps
+    options.rewrite = true;
 
     return sentryCli
       .createRelease(release)
