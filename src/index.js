@@ -1,8 +1,8 @@
 var SentryCli = require('@sentry/cli');
 
 function SentryCliPlugin(options = {}) {
-  this.options = options;
-  this.options.release = options.release;
+  // By default we want that rewrite is true
+  this.options = Object.assign({rewrite: true}, options);
   this.options.include =
     options.include &&
     (Array.isArray(options.include) ? options.include : [options.include]);
@@ -27,7 +27,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
 
     if (typeof release === 'function') {
       release = release(compilation.hash);
-      options.release=release;
+      options.release = release;
     }
 
     return sentryCli
