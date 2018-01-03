@@ -27,6 +27,7 @@ SentryCliPlugin.prototype.apply = function(compiler) {
 
     if (typeof release === 'function') {
       release = release(compilation.hash);
+      options.release=release;
     }
 
     return sentryCli
