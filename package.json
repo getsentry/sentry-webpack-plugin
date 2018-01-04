@@ -21,8 +21,8 @@
   },
   "devDependencies": {
     "husky": "^0.14.3",
-    "lint-staged": "^4.2.3",
-    "prettier": "^1.7.4"
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.9.2"
   },
   "prettier": {
     "singleQuote": true,
