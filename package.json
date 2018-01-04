@@ -14,13 +14,15 @@
   "homepage": "https://github.com/getsentry/sentry-webpack-plugin",
   "main": "src/index.js",
   "scripts": {
-    "precommit": "lint-staged"
+    "precommit": "lint-staged && npm test",
+    "test": "jest"
   },
   "dependencies": {
     "@sentry/cli": "^1.27.0"
   },
   "devDependencies": {
     "husky": "^0.14.3",
+    "jest": "^22.0.4",
     "lint-staged": "^6.0.0",
     "prettier": "^1.9.2"
   },
