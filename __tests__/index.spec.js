@@ -157,30 +157,34 @@ describe('.apply callback function', () => {
       expect(createReleaseMock).toBeCalledWith(42);
     });
 
-    test('then should call SentryCli.uploadSourceMaps with a whole options object', async () => {
+    test('then should call SentryCli.uploadSourceMaps with a whole options object', () => {
+      expect.assertions(1);
       sentryCliPlugin.apply(compiler);
-      await createReleaseMock();
-      expect(uploadSourceMapsMock).toBeCalledWith({
-        ignore: undefined,
-        include: ['src'],
-        release: 42,
-        rewrite: true
+      return createReleaseMock().then(() => {
+        expect(uploadSourceMapsMock).toBeCalledWith({
+          ignore: undefined,
+          include: ['src'],
+          release: 42,
+          rewrite: true
+        });
       });
     });
 
-    test('then should call SentryCli.finalizeRelease with `release` option', async () => {
+    test('then should call SentryCli.finalizeRelease with `release` option', () => {
+      expect.assertions(1);
       sentryCliPlugin.apply(compiler);
-      await createReleaseMock();
-      await uploadSourceMapsMock();
-      expect(finalizeReleaseMock).toBeCalledWith(42);
+      return createReleaseMock()
+        .then(() => uploadSourceMapsMock())
+        .then(() => expect(finalizeReleaseMock).toBeCalledWith(42));
     });
 
-    test('then should call `done` callback', async () => {
+    test('then should call `done` callback', () => {
+      expect.assertions(1);
       sentryCliPlugin.apply(compiler);
-      await createReleaseMock();
-      await uploadSourceMapsMock();
-      await finalizeReleaseMock();
-      expect(done).toBeCalled();
+      return createReleaseMock()
+        .then(() => uploadSourceMapsMock())
+        .then(() => finalizeReleaseMock())
+        .then(() => expect(done).toBeCalled());
     });
   });
 });
