@@ -13,10 +13,6 @@
   "repository": "git@github.com:getsentry/sentry-webpack-plugin.git",
   "homepage": "https://github.com/getsentry/sentry-webpack-plugin",
   "main": "src/index.js",
-  "scripts": {
-    "precommit": "lint-staged && npm test",
-    "test": "jest"
-  },
   "engines": {
     "node": ">= 6.0.0"
   },
@@ -24,10 +20,19 @@
     "@sentry/cli": "^1.27.0"
   },
   "devDependencies": {
+    "codecov": "^3.0.0",
     "husky": "^0.14.3",
     "jest": "^22.0.4",
     "lint-staged": "^6.0.0",
     "prettier": "^1.9.2"
+  },
+  "scripts": {
+    "precommit": "lint-staged && npm test",
+    "test": "jest",
+    "codecov": "codecov"
+  },
+  "jest": {
+    "collectCoverage": true
   },
   "prettier": {
     "singleQuote": true,
