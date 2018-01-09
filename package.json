@@ -17,6 +17,9 @@
     "precommit": "lint-staged && npm test",
     "test": "jest"
   },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
   "dependencies": {
     "@sentry/cli": "^1.27.0"
   },
