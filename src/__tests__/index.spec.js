@@ -94,7 +94,7 @@ describe('.apply', () => {
 
 describe('.apply callback function', () => {
   let compilation;
-  let done;
+  let compilationDoneCallback;
   let compiler;
 
   beforeEach(() => {
@@ -102,9 +102,9 @@ describe('.apply callback function', () => {
       errors: [],
       hash: 'someHash'
     };
-    done = jest.fn();
+    compilationDoneCallback = jest.fn();
     compiler = {
-      plugin: jest.fn((event, callback) => callback(compilation, done))
+      plugin: jest.fn((event, callback) => callback(compilation, compilationDoneCallback))
     };
   });
 
@@ -115,7 +115,7 @@ describe('.apply callback function', () => {
     expect(compilation.errors).toEqual([
       'Sentry CLI Plugin: `release` option is required'
     ]);
-    expect(done).toBeCalled();
+    expect(compilationDoneCallback).toBeCalled();
   });
 
   test('should bail-out when no `include` option provided', () => {
@@ -127,7 +127,7 @@ describe('.apply callback function', () => {
     expect(compilation.errors).toEqual([
       'Sentry CLI Plugin: `include` option is required'
     ]);
-    expect(done).toBeCalled();
+    expect(compilationDoneCallback).toBeCalled();
   });
 
   test('should evaluate `release` option with compilation hash if its passed as a function', () => {
@@ -152,39 +152,35 @@ describe('.apply callback function', () => {
       });
     });
 
-    test('should call SentryCli.createRelease with `release` option', () => {
+    test('should call all required SentryCli methods in sequence', done => {
       sentryCliPlugin.apply(compiler);
-      expect(createReleaseMock).toBeCalledWith(42);
-    });
 
-    test('then should call SentryCli.uploadSourceMaps with a whole options object', () => {
-      expect.assertions(1);
-      sentryCliPlugin.apply(compiler);
-      return createReleaseMock().then(() => {
+      setImmediate(() => {
+        expect(createReleaseMock).toBeCalledWith(42);
         expect(uploadSourceMapsMock).toBeCalledWith({
           ignore: undefined,
           include: ['src'],
           release: 42,
           rewrite: true
         });
+        expect(finalizeReleaseMock).toBeCalledWith(42);
+        expect(compilationDoneCallback).toBeCalled();
+        done();
       });
     });
 
-    test('then should call SentryCli.finalizeRelease with `release` option', () => {
-      expect.assertions(1);
-      sentryCliPlugin.apply(compiler);
-      return createReleaseMock()
-        .then(() => uploadSourceMapsMock())
-        .then(() => expect(finalizeReleaseMock).toBeCalledWith(42));
-    });
+    test('when failed, should handle the error', done => {
+      SentryCliMock.mockImplementationOnce(configFile => ({
+        createRelease: jest.fn(() => Promise.reject(new Error('Pickle Rick')))
+      }));
 
-    test('then should call `done` callback', () => {
-      expect.assertions(1);
       sentryCliPlugin.apply(compiler);
-      return createReleaseMock()
-        .then(() => uploadSourceMapsMock())
-        .then(() => finalizeReleaseMock())
-        .then(() => expect(done).toBeCalled());
+
+      setImmediate(() => {
+        expect(compilation.errors).toEqual(['Sentry CLI Plugin: Pickle Rick']);
+        expect(compilationDoneCallback).toBeCalled();
+        done();
+      });
     });
   });
 });
