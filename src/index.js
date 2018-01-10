@@ -22,21 +22,27 @@ SentryCliPlugin.prototype.apply = function(compiler) {
       return cb();
     }
 
-    if (!release) return handleError('`release` option is required', cb);
     if (!include) return handleError('`include` option is required', cb);
 
     if (typeof release === 'function') {
       release = release(compilation.hash);
-      options.release = release;
     }
 
-    return sentryCli
-      .createRelease(release)
-      .then(function() {
-        return sentryCli.uploadSourceMaps(options);
+    var versionPromise = Promise.resolve(release);
+    if (typeof release === 'undefined') {
+      versionPromise = sentryCli.releases.proposeVersion();
+    }
+
+    return versionPromise
+      .then(function(proposedVersion) {
+        options.release = proposedVersion;
+        return sentryCli.releases.new(options.release);
       })
       .then(function() {
-        return sentryCli.finalizeRelease(release);
+        return sentryCli.releases.uploadSourceMaps(options.release, options);
+      })
+      .then(function() {
+        return sentryCli.releases.finalize(options.release);
       })
       .then(function() {
         return cb();
