@@ -10,9 +10,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@sentry/cli@^1.27.0":
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.28.0.tgz#ef0bb4fd06d4af918f22e4e253e330bd7855cb1d"
+"@sentry/cli@^1.28.1":
+  version "1.28.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.28.1.tgz#42feaa7f5db056dad1ebfbb80af5c01c1f46b82d"
   dependencies:
     progress "2.0.0"
 

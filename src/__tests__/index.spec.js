@@ -144,7 +144,7 @@ describe('.apply callback function', () => {
 
     beforeEach(() => {
       sentryCliPlugin = new SentryCliPlugin({
-        release: 42,
+        release: '42',
         include: 'src'
       });
     });
@@ -154,14 +154,14 @@ describe('.apply callback function', () => {
       sentryCliPlugin.apply(compiler);
 
       setImmediate(() => {
-        expect(newMock).toBeCalledWith(42);
-        expect(uploadSourceMapsMock).toBeCalledWith(42, {
+        expect(newMock).toBeCalledWith('42');
+        expect(uploadSourceMapsMock).toBeCalledWith('42', {
           ignore: undefined,
-          release: 42,
+          release: '42',
           include: ['src'],
           rewrite: true
         });
-        expect(finalizeMock).toBeCalledWith(42);
+        expect(finalizeMock).toBeCalledWith('42');
         expect(compilationDoneCallback).toBeCalled();
         done();
       });
