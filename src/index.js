@@ -65,10 +65,7 @@ function replaceRelease(compilation, version) {
     chunk.files.forEach(function(filename) {
       var source = compilation.assets[filename]
         .source()
-        .replace(
-          'global.SENTRY_RELEASE.id="";',
-          'global.SENTRY_RELEASE.id="' + version + '";'
-        );
+        .replace('SENTRY_RELEASE.id=""', 'SENTRY_RELEASE.id="' + version + '"');
       replaceInFile(compilation.assets[filename].existsAt, source);
     });
   });
