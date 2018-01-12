@@ -13,10 +13,16 @@ function SentryCliPlugin(options = {}) {
 }
 
 function injectEntry(originalEntry, newEntry) {
-  console.log(originalEntry);
   if (Array.isArray(originalEntry)) {
-    originalEntry.unshift(newEntry);
-    return originalEntry;
+    return [newEntry].concat(originalEntry);
+  }
+
+  if (originalEntry !== null && typeof originalEntry === 'object') {
+    var nextEntries = {};
+    Object.keys(originalEntry).forEach(function(key) {
+      nextEntries[key] = injectEntry(originalEntry[key], newEntry);
+    });
+    return nextEntries;
   }
 
   if (typeof originalEntry === 'string') {
