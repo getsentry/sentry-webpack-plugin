@@ -1,4 +1,4 @@
-module.exports = (content, map, meta) => {
+module.exports = function sentryLoader(content, map, meta) {
   const { versionPromise } = this.query;
   const callback = this.async();
   versionPromise.then(version => {
