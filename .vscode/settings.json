@@ -10,4 +10,5 @@
         "**/bower_components": true,
         "**/dist/**": true
     },
+    "editor.tabSize": 2,
 }

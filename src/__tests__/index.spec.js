@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 const newMock = jest.fn(() => Promise.resolve());
 const uploadSourceMapsMock = jest.fn(() => Promise.resolve());
 const finalizeMock = jest.fn(() => Promise.resolve());
@@ -7,8 +9,8 @@ const SentryCliMock = jest.fn(configFile => ({
     new: newMock,
     uploadSourceMaps: uploadSourceMapsMock,
     finalize: finalizeMock,
-    proposeVersion: proposeVersionMock
-  }
+    proposeVersion: proposeVersionMock,
+  },
 }));
 
 const SentryCli = jest.mock('@sentry/cli', () => SentryCliMock);
@@ -23,44 +25,44 @@ describe('new SentryCliPlugin(options)', () => {
     const sentryCliPlugin = new SentryCliPlugin();
 
     expect(sentryCliPlugin.options).toEqual({
-      rewrite: true
+      rewrite: true,
     });
   });
 
   test('provided options should be merged with defaults', () => {
     const sentryCliPlugin = new SentryCliPlugin({
-      foo: 42
+      foo: 42,
     });
 
     expect(sentryCliPlugin.options).toEqual({
       rewrite: true,
-      foo: 42
+      foo: 42,
     });
   });
 
   test('`include` and `ignore` options should be wrapped in arrays when passed as strings', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'foo',
-      ignore: 'bar'
+      ignore: 'bar',
     });
 
     expect(sentryCliPlugin.options).toEqual({
       rewrite: true,
       include: ['foo'],
-      ignore: ['bar']
+      ignore: ['bar'],
     });
   });
 
   test('`include` and `ignore` options should not be wrapped in arrays again when already passed as ones', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: ['foo'],
-      ignore: ['bar']
+      ignore: ['bar'],
     });
 
     expect(sentryCliPlugin.options).toEqual({
       rewrite: true,
       include: ['foo'],
-      ignore: ['bar']
+      ignore: ['bar'],
     });
   });
 });
@@ -70,7 +72,7 @@ describe('.apply', () => {
 
   beforeEach(() => {
     compiler = {
-      plugin: jest.fn()
+      plugin: jest.fn(),
     };
   });
 
@@ -78,7 +80,7 @@ describe('.apply', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       release: '42',
       include: 'src',
-      configFile: './some/file'
+      configFile: './some/file',
     });
     sentryCliPlugin.apply(compiler);
 
@@ -104,22 +106,24 @@ describe('.apply callback function', () => {
   beforeEach(() => {
     compilation = {
       errors: [],
-      hash: 'someHash'
+      hash: 'someHash',
     };
     compilationDoneCallback = jest.fn();
     compiler = {
-      plugin: jest.fn((event, callback) => callback(compilation, compilationDoneCallback))
+      plugin: jest.fn((event, callback) =>
+        callback(compilation, compilationDoneCallback)
+      ),
     };
   });
 
   test('should bail-out when no `include` option provided', () => {
     const sentryCliPlugin = new SentryCliPlugin({
-      release: 42
+      release: 42,
     });
     sentryCliPlugin.apply(compiler);
 
     expect(compilation.errors).toEqual([
-      'Sentry CLI Plugin: `include` option is required'
+      'Sentry CLI Plugin: `include` option is required',
     ]);
     expect(compilationDoneCallback).toBeCalled();
   });
@@ -128,7 +132,7 @@ describe('.apply callback function', () => {
     expect.assertions(2);
     const sentryCliPlugin = new SentryCliPlugin({
       release: 'someHashEvaluated',
-      include: 'src'
+      include: 'src',
     });
     sentryCliPlugin.apply(compiler);
 
@@ -145,7 +149,7 @@ describe('.apply callback function', () => {
     beforeEach(() => {
       sentryCliPlugin = new SentryCliPlugin({
         release: '42',
-        include: 'src'
+        include: 'src',
       });
     });
 
@@ -159,7 +163,7 @@ describe('.apply callback function', () => {
           ignore: undefined,
           release: '42',
           include: ['src'],
-          rewrite: true
+          rewrite: true,
         });
         expect(finalizeMock).toBeCalledWith('42');
         expect(compilationDoneCallback).toBeCalled();
@@ -171,8 +175,8 @@ describe('.apply callback function', () => {
       expect.assertions(2);
       SentryCliMock.mockImplementationOnce(configFile => ({
         releases: {
-          new: jest.fn(() => Promise.reject(new Error('Pickle Rick')))
-        }
+          new: jest.fn(() => Promise.reject(new Error('Pickle Rick'))),
+        },
       }));
 
       sentryCliPlugin.apply(compiler);

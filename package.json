@@ -21,10 +21,16 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
     "jest": "^22.0.6",
     "prettier": "^1.10.2"
   },
   "scripts": {
+    "fix:eslint": "eslint --fix src",
+    "test:eslint": "eslint src",
     "test": "jest",
     "codecov": "codecov"
   },

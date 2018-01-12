@@ -1,16 +1,5 @@
-var SentryCli = require('@sentry/cli');
-var path = require('path');
-var fs = require('fs');
-
-function SentryCliPlugin(options = {}) {
-  // By default we want that rewrite is true
-  this.options = Object.assign({rewrite: true}, options);
-  this.options.include =
-    options.include &&
-    (Array.isArray(options.include) ? options.include : [options.include]);
-  this.options.ignore =
-    options.ignore && (Array.isArray(options.ignore) ? options.ignore : [options.ignore]);
-}
+const SentryCli = require('@sentry/cli');
+const path = require('path');
 
 function injectEntry(originalEntry, newEntry) {
   if (Array.isArray(originalEntry)) {
@@ -18,8 +7,8 @@ function injectEntry(originalEntry, newEntry) {
   }
 
   if (originalEntry !== null && typeof originalEntry === 'object') {
-    var nextEntries = {};
-    Object.keys(originalEntry).forEach(function(key) {
+    const nextEntries = {};
+    Object.keys(originalEntry).forEach(key => {
       nextEntries[key] = injectEntry(originalEntry[key], newEntry);
     });
     return nextEntries;
@@ -38,62 +27,68 @@ function injectRelease(compiler, versionPromise) {
     // probably just tests
     return;
   }
-  compiler.options.entry = injectEntry(
-    compiler.options.entry,
+  const changedCompiler = compiler;
+  changedCompiler.options.entry = injectEntry(
+    changedCompiler.options.entry,
     path.join(__dirname, 'sentry-webpack.module.js')
   );
-  compiler.options.module = {};
-  compiler.options.module.rules = [];
-  compiler.options.module.rules.push({
+  changedCompiler.options.module = {};
+  changedCompiler.options.module.rules = [];
+  changedCompiler.options.module.rules.push({
     test: /sentry-webpack\.module\.js$/,
     use: [
       {
         loader: path.resolve(__dirname, 'sentry.loader.js'),
-        query: {versionPromise}
-      }
-    ]
+        query: { versionPromise },
+      },
+    ],
   });
 }
 
-SentryCliPlugin.prototype.apply = function(compiler) {
-  var sentryCli = new SentryCli(this.options.configFile);
-  var release = this.options.release;
-  var include = this.options.include;
-  var options = this.options;
-
-  var versionPromise = Promise.resolve(release);
-  if (typeof release === 'undefined') {
-    versionPromise = sentryCli.releases.proposeVersion();
+class SentryCliPlugin {
+  constructor(options = {}) {
+    // By default we want that rewrite is true
+    this.options = Object.assign({ rewrite: true }, options);
+    this.options.include =
+      options.include &&
+      (Array.isArray(options.include) ? options.include : [options.include]);
+    this.options.ignore =
+      options.ignore &&
+      (Array.isArray(options.ignore) ? options.ignore : [options.ignore]);
   }
 
-  injectRelease(compiler, versionPromise);
+  apply(compiler) {
+    const sentryCli = new SentryCli(this.options.configFile);
+    const { release, include } = this.options;
 
-  compiler.plugin('after-emit', function(compilation, cb) {
-    function handleError(message, cb) {
-      compilation.errors.push(`Sentry CLI Plugin: ${message}`);
-      return cb();
+    let versionPromise = Promise.resolve(release);
+    if (typeof release === 'undefined') {
+      versionPromise = sentryCli.releases.proposeVersion();
     }
 
-    if (!include) return handleError('`include` option is required', cb);
+    injectRelease(compiler, versionPromise);
 
-    return versionPromise
-      .then(function(proposedVersion) {
-        options.release = (proposedVersion + '').trim();
-        return sentryCli.releases.new(options.release);
-      })
-      .then(function() {
-        return sentryCli.releases.uploadSourceMaps(options.release, options);
-      })
-      .then(function() {
-        return sentryCli.releases.finalize(options.release);
-      })
-      .then(function() {
-        return cb();
-      })
-      .catch(function(err) {
-        return handleError(err.message, cb);
-      });
-  });
-};
+    compiler.plugin('after-emit', (compilation, cb) => {
+      function handleError(message, errorCb) {
+        compilation.errors.push(`Sentry CLI Plugin: ${message}`);
+        return errorCb();
+      }
+
+      if (!include) return handleError('`include` option is required', cb);
+
+      return versionPromise
+        .then(proposedVersion => {
+          this.options.release = `${proposedVersion}`.trim();
+          return sentryCli.releases.new(this.options.release);
+        })
+        .then(() =>
+          sentryCli.releases.uploadSourceMaps(this.options.release, this.options)
+        )
+        .then(() => sentryCli.releases.finalize(this.options.release))
+        .then(() => cb())
+        .catch(err => handleError(err.message, cb));
+    });
+  }
+}
 
 module.exports = SentryCliPlugin;
