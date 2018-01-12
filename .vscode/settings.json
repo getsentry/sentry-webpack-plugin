@@ -1,0 +1,13 @@
+{
+    "[typescript]": {
+        "editor.formatOnSave": true
+    },
+    "[javascript]": {
+        "editor.formatOnSave": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/dist/**": true
+    },
+}
