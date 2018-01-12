@@ -55,7 +55,7 @@ const config = {
 
 #### Options
 
-* `release [optional]` - unique name of a release, can be either a `string` or a `function` which will expose you a compilation hash as it's first argument, which is 20-char long string, unique for a given codebase, defaults to `sentry-cli releases propose-version` command which should always return the correct version
+* `release [optional]` - unique name of a release, must be a `string`, should uniquely identify your release, defaults to `sentry-cli releases propose-version` command which should always return the correct version
 * `include [required]` - `string` or `array`, one or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files
 * `ignoreFile [optional]` - `string`, path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with same format
 * `ignore [optional]` - `string` or `array`, one or more paths to ignore during upload. Overrides entries in `ignoreFile` file. If neither `ignoreFile` or `ignore` are present, defaults to `['node_modules']`

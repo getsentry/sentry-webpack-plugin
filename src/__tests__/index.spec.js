@@ -1,11 +1,13 @@
 const newMock = jest.fn(() => Promise.resolve());
 const uploadSourceMapsMock = jest.fn(() => Promise.resolve());
 const finalizeMock = jest.fn(() => Promise.resolve());
+const proposeVersionMock = jest.fn(() => Promise.resolve());
 const SentryCliMock = jest.fn(configFile => ({
   releases: {
     new: newMock,
     uploadSourceMaps: uploadSourceMapsMock,
-    finalize: finalizeMock
+    finalize: finalizeMock,
+    proposeVersion: proposeVersionMock
   }
 }));
 
@@ -74,7 +76,7 @@ describe('.apply', () => {
 
   test('should create exactly one instance of SentryCli with `configFile` if passed', () => {
     const sentryCliPlugin = new SentryCliPlugin({
-      release: 42,
+      release: '42',
       include: 'src',
       configFile: './some/file'
     });
@@ -125,9 +127,7 @@ describe('.apply callback function', () => {
   test('should evaluate `release` option with compilation hash if its passed as a function', done => {
     expect.assertions(2);
     const sentryCliPlugin = new SentryCliPlugin({
-      release(hash) {
-        return hash + 'Evaluated';
-      },
+      release: 'someHashEvaluated',
       include: 'src'
     });
     sentryCliPlugin.apply(compiler);

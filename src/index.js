@@ -26,7 +26,7 @@ function injectEntry(originalEntry, newEntry) {
   return newEntry;
 }
 
-function injectRelease(compiler, version) {
+function injectRelease(compiler, versionPromise) {
   if (typeof compiler.options === 'undefined') {
     // Gatekeeper because we are not running in webpack env
     // probably just tests
@@ -43,31 +43,9 @@ function injectRelease(compiler, version) {
     use: [
       {
         loader: path.resolve(__dirname, 'sentry.loader.js'),
-        query: {version}
+        query: {versionPromise}
       }
     ]
-  });
-}
-
-function replaceInFile(file, source) {
-  fs.writeFile(file, source, 'utf8', function(err) {
-    if (err) return console.log(err);
-  });
-}
-
-function replaceRelease(compilation, version) {
-  if (typeof compilation.chunks === 'undefined') {
-    // Gatekeeper because we are not running in webpack env
-    // probably just tests
-    return;
-  }
-  compilation.chunks.forEach(function(chunk) {
-    chunk.files.forEach(function(filename) {
-      var source = compilation.assets[filename]
-        .source()
-        .replace('SENTRY_RELEASE.id=""', 'SENTRY_RELEASE.id="' + version + '"');
-      replaceInFile(compilation.assets[filename].existsAt, source);
-    });
   });
 }
 
@@ -77,7 +55,12 @@ SentryCliPlugin.prototype.apply = function(compiler) {
   var include = this.options.include;
   var options = this.options;
 
-  injectRelease(compiler, 'global.SENTRY_RELEASE={};\nglobal.SENTRY_RELEASE.id="";');
+  var versionPromise = Promise.resolve(release);
+  if (typeof release === 'undefined') {
+    versionPromise = sentryCli.releases.proposeVersion();
+  }
+
+  injectRelease(compiler, versionPromise);
 
   compiler.plugin('after-emit', function(compilation, cb) {
     function handleError(message, cb) {
@@ -87,19 +70,9 @@ SentryCliPlugin.prototype.apply = function(compiler) {
 
     if (!include) return handleError('`include` option is required', cb);
 
-    if (typeof release === 'function') {
-      release = release(compilation.hash);
-    }
-
-    var versionPromise = Promise.resolve(release);
-    if (typeof release === 'undefined') {
-      versionPromise = sentryCli.releases.proposeVersion();
-    }
-
     return versionPromise
       .then(function(proposedVersion) {
         options.release = (proposedVersion + '').trim();
-        replaceRelease(compilation, options.release);
         return sentryCli.releases.new(options.release);
       })
       .then(function() {
