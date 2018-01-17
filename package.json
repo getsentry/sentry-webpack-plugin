@@ -21,28 +21,20 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
-    "husky": "^0.14.3",
-    "jest": "^22.0.4",
-    "lint-staged": "^6.0.0",
-    "prettier": "^1.9.2"
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "jest": "^22.0.6",
+    "prettier": "^1.10.2"
   },
   "scripts": {
-    "precommit": "lint-staged && npm test",
+    "fix:eslint": "eslint --fix src",
+    "test:eslint": "eslint src",
     "test": "jest",
     "codecov": "codecov"
   },
   "jest": {
     "collectCoverage": true
-  },
-  "prettier": {
-    "singleQuote": true,
-    "bracketSpacing": false,
-    "printWidth": 90
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ]
   }
 }
