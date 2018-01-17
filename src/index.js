@@ -32,8 +32,12 @@ function injectRelease(compiler, versionPromise) {
     changedCompiler.options.entry,
     path.join(__dirname, 'sentry-webpack.module.js')
   );
-  changedCompiler.options.module = {};
-  changedCompiler.options.module.rules = [];
+  if (typeof changedCompiler.options.module === 'undefined') {
+    changedCompiler.options.module = {};
+  }
+  if (typeof changedCompiler.options.module.rules === 'undefined') {
+    changedCompiler.options.module.rules = [];
+  }
   changedCompiler.options.module.rules.push({
     test: /sentry-webpack\.module\.js$/,
     use: [
