@@ -35,18 +35,28 @@ function injectRelease(compiler, versionPromise) {
   if (typeof changedCompiler.options.module === 'undefined') {
     changedCompiler.options.module = {};
   }
-  if (typeof changedCompiler.options.module.rules === 'undefined') {
-    changedCompiler.options.module.rules = [];
+
+  // Handle old `module.loaders` syntax
+  if (typeof changedCompiler.options.module.loaders !== 'undefined') {
+    changedCompiler.options.module.loaders.push({
+      test: /sentry-webpack\.module\.js$/,
+      loader: path.resolve(__dirname, 'sentry.loader.js'),
+      options: { versionPromise },
+    });
+  } else {
+    if (typeof changedCompiler.options.module.rules === 'undefined') {
+      changedCompiler.options.module.rules = [];
+    }
+    changedCompiler.options.module.rules.push({
+      test: /sentry-webpack\.module\.js$/,
+      use: [
+        {
+          loader: path.resolve(__dirname, 'sentry.loader.js'),
+          options: { versionPromise },
+        },
+      ],
+    });
   }
-  changedCompiler.options.module.rules.push({
-    test: /sentry-webpack\.module\.js$/,
-    use: [
-      {
-        loader: path.resolve(__dirname, 'sentry.loader.js'),
-        query: { versionPromise },
-      },
-    ],
-  });
 }
 
 class SentryCliPlugin {
