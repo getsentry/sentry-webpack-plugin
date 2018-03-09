@@ -74,10 +74,26 @@ class SentryCliPlugin {
     this.options.ignore =
       options.ignore &&
       (Array.isArray(options.ignore) ? options.ignore : [options.ignore]);
+
+    this.dryRun = this.options.dryRun === true;
+  }
+
+  getSentryCli() {
+    if (!this.dryRun) {
+      return new SentryCli(this.options.configFile);
+    }
+    return {
+      releases: {
+        proposeVersion: () => Promise.resolve('1.0.0-dev'),
+        new: () => Promise.resolve(),
+        uploadSourceMaps: () => Promise.resolve(),
+        finalize: () => Promise.resolve(),
+      },
+    };
   }
 
   apply(compiler) {
-    const sentryCli = new SentryCli(this.options.configFile);
+    const sentryCli = this.getSentryCli();
     const { release, include } = this.options;
 
     let versionPromise = Promise.resolve(release);

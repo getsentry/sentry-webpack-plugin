@@ -32,9 +32,11 @@
     "fix:eslint": "eslint --fix src",
     "test:eslint": "eslint src",
     "test": "jest",
+    "test:integration": "cd example && yarn && yarn test",
     "codecov": "codecov"
   },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testPathIgnorePatterns": ["example"]
   }
 }
