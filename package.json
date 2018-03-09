@@ -36,6 +36,7 @@
     "codecov": "codecov"
   },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testPathIgnorePatterns": ["example"]
   }
 }

@@ -4,9 +4,7 @@ branches:
 
 sudo: false
 language: node_js
-node_js:
-  - "8"
-  - "6"
+node_js: "8"
 
 if: tag IS blank
 
@@ -17,11 +15,17 @@ before_install:
 matrix:
   include:
     - env: NAME="test"
+      node_js:
+        - "8"
+        - "6"
       script:
         - yarn test
         - yarn run codecov
 
     - env: NAME="integration test"
+      node_js:
+        - "8"
+        - "6"
       script:
         - yarn test:example
 
