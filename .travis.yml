@@ -13,9 +13,10 @@ if: tag IS blank
 matrix:
   include:
     - script:
-      - npm test
-      - npm run codecov
-      - npm pack
+      - yarn test
+      - yarn test:example
+      - yarn run codecov
+      - yarn pack
       after_success:
         - npm install -g @zeus-ci/cli
         - zeus upload -t "application/tar+npm" *.tgz
