@@ -32,7 +32,7 @@
     "fix:eslint": "eslint --fix src",
     "test:eslint": "eslint src",
     "test": "jest",
-    "test:example": "cd example && yarn && yarn test",
+    "test:integration": "cd example && yarn && yarn test",
     "codecov": "codecov"
   },
   "jest": {

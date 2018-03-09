@@ -21,7 +21,7 @@ matrix:
 
     - env: NAME="integration test"
       script:
-        - yarn test:example
+        - yarn test:integration
 
     # NODE 6
     - env: NAME="test"
@@ -33,7 +33,7 @@ matrix:
     - env: NAME="integration test"
       node_js: "6"
       script:
-        - yarn test:example
+        - yarn test:integration
 
     # DEPLOY
     - env: NAME="deploy"
