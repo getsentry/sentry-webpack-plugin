@@ -4,19 +4,39 @@ branches:
 
 sudo: false
 language: node_js
-node_js:
-  - "8"
-  - "6"
 
 if: tag IS blank
 
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$PATH"
+
 matrix:
   include:
-    - script:
-      - yarn test
-      - yarn test:example
-      - yarn run codecov
-      - yarn pack
+    - node_js: "8"
+      install: true
+      script:
+        - yarn test
+        - yarn run codecov
+    - node_js: "6"
+      install: true
+      script:
+        - yarn test
+        - yarn run codecov
+
+    - node_js: "8"
+      env: NAME="integration test"
+      install: true
+      script:
+        - yarn test:example
+    - node_js: "6"
+      env: NAME="integration test"
+      install: true
+      script:
+        - yarn test:example
+
+    - node_js: "8"
+        - npm pack
       after_success:
         - npm install -g @zeus-ci/cli
         - zeus upload -t "application/tar+npm" *.tgz
