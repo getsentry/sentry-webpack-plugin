@@ -15,20 +15,27 @@ before_install:
 matrix:
   include:
     - env: NAME="test"
-      node_js:
-        - "8"
-        - "6"
       script:
         - yarn test
         - yarn run codecov
 
     - env: NAME="integration test"
-      node_js:
-        - "8"
-        - "6"
       script:
         - yarn test:example
 
+    # NODE 6
+    - env: NAME="test"
+      node_js: "6"
+      script:
+        - yarn test
+        - yarn run codecov
+
+    - env: NAME="integration test"
+      node_js: "6"
+      script:
+        - yarn test:example
+
+    # DEPLOY
     - env: NAME="deploy"
       script:
         - npm pack
