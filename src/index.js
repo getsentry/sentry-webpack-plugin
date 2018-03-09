@@ -18,6 +18,11 @@ function injectEntry(originalEntry, newEntry) {
     return [newEntry, originalEntry];
   }
 
+  if (typeof originalEntry === 'function') {
+    return () =>
+      Promise.resolve(originalEntry()).then(entry => injectEntry(entry, newEntry));
+  }
+
   return newEntry;
 }
 
