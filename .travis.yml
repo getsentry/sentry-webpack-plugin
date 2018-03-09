@@ -17,13 +17,11 @@ before_install:
 matrix:
   include:
     - env: NAME="test"
-      install: true
       script:
         - yarn test
         - yarn run codecov
 
     - env: NAME="integration test"
-      install: true
       script:
         - yarn test:example
 
