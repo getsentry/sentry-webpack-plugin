@@ -91,6 +91,14 @@ class SentryCliPlugin {
       },
     };
   }
+  attachAfterEmitHook(compiler, callback) {
+    // Backwards compatible version of: compiler.plugin.afterEmit.tapAsync()
+    if (compiler.hooks) {
+      compiler.hooks.afterEmit.tapAsync('SentryCliPlugin', callback);
+    } else {
+      compiler.plugin('after-emit', callback);
+    }
+  }
 
   apply(compiler) {
     const sentryCli = this.getSentryCli();
@@ -103,7 +111,7 @@ class SentryCliPlugin {
 
     injectRelease(compiler, versionPromise);
 
-    compiler.plugin('after-emit', (compilation, cb) => {
+    this.attachAfterEmitHook(compiler, (compilation, cb) => {
       function handleError(message, errorCb) {
         compilation.errors.push(`Sentry CLI Plugin: ${message}`);
         return errorCb();

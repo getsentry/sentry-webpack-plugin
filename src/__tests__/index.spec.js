@@ -72,7 +72,11 @@ describe('.apply', () => {
 
   beforeEach(() => {
     compiler = {
-      plugin: jest.fn(),
+      hooks: {
+        afterEmit: {
+          tapAsync: jest.fn(),
+        },
+      },
     };
   });
 
@@ -88,13 +92,36 @@ describe('.apply', () => {
     expect(SentryCliMock.mock.instances.length).toBe(1);
   });
 
-  test('should call `compiler.plugin()` with `after-emit` and callback function', () => {
+  test('should call `compiler.hooks.afterEmit.tapAsync()` with callback function', () => {
     const sentryCliPlugin = new SentryCliPlugin();
     sentryCliPlugin.apply(compiler);
 
-    expect(compiler.plugin).toHaveBeenCalled();
-    expect(compiler.plugin.mock.calls[0][0]).toBe('after-emit');
-    expect(typeof compiler.plugin.mock.calls[0][1]).toBe('function');
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledWith('SentryCliPlugin', expect.any(Function));
+  });
+
+  describe('Webpack <= 3', () => {
+    let _compiler;
+
+    beforeAll(() => {
+      _compiler = compiler;
+    });
+
+    beforeEach(() => {
+      compiler = {
+        plugin: jest.fn(),
+      };
+    });
+
+    afterAll(() => {
+      compiler = _compiler;
+    });
+
+    test('should call `compiler.plugin()` with `after-emit` and callback function', () => {
+      const sentryCliPlugin = new SentryCliPlugin();
+      sentryCliPlugin.apply(compiler);
+
+      expect(compiler.plugin).toHaveBeenCalledWith('after-emit', expect.any(Function));
+    });
   });
 });
 
@@ -110,9 +137,13 @@ describe('.apply callback function', () => {
     };
     compilationDoneCallback = jest.fn();
     compiler = {
-      plugin: jest.fn((event, callback) =>
-        callback(compilation, compilationDoneCallback)
-      ),
+      hooks: {
+        afterEmit: {
+          tapAsync: jest.fn((name, callback) =>
+            callback(compilation, compilationDoneCallback)
+          ),
+        },
+      },
     };
   });
 
