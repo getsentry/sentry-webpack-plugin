@@ -23,13 +23,13 @@ A webpack plugin acting as an interface to [Sentry CLI](https://docs.sentry.io/l
 Using npm:
 
 ```
-$ npm install @sentry/webpack-plugin
+$ npm install @sentry/webpack-plugin --only=dev
 ```
 
 Using yarn:
 
 ```
-$ yarn add @sentry/webpack-plugin
+$ yarn add @sentry/webpack-plugin --dev
 ```
 
 ### CLI Configuration
@@ -53,6 +53,8 @@ const config = {
 };
 ```
 
+Also, check the [example](example) directory.
+
 #### Options
 
 * `release [optional]` - unique name of a release, must be a `string`, should uniquely identify your release, defaults to `sentry-cli releases propose-version` command which should always return the correct version
@@ -67,5 +69,6 @@ const config = {
 * `stripCommonPrefix [optional]` - `boolean`, when paired with `rewrite` this will add `~` to the `stripPrefix` array.
 * `sourceMapReference [optional]` - `boolean`, this prevents the automatic detection of sourcemap references.
 * `rewrite [optional]` - `boolean`, enables rewriting of matching sourcemaps so that indexed maps are flattened and missing sources are inlined if possible., defaults to `true`
+* `dryRun [optional]` - `boolean`, attempts a dry run (useful for dev environments) 
 
 You can find more information about these options in our official docs: https://docs.sentry.io/learn/cli/releases/#upload-source-maps
