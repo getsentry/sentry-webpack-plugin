@@ -1,3 +1,5 @@
+'use strict';
+
 const SentryCli = require('@sentry/cli');
 const path = require('path');
 
@@ -65,9 +67,9 @@ function injectRelease(compiler, versionPromise) {
 }
 
 class SentryCliPlugin {
-  constructor(options = {}) {
+  constructor(options) {
     // By default we want that rewrite is true
-    this.options = Object.assign({ rewrite: true }, options);
+    this.options = Object.assign({ rewrite: true }, options || {});
     this.options.include =
       options.include &&
       (Array.isArray(options.include) ? options.include : [options.include]);
@@ -102,7 +104,8 @@ class SentryCliPlugin {
 
   apply(compiler) {
     const sentryCli = this.getSentryCli();
-    const { release, include } = this.options;
+    const release = this.options.release;
+    const include = this.options.include;
 
     let versionPromise = Promise.resolve(release);
     if (typeof release === 'undefined') {
