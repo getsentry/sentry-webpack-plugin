@@ -14,6 +14,10 @@ before_install:
 
 matrix:
   include:
+    - env: NAME="lint"
+      script:
+        - yarn lint
+
     - env: NAME="test"
       script:
         - yarn test
@@ -30,7 +34,7 @@ matrix:
         - yarn test
         - yarn run codecov
 
-    - env: NAME="integration test"
+    - env: NAME="integration"
       node_js: "6"
       script:
         - yarn test:integration
