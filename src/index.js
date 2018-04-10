@@ -106,7 +106,9 @@ class SentryCliPlugin {
       return entries.indexOf(key) >= 0;
     }
 
-    throw new Error('Invalid `entries` option: Must be an array, RegExp or function');
+    throw new Error(
+      'Invalid `entries` option: Must be an array, RegExp or function'
+    );
   }
 
   /** Injects the release string into the given entry point. */
@@ -131,7 +133,9 @@ class SentryCliPlugin {
 
     if (typeof originalEntry === 'function') {
       return () =>
-        Promise.resolve(originalEntry()).then(entry => this.injectEntry(entry, newEntry));
+        Promise.resolve(originalEntry()).then(entry =>
+          this.injectEntry(entry, newEntry)
+        );
     }
 
     return newEntry;

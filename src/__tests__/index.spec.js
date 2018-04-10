@@ -138,7 +138,10 @@ describe('afterEmitHook', () => {
     compiler = { plugin: jest.fn() };
     sentryCliPlugin.apply(compiler);
 
-    expect(compiler.plugin).toHaveBeenCalledWith('after-emit', expect.any(Function));
+    expect(compiler.plugin).toHaveBeenCalledWith(
+      'after-emit',
+      expect.any(Function)
+    );
   });
 
   test('errors without `include` option', done => {
@@ -157,7 +160,10 @@ describe('afterEmitHook', () => {
   test('creates a release on Sentry', done => {
     expect.assertions(4);
 
-    const sentryCliPlugin = new SentryCliPlugin({ include: 'src', release: 42 });
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
+    });
     sentryCliPlugin.apply(compiler);
 
     setImmediate(() => {
@@ -180,7 +186,10 @@ describe('afterEmitHook', () => {
       Promise.reject(new Error('Pickle Rick'))
     );
 
-    const sentryCliPlugin = new SentryCliPlugin({ include: 'src', release: 42 });
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
+    });
     sentryCliPlugin.apply(compiler);
 
     setImmediate(() => {
@@ -353,7 +362,10 @@ describe('entry point overrides', () => {
   test('filters entry points by name', done => {
     expect.assertions(1);
 
-    compiler.options.entry = { main: './src/index.js', admin: './src/admin.js' };
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
     sentryCliPlugin.options.entries = ['admin'];
     sentryCliPlugin.apply(compiler);
 
@@ -368,7 +380,10 @@ describe('entry point overrides', () => {
   test('filters entry points by RegExp', done => {
     expect.assertions(1);
 
-    compiler.options.entry = { main: './src/index.js', admin: './src/admin.js' };
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
     sentryCliPlugin.options.entries = /^ad/;
     sentryCliPlugin.apply(compiler);
 
@@ -383,7 +398,10 @@ describe('entry point overrides', () => {
   test('filters entry points by function', done => {
     expect.assertions(1);
 
-    compiler.options.entry = { main: './src/index.js', admin: './src/admin.js' };
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
     sentryCliPlugin.options.entries = key => key == 'admin';
     sentryCliPlugin.apply(compiler);
 
@@ -396,7 +414,10 @@ describe('entry point overrides', () => {
   });
 
   test('throws for an invalid `entries` option', () => {
-    compiler.options.entry = { main: './src/index.js', admin: './src/admin.js' };
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
     sentryCliPlugin.options.entries = 42;
     expect(() => sentryCliPlugin.apply(compiler)).toThrowError(/entries/);
   });
