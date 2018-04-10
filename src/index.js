@@ -1,15 +1,8 @@
 const SentryCli = require('@sentry/cli');
 const path = require('path');
 
+const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.join(__dirname, 'sentry-webpack.module.js');
-const DRY_RUN_CLI = {
-  releases: {
-    proposeVersion: () => Promise.resolve('1.0.0-dev'),
-    new: () => Promise.resolve(),
-    uploadSourceMaps: () => Promise.resolve(),
-    finalize: () => Promise.resolve(),
-  },
-};
 
 /**
  * Helper function that ensures an object key is defined. This mutates target!
@@ -67,7 +60,18 @@ class SentryCliPlugin {
 
   /** Creates a new Sentry CLI instance. */
   getSentryCli() {
-    return this.isDryRun() ? DRY_RUN_CLI : new SentryCli(this.options.configFile);
+    if (this.isDryRun()) {
+      return {
+        releases: {
+          proposeVersion: () => Promise.resolve('1.0.0-dev'),
+          new: () => Promise.resolve(),
+          uploadSourceMaps: () => Promise.resolve(),
+          finalize: () => Promise.resolve(),
+        },
+      };
+    }
+
+    return new SentryCli(this.options.configFile);
   }
 
   /**
@@ -137,7 +141,7 @@ class SentryCliPlugin {
   injectLoader(loaders) {
     const loader = {
       test: /sentry-webpack\.module\.js$/,
-      loader: path.resolve(__dirname, 'sentry.loader.js'),
+      loader: SENTRY_LOADER,
       options: { releasePromise: this.release },
     };
 
@@ -150,7 +154,7 @@ class SentryCliPlugin {
       test: /sentry-webpack\.module\.js$/,
       use: [
         {
-          loader: path.resolve(__dirname, 'sentry.loader.js'),
+          loader: SENTRY_LOADER,
           options: { releasePromise: this.release },
         },
       ],
