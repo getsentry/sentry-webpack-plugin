@@ -33,12 +33,7 @@
     "test:eslint": "eslint src",
     "test": "jest",
     "test:integration": "cd example && yarn && yarn test",
+    "test:watch": "jest --watch --notify",
     "codecov": "codecov"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "testPathIgnorePatterns": [
-      "example"
-    ]
   }
 }
