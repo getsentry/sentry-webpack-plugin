@@ -83,6 +83,28 @@ class SentryCliPlugin {
     ).then(version => `${version}`.trim());
   }
 
+  /** Checks if the given named entry point should be handled. */
+  checkEntry(key) {
+    const { entries } = this.options;
+    if (!entries) {
+      return true;
+    }
+
+    if (typeof entries === 'function') {
+      return entries(key);
+    }
+
+    if (entries instanceof RegExp) {
+      return entries.test(key);
+    }
+
+    if (Array.isArray(entries)) {
+      return entries.indexOf(key) >= 0;
+    }
+
+    throw new Error('Invalid `entries` option: Must be an array, RegExp or function');
+  }
+
   /** Injects the release string into the given entry point. */
   injectEntry(originalEntry, newEntry) {
     if (Array.isArray(originalEntry)) {
@@ -92,7 +114,9 @@ class SentryCliPlugin {
     if (originalEntry !== null && typeof originalEntry === 'object') {
       const nextEntries = {};
       Object.keys(originalEntry).forEach(key => {
-        nextEntries[key] = this.injectEntry(originalEntry[key], newEntry);
+        if (this.checkEntry(key)) {
+          nextEntries[key] = this.injectEntry(originalEntry[key], newEntry);
+        }
       });
       return nextEntries;
     }
@@ -146,7 +170,7 @@ class SentryCliPlugin {
     options.entry = this.injectEntry(options.entry, SENTRY_MODULE);
 
     const mod = ensure(options, 'module', Object);
-    if (module.loaders) {
+    if (mod.loaders) {
       // Handle old `module.loaders` syntax
       mod.loaders = this.injectLoader(mod.loaders);
     } else {
