@@ -2,7 +2,7 @@ const SentryCli = require('@sentry/cli');
 const path = require('path');
 
 const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
-const SENTRY_MODULE = path.join(__dirname, 'sentry-webpack.module.js');
+const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
 
 /**
  * Helper function that ensures an object key is defined. This mutates target!
@@ -90,7 +90,7 @@ class SentryCliPlugin {
   /** Checks if the given named entry point should be handled. */
   checkEntry(key) {
     const { entries } = this.options;
-    if (!entries) {
+    if (entries == null) {
       return true;
     }
 
@@ -103,7 +103,7 @@ class SentryCliPlugin {
     }
 
     if (Array.isArray(entries)) {
-      return entries.indexOf(key) >= 0;
+      return entries.includes(key);
     }
 
     throw new Error(

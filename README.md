@@ -66,9 +66,9 @@ Also, check the [example](example) directory.
 * `include [required]` - `string` or `array`, one or more paths that Sentry CLI
   should scan recursively for sources. It will upload all `.map` files and match
   associated `.js` files
-* `entries [optional]` - `array` or `RegExp` or `function`, a filter for entry
-  points that should be processed. By default, the release will be injected into
-  all entry points.
+* `entries [optional]` - `array` or `RegExp` or `function(key: string): bool`, a
+  filter for entry points that should be processed. By default, the release will
+  be injected into all entry points.
 * `ignoreFile [optional]` - `string`, path to a file containing list of
   files/directories to ignore. Can point to `.gitignore` or anything with same
   format

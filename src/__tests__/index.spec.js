@@ -40,7 +40,7 @@ describe('constructor', () => {
     });
   });
 
-  test('does not override options with defaults', () => {
+  test('uses declared options over defaults', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       rewrite: false,
     });
@@ -78,7 +78,7 @@ describe('constructor', () => {
 });
 
 describe('CLI configuration', () => {
-  test('uses a mock SentryCLI in `dryRun` mode', () => {
+  test('does not create a SentryCLI instance in `dryRun` mode', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       dryRun: true,
     });
@@ -131,7 +131,7 @@ describe('afterEmitHook', () => {
     );
   });
 
-  test('calls `compiler.plugin("after-emit")` legacy Webpack 2', () => {
+  test('calls `compiler.plugin("after-emit")` legacy Webpack <= 3', () => {
     const sentryCliPlugin = new SentryCliPlugin();
 
     // Simulate Webpack <= 2
