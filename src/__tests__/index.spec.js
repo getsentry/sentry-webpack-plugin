@@ -1,18 +1,18 @@
 /*eslint-disable*/
 
-const newMock = jest.fn(() => Promise.resolve());
-const uploadSourceMapsMock = jest.fn(() => Promise.resolve());
-const finalizeMock = jest.fn(() => Promise.resolve());
-const proposeVersionMock = jest.fn(() => Promise.resolve());
-const SentryCliMock = jest.fn(configFile => ({
-  releases: {
-    new: newMock,
-    uploadSourceMaps: uploadSourceMapsMock,
-    finalize: finalizeMock,
-    proposeVersion: proposeVersionMock,
-  },
-}));
+const SENTRY_LOADER_RE = /sentry\.loader\.js$/;
+const SENTRY_MODULE_RE = /sentry-webpack\.module\.js$/;
 
+const mockCli = {
+  releases: {
+    new: jest.fn(() => Promise.resolve()),
+    uploadSourceMaps: jest.fn(() => Promise.resolve()),
+    finalize: jest.fn(() => Promise.resolve()),
+    proposeVersion: jest.fn(() => Promise.resolve()),
+  },
+};
+
+const SentryCliMock = jest.fn(configFile => mockCli);
 const SentryCli = jest.mock('@sentry/cli', () => SentryCliMock);
 const SentryCliPlugin = require('..');
 
@@ -20,8 +20,8 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('new SentryCliPlugin(options)', () => {
-  test('when no options provided should use defaults', () => {
+describe('constructor', () => {
+  test('uses defaults without options', () => {
     const sentryCliPlugin = new SentryCliPlugin();
 
     expect(sentryCliPlugin.options).toEqual({
@@ -29,7 +29,7 @@ describe('new SentryCliPlugin(options)', () => {
     });
   });
 
-  test('provided options should be merged with defaults', () => {
+  test('merges defaults with options', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       foo: 42,
     });
@@ -40,7 +40,17 @@ describe('new SentryCliPlugin(options)', () => {
     });
   });
 
-  test('`include` and `ignore` options should be wrapped in arrays when passed as strings', () => {
+  test('uses declared options over defaults', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      rewrite: false,
+    });
+
+    expect(sentryCliPlugin.options).toEqual({
+      rewrite: false,
+    });
+  });
+
+  test('sanitizes array options `include` and `ignore`', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'foo',
       ignore: 'bar',
@@ -53,7 +63,7 @@ describe('new SentryCliPlugin(options)', () => {
     });
   });
 
-  test('`include` and `ignore` options should not be wrapped in arrays again when already passed as ones', () => {
+  test('keeps array options `include` and `ignore`', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: ['foo'],
       ignore: ['bar'],
@@ -67,75 +77,36 @@ describe('new SentryCliPlugin(options)', () => {
   });
 });
 
-describe('.apply', () => {
-  let compiler;
-
-  beforeEach(() => {
-    compiler = {
-      hooks: {
-        afterEmit: {
-          tapAsync: jest.fn(),
-        },
-      },
-    };
-  });
-
-  test('should create exactly one instance of SentryCli with `configFile` if passed', () => {
+describe('CLI configuration', () => {
+  test('does not create a SentryCLI instance in `dryRun` mode', () => {
     const sentryCliPlugin = new SentryCliPlugin({
-      release: '42',
-      include: 'src',
-      configFile: './some/file',
+      dryRun: true,
     });
-    sentryCliPlugin.apply(compiler);
 
-    expect(SentryCliMock).toBeCalledWith('./some/file');
+    expect(SentryCliMock).not.toHaveBeenCalled();
+  });
+
+  test('passes the configuration file to CLI', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      configFile: 'some/sentry.properties',
+    });
+
+    expect(SentryCliMock).toHaveBeenCalledWith('some/sentry.properties');
+  });
+
+  test('only creates a single CLI instance', () => {
+    const sentryCliPlugin = new SentryCliPlugin({});
+    sentryCliPlugin.apply({ hooks: { afterEmit: { tapAsync: jest.fn() } } });
     expect(SentryCliMock.mock.instances.length).toBe(1);
-  });
-
-  test('should call `compiler.hooks.afterEmit.tapAsync()` with callback function', () => {
-    const sentryCliPlugin = new SentryCliPlugin();
-    sentryCliPlugin.apply(compiler);
-
-    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledWith('SentryCliPlugin', expect.any(Function));
-  });
-
-  describe('Webpack <= 3', () => {
-    let _compiler;
-
-    beforeAll(() => {
-      _compiler = compiler;
-    });
-
-    beforeEach(() => {
-      compiler = {
-        plugin: jest.fn(),
-      };
-    });
-
-    afterAll(() => {
-      compiler = _compiler;
-    });
-
-    test('should call `compiler.plugin()` with `after-emit` and callback function', () => {
-      const sentryCliPlugin = new SentryCliPlugin();
-      sentryCliPlugin.apply(compiler);
-
-      expect(compiler.plugin).toHaveBeenCalledWith('after-emit', expect.any(Function));
-    });
   });
 });
 
-describe('.apply callback function', () => {
+describe('afterEmitHook', () => {
+  let compiler;
   let compilation;
   let compilationDoneCallback;
-  let compiler;
 
   beforeEach(() => {
-    compilation = {
-      errors: [],
-      hash: 'someHash',
-    };
-    compilationDoneCallback = jest.fn();
     compiler = {
       hooks: {
         afterEmit: {
@@ -145,78 +116,309 @@ describe('.apply callback function', () => {
         },
       },
     };
+
+    compilation = { errors: [], hash: 'someHash' };
+    compilationDoneCallback = jest.fn();
   });
 
-  test('should bail-out when no `include` option provided', () => {
-    const sentryCliPlugin = new SentryCliPlugin({
-      release: 42,
-    });
+  test('calls `hooks.afterEmit.tapAsync()`', () => {
+    const sentryCliPlugin = new SentryCliPlugin();
     sentryCliPlugin.apply(compiler);
 
-    expect(compilation.errors).toEqual([
-      'Sentry CLI Plugin: `include` option is required',
-    ]);
-    expect(compilationDoneCallback).toBeCalled();
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledWith(
+      'SentryCliPlugin',
+      expect.any(Function)
+    );
   });
 
-  test('should evaluate `release` option with compilation hash if its passed as a function', done => {
-    expect.assertions(2);
-    const sentryCliPlugin = new SentryCliPlugin({
-      release: 'someHashEvaluated',
-      include: 'src',
-    });
+  test('calls `compiler.plugin("after-emit")` legacy Webpack <= 3', () => {
+    const sentryCliPlugin = new SentryCliPlugin();
+
+    // Simulate Webpack <= 2
+    compiler = { plugin: jest.fn() };
+    sentryCliPlugin.apply(compiler);
+
+    expect(compiler.plugin).toHaveBeenCalledWith(
+      'after-emit',
+      expect.any(Function)
+    );
+  });
+
+  test('errors without `include` option', done => {
+    const sentryCliPlugin = new SentryCliPlugin({ release: 42 });
     sentryCliPlugin.apply(compiler);
 
     setImmediate(() => {
       expect(compilationDoneCallback).toBeCalled();
-      expect(sentryCliPlugin.options.release).toBe('someHashEvaluated');
+      expect(compilation.errors).toEqual([
+        'Sentry CLI Plugin: `include` option is required',
+      ]);
       done();
     });
   });
 
-  describe('SentryCli calls flow', () => {
-    let sentryCliPlugin;
+  test('creates a release on Sentry', done => {
+    expect.assertions(4);
 
-    beforeEach(() => {
-      sentryCliPlugin = new SentryCliPlugin({
-        release: '42',
-        include: 'src',
-      });
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
     });
+    sentryCliPlugin.apply(compiler);
 
-    test('should call all required SentryCli methods in sequence', done => {
-      expect.assertions(4);
-      sentryCliPlugin.apply(compiler);
+    setImmediate(() => {
+      expect(mockCli.releases.new).toBeCalledWith('42');
+      expect(mockCli.releases.uploadSourceMaps).toBeCalledWith('42', {
+        ignore: undefined,
+        release: 42,
+        include: ['src'],
+        rewrite: true,
+      });
+      expect(mockCli.releases.finalize).toBeCalledWith('42');
+      expect(compilationDoneCallback).toBeCalled();
+      done();
+    });
+  });
 
-      setImmediate(() => {
-        expect(newMock).toBeCalledWith('42');
-        expect(uploadSourceMapsMock).toBeCalledWith('42', {
-          ignore: undefined,
-          release: '42',
-          include: ['src'],
-          rewrite: true,
-        });
-        expect(finalizeMock).toBeCalledWith('42');
-        expect(compilationDoneCallback).toBeCalled();
+  test('handles errors during releasing', done => {
+    expect.assertions(2);
+    mockCli.releases.new.mockImplementationOnce(() =>
+      Promise.reject(new Error('Pickle Rick'))
+    );
+
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
+    });
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compilation.errors).toEqual(['Sentry CLI Plugin: Pickle Rick']);
+      expect(compilationDoneCallback).toBeCalled();
+      done();
+    });
+  });
+});
+
+describe('module rule overrides', () => {
+  let compiler;
+  let sentryCliPlugin;
+
+  beforeEach(() => {
+    sentryCliPlugin = new SentryCliPlugin({ release: '42', include: 'src' });
+    compiler = {
+      hooks: { afterEmit: { tapAsync: jest.fn() } },
+      options: { module: {} },
+    };
+  });
+
+  test('injects a `rule` for our mock module', done => {
+    expect.assertions(1);
+
+    compiler.options.module.rules = [];
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.module.rules[0]).toEqual({
+        test: /sentry-webpack\.module\.js$/,
+        use: [
+          {
+            loader: expect.stringMatching(SENTRY_LOADER_RE),
+            options: { releasePromise: expect.any(Promise) },
+          },
+        ],
+      });
+      done();
+    });
+  });
+
+  test('injects a `loader` for our mock module', done => {
+    expect.assertions(1);
+
+    compiler.options.module.loaders = [];
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.module.loaders[0]).toEqual({
+        test: /sentry-webpack\.module\.js$/,
+        loader: expect.stringMatching(SENTRY_LOADER_RE),
+        options: { releasePromise: expect.any(Promise) },
+      });
+      done();
+    });
+  });
+
+  test('defaults to `rules` when nothing is specified', done => {
+    expect.assertions(1);
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.module.rules).toBeInstanceOf(Array);
+      done();
+    });
+  });
+
+  test('creates the `module` option if missing', done => {
+    expect.assertions(1);
+
+    delete compiler.options.module;
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.module).not.toBeUndefined();
+      done();
+    });
+  });
+});
+
+describe('entry point overrides', () => {
+  let compiler;
+  let sentryCliPlugin;
+
+  beforeEach(() => {
+    sentryCliPlugin = new SentryCliPlugin({ release: '42', include: 'src' });
+    compiler = {
+      hooks: { afterEmit: { tapAsync: jest.fn() } },
+      options: { module: { rules: [] } },
+    };
+  });
+
+  test('creates an entry if none is specified', done => {
+    expect.assertions(1);
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toMatch(SENTRY_MODULE_RE);
+      done();
+    });
+  });
+
+  test('injects into a single entry', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = './src/index.js';
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual([
+        expect.stringMatching(SENTRY_MODULE_RE),
+        './src/index.js',
+      ]);
+      done();
+    });
+  });
+
+  test('injects into an array entry', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = ['./src/preload.js', './src/index.js'];
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual([
+        expect.stringMatching(SENTRY_MODULE_RE),
+        './src/preload.js',
+        './src/index.js',
+      ]);
+      done();
+    });
+  });
+
+  test('injects into multiple entries', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual({
+        main: [expect.stringMatching(SENTRY_MODULE_RE), './src/index.js'],
+        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+      });
+      done();
+    });
+  });
+
+  test('injects into entries specified by a function', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = () => Promise.resolve('./src/index.js');
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      compiler.options.entry().then(entry => {
+        expect(entry).toEqual([
+          expect.stringMatching(SENTRY_MODULE_RE),
+          './src/index.js',
+        ]);
         done();
       });
     });
+  });
 
-    test('when failed, should handle the error', done => {
-      expect.assertions(2);
-      SentryCliMock.mockImplementationOnce(configFile => ({
-        releases: {
-          new: jest.fn(() => Promise.reject(new Error('Pickle Rick'))),
-        },
-      }));
+  test('filters entry points by name', done => {
+    expect.assertions(1);
 
-      sentryCliPlugin.apply(compiler);
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
+    sentryCliPlugin.options.entries = ['admin'];
+    sentryCliPlugin.apply(compiler);
 
-      setImmediate(() => {
-        expect(compilation.errors).toEqual(['Sentry CLI Plugin: Pickle Rick']);
-        expect(compilationDoneCallback).toBeCalled();
-        done();
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual({
+        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
       });
+      done();
     });
+  });
+
+  test('filters entry points by RegExp', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
+    sentryCliPlugin.options.entries = /^ad/;
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual({
+        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+      });
+      done();
+    });
+  });
+
+  test('filters entry points by function', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
+    sentryCliPlugin.options.entries = key => key == 'admin';
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual({
+        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+      });
+      done();
+    });
+  });
+
+  test('throws for an invalid `entries` option', () => {
+    compiler.options.entry = {
+      main: './src/index.js',
+      admin: './src/admin.js',
+    };
+    sentryCliPlugin.options.entries = 42;
+    expect(() => sentryCliPlugin.apply(compiler)).toThrowError(/entries/);
   });
 });

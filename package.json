@@ -21,24 +21,25 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
-    "eslint": "^4.15.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.8.0",
-    "jest": "^22.0.6",
-    "prettier": "^1.10.2"
+    "eslint-plugin-import": "^2.10.0",
+    "jest": "^22.4.3",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.11.1",
+    "prettier-check": "^2.0.0"
   },
   "scripts": {
+    "lint": "run-s lint:prettier lint:eslint",
+    "lint:prettier": "prettier-check 'src/**/*.js'",
+    "lint:eslint": "eslint src",
+    "fix": "run-s fix:eslint fix:prettier",
+    "fix:prettier": "prettier --write 'src/**/*.js'",
     "fix:eslint": "eslint --fix src",
-    "test:eslint": "eslint src",
     "test": "jest",
     "test:integration": "cd example && yarn && yarn test",
+    "test:watch": "jest --watch --notify",
     "codecov": "codecov"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "testPathIgnorePatterns": [
-      "example"
-    ]
   }
 }
