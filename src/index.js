@@ -118,13 +118,12 @@ class SentryCliPlugin {
     }
 
     if (originalEntry !== null && typeof originalEntry === 'object') {
-      const nextEntries = {};
-      Object.keys(originalEntry).forEach(key => {
-        if (this.checkEntry(key)) {
-          nextEntries[key] = this.injectEntry(originalEntry[key], newEntry);
-        }
-      });
-      return nextEntries;
+      return Object.keys(originalEntry).reduce((acc, key) => {
+        acc[key] = this.checkEntry(key)
+          ? this.injectEntry(originalEntry[key], newEntry)
+          : originalEntry[key];
+        return acc;
+      }, {});
     }
 
     if (typeof originalEntry === 'string') {
