@@ -342,6 +342,32 @@ describe('entry point overrides', () => {
     });
   });
 
+  test('injects into multiple entries with array chunks', done => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: ['./src/index.js', './src/common.js'],
+      admin: ['./src/admin.js', './src/common.js'],
+    };
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compiler.options.entry).toEqual({
+        main: [
+          expect.stringMatching(SENTRY_MODULE_RE),
+          './src/index.js',
+          './src/common.js',
+        ],
+        admin: [
+          expect.stringMatching(SENTRY_MODULE_RE),
+          './src/admin.js',
+          './src/common.js',
+        ],
+      });
+      done();
+    });
+  });
+
   test('injects into entries specified by a function', done => {
     expect.assertions(1);
 
@@ -371,6 +397,7 @@ describe('entry point overrides', () => {
 
     setImmediate(() => {
       expect(compiler.options.entry).toEqual({
+        main: './src/index.js',
         admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
       });
       done();
@@ -382,14 +409,19 @@ describe('entry point overrides', () => {
 
     compiler.options.entry = {
       main: './src/index.js',
-      admin: './src/admin.js',
+      admin: ['./src/admin.js', './src/common.js'],
     };
     sentryCliPlugin.options.entries = /^ad/;
     sentryCliPlugin.apply(compiler);
 
     setImmediate(() => {
       expect(compiler.options.entry).toEqual({
-        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+        main: './src/index.js',
+        admin: [
+          expect.stringMatching(SENTRY_MODULE_RE),
+          './src/admin.js',
+          './src/common.js',
+        ],
       });
       done();
     });
@@ -399,7 +431,7 @@ describe('entry point overrides', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
-      main: './src/index.js',
+      main: ['./src/index.js', './src/common.js'],
       admin: './src/admin.js',
     };
     sentryCliPlugin.options.entries = key => key == 'admin';
@@ -407,6 +439,7 @@ describe('entry point overrides', () => {
 
     setImmediate(() => {
       expect(compiler.options.entry).toEqual({
+        main: ['./src/index.js', './src/common.js'],
         admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
       });
       done();
