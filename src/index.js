@@ -44,6 +44,8 @@ function addCompilationError(compilation, message) {
 
 class SentryCliPlugin {
   constructor(options = {}) {
+    this.debug = options.debug || false;
+
     // By default we want that rewrite is true
     this.options = Object.assign({ rewrite: true }, options);
     this.options.include = toArray(options.include);
@@ -145,7 +147,9 @@ class SentryCliPlugin {
     const loader = {
       test: /sentry-webpack\.module\.js$/,
       loader: SENTRY_LOADER,
-      options: { releasePromise: this.release },
+      options: {
+        releasePromise: this.release,
+      },
     };
 
     return loaders.concat([loader]);
@@ -158,7 +162,9 @@ class SentryCliPlugin {
       use: [
         {
           loader: SENTRY_LOADER,
-          options: { releasePromise: this.release },
+          options: {
+            releasePromise: this.release,
+          },
         },
       ],
     };
@@ -169,19 +175,12 @@ class SentryCliPlugin {
   /** Injects the release entry points and rules into the given options. */
   injectRelease(compilerOptions) {
     const options = compilerOptions;
-    if (typeof options === 'undefined') {
-      // Gatekeeper because we are not running in webpack env, probably just tests
-      return;
-    }
-
     options.entry = this.injectEntry(options.entry, SENTRY_MODULE);
-
-    const mod = ensure(options, 'module', Object);
-    if (mod.loaders) {
-      // Handle old `module.loaders` syntax
-      mod.loaders = this.injectLoader(mod.loaders);
+    if (options.module.loaders) {
+      // Handle old `options.module.loaders` syntax
+      options.module.loaders = this.injectLoader(options.module.loaders);
     } else {
-      mod.rules = this.injectRule(mod.rules || []);
+      options.module.rules = this.injectRule(options.module.rules || []);
     }
   }
 
@@ -205,9 +204,35 @@ class SentryCliPlugin {
       .catch(err => addCompilationError(compilation, err.message));
   }
 
+  _outputDebug(label, data) {
+    console.log(
+      `[Sentry Webpack Plugin] ${label}: ${JSON.stringify(data, null, 2)}`
+    );
+  }
+
   /** Webpack lifecycle hook to update compiler options. */
   apply(compiler) {
-    this.injectRelease(compiler.options);
+    const compilerOptions = compiler.options || {};
+    ensure(compilerOptions, 'module', Object);
+
+    if (this.debug) {
+      this._outputDebug(
+        'Pre-Loaders',
+        compilerOptions.module.loaders || compilerOptions.module.rules
+      );
+      this._outputDebug('Pre-Entry', compilerOptions.entry);
+    }
+
+    this.injectRelease(compilerOptions);
+
+    if (this.debug) {
+      this._outputDebug(
+        'Post-Loaders',
+        compilerOptions.module.loaders || compilerOptions.module.rules
+      );
+      this._outputDebug('Post-Entry', compilerOptions.entry);
+    }
+
     attachAfterEmitHook(compiler, (compilation, cb) => {
       this.finalizeRelease(compilation).then(() => cb());
     });

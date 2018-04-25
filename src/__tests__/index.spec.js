@@ -50,6 +50,16 @@ describe('constructor', () => {
     });
   });
 
+  test('allows to provide debug mode', () => {
+    let sentryCliPlugin = new SentryCliPlugin();
+    expect(sentryCliPlugin.debug).toEqual(false);
+
+    sentryCliPlugin = new SentryCliPlugin({
+      debug: true,
+    });
+    expect(sentryCliPlugin.debug).toEqual(true);
+  });
+
   test('sanitizes array options `include` and `ignore`', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'foo',
