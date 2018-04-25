@@ -102,6 +102,7 @@ Also, check the [example](example) directory.
   defaults to `true`
 * `dryRun [optional]` - `boolean`, attempts a dry run (useful for dev
   environments)
+* `debug [optional]` - `boolean`, print some useful debug information
 
 You can find more information about these options in our official docs:
 https://docs.sentry.io/learn/cli/releases/#upload-source-maps
