@@ -42,6 +42,19 @@ function addCompilationError(compilation, message) {
   compilation.errors.push(`Sentry CLI Plugin: ${message}`);
 }
 
+/**
+ * Pretty-prints debug information
+ *
+ * @param {string} label Label to be printed as a prefix for the data
+ * @param {any} data Input to be pretty-printed
+ */
+function outputDebug(label, data) {
+  // eslint-disable-next-line no-console
+  console.log(
+    `[Sentry Webpack Plugin] ${label}: ${JSON.stringify(data, null, 2)}`
+  );
+}
+
 class SentryCliPlugin {
   constructor(options = {}) {
     this.debug = options.debug || false;
@@ -204,33 +217,27 @@ class SentryCliPlugin {
       .catch(err => addCompilationError(compilation, err.message));
   }
 
-  _outputDebug(label, data) {
-    console.log(
-      `[Sentry Webpack Plugin] ${label}: ${JSON.stringify(data, null, 2)}`
-    );
-  }
-
   /** Webpack lifecycle hook to update compiler options. */
   apply(compiler) {
     const compilerOptions = compiler.options || {};
     ensure(compilerOptions, 'module', Object);
 
     if (this.debug) {
-      this._outputDebug(
+      outputDebug(
         'Pre-Loaders',
         compilerOptions.module.loaders || compilerOptions.module.rules
       );
-      this._outputDebug('Pre-Entry', compilerOptions.entry);
+      outputDebug('Pre-Entry', compilerOptions.entry);
     }
 
     this.injectRelease(compilerOptions);
 
     if (this.debug) {
-      this._outputDebug(
+      outputDebug(
         'Post-Loaders',
         compilerOptions.module.loaders || compilerOptions.module.rules
       );
-      this._outputDebug('Post-Entry', compilerOptions.entry);
+      outputDebug('Post-Entry', compilerOptions.entry);
     }
 
     attachAfterEmitHook(compiler, (compilation, cb) => {
