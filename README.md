@@ -79,7 +79,7 @@ Also, check the [example](example) directory.
   described in https://docs.sentry.io/learn/cli/configuration/#properties-files.
   By default, the config file is looked for upwards from the current path and
   defaults from `~/.sentryclirc` are always loaded
-* `ext [optional]` - `string`, adds an additional file extension to be
+* `ext [optional]` - `array`, this sets the file extensions to be
   considered. By default the following file extensions are processed: js, map,
   jsbundle and bundle.
 * `urlPrefix [optional]` - `string`, this sets an URL prefix in front of all
