@@ -64,6 +64,7 @@ Also, check the [example](example) directory.
   `sentry-cli releases propose-version` command which should always return the
   correct version. Can use `[hash]` as a part of a string, which will be replaced
   with Webpack's compilation hash.
+>>>>>>> Note about git requirement for default release
 * `include [required]` - `string` or `array`, one or more paths that Sentry CLI
   should scan recursively for sources. It will upload all `.map` files and match
   associated `.js` files
