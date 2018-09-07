@@ -23,14 +23,16 @@ function ensure(target, key, factory) {
 function sillyClone(input) {
   try {
     return JSON.parse(JSON.stringify(input));
-  } catch (o_O) {
+  } catch (oO) {
     return undefined;
   }
 }
 
 /** Diffs two arrays */
 function diffArray(prev, next) {
+  // eslint-disable-next-line no-param-reassign
   prev = Array.isArray(prev) ? prev : [prev];
+  // eslint-disable-next-line no-param-reassign
   next = Array.isArray(next) ? next : [next];
 
   return {
@@ -70,17 +72,20 @@ function addCompilationError(compilation, message) {
  * @param {any} data Input to be pretty-printed
  */
 function outputDebug(label, data) {
-  // eslint-disable-next-line no-console
-  data
-    ? console.log(
-        `[Sentry Webpack Plugin] ${label} ${util.inspect(
-          data,
-          false,
-          null,
-          true
-        )}`
-      )
-    : console.log(`[Sentry Webpack Plugin] ${label}`);
+  if (data !== undefined) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[Sentry Webpack Plugin] ${label} ${util.inspect(
+        data,
+        false,
+        null,
+        true
+      )}`
+    );
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(`[Sentry Webpack Plugin] ${label}`);
+  }
 }
 
 class SentryCliPlugin {
@@ -111,12 +116,11 @@ class SentryCliPlugin {
 
       return {
         releases: {
-          proposeVersion: () => {
-            return cli.releases.proposeVersion().then(version => {
+          proposeVersion: () =>
+            cli.releases.proposeVersion().then(version => {
               outputDebug('Proposed version:\n', version);
               return version;
-            });
-          },
+            }),
           new: release => {
             outputDebug('Creating new release:\n', release);
             return Promise.resolve(release);
@@ -246,7 +250,7 @@ class SentryCliPlugin {
 
   /** injectRelease with printable debug info */
   injectReleaseWithDebug(compilerOptions) {
-    let input = {
+    const input = {
       loaders: sillyClone(
         compilerOptions.module.loaders || compilerOptions.module.rules
       ).map(x => x.loader || x.use[0].loader),
@@ -255,7 +259,7 @@ class SentryCliPlugin {
 
     this.injectRelease(compilerOptions);
 
-    let output = {
+    const output = {
       loaders: sillyClone(
         compilerOptions.module.loaders || compilerOptions.module.rules
       ).map(x => x.loader || x.use[0].loader),

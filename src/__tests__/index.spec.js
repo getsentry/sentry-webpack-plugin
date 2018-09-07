@@ -88,14 +88,6 @@ describe('constructor', () => {
 });
 
 describe('CLI configuration', () => {
-  test('does not create a SentryCLI instance in `dryRun` mode', () => {
-    const sentryCliPlugin = new SentryCliPlugin({
-      dryRun: true,
-    });
-
-    expect(SentryCliMock).not.toHaveBeenCalled();
-  });
-
   test('passes the configuration file to CLI', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       configFile: 'some/sentry.properties',
