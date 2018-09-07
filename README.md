@@ -82,10 +82,12 @@ Also, check the [example](example) directory.
 * `ext [optional]` - `array`, this sets the file extensions to be
   considered. By default the following file extensions are processed: js, map,
   jsbundle and bundle.
-* `urlPrefix [optional]` - `string`, this sets an URL prefix in front of all
-  files. This defaults to `~/` but you might want to set this to the full URL.
-  This is also useful if your files are stored in a sub folder. eg:
+* `urlPrefix [optional]` - `string`, this sets an URL prefix at the beginning
+  of all files. This defaults to `~/` but you might want to set this to the
+  full URL. This is also useful if your files are stored in a sub folder. eg:
   `url-prefix '~/static/js'`
+* `urlSuffix [optional]` - `string`, this sets an URL suffix at the end of all
+  files. Useful for appending query parameters.
 * `validate [optional]` - `boolean`, this attempts sourcemap validation before
   upload when rewriting is not enabled. It will spot a variety of issues with
   source maps and cancel the upload if any are found. This is not the default as
