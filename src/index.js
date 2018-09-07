@@ -165,7 +165,7 @@ class SentryCliPlugin {
       },
     };
 
-    return loaders.concat([loader]);
+    return (loaders || []).concat([loader]);
   }
 
   /** Webpack 3+: Injects a new rule for the release module. */
@@ -182,7 +182,7 @@ class SentryCliPlugin {
       ],
     };
 
-    return rules.concat([rule]);
+    return (rules || []).concat([rule]);
   }
 
   /** Injects the release entry points and rules into the given options. */
@@ -193,7 +193,7 @@ class SentryCliPlugin {
       // Handle old `options.module.loaders` syntax
       options.module.loaders = this.injectLoader(options.module.loaders);
     } else {
-      options.module.rules = this.injectRule(options.module.rules || []);
+      options.module.rules = this.injectRule(options.module.rules);
     }
   }
 
