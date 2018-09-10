@@ -1,5 +1,6 @@
 const SentryCli = require('@sentry/cli');
 const path = require('path');
+const util = require('util');
 
 const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
@@ -16,6 +17,28 @@ function ensure(target, key, factory) {
   // eslint-disable-next-line no-param-reassign
   target[key] = typeof target[key] !== 'undefined' ? target[key] : factory();
   return target[key];
+}
+
+/** Deep copy of a given input */
+function sillyClone(input) {
+  try {
+    return JSON.parse(JSON.stringify(input));
+  } catch (oO) {
+    return undefined;
+  }
+}
+
+/** Diffs two arrays */
+function diffArray(prev, next) {
+  // eslint-disable-next-line no-param-reassign
+  prev = Array.isArray(prev) ? prev : [prev];
+  // eslint-disable-next-line no-param-reassign
+  next = Array.isArray(next) ? next : [next];
+
+  return {
+    removed: prev.filter(x => !next.includes(x)),
+    added: next.filter(x => !prev.includes(x)),
+  };
 }
 
 /**
@@ -49,10 +72,20 @@ function addCompilationError(compilation, message) {
  * @param {any} data Input to be pretty-printed
  */
 function outputDebug(label, data) {
-  // eslint-disable-next-line no-console
-  console.log(
-    `[Sentry Webpack Plugin] ${label}: ${JSON.stringify(data, null, 2)}`
-  );
+  if (data !== undefined) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[Sentry Webpack Plugin] ${label} ${util.inspect(
+        data,
+        false,
+        null,
+        true
+      )}`
+    );
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(`[Sentry Webpack Plugin] ${label}`);
+  }
 }
 
 class SentryCliPlugin {
@@ -61,8 +94,9 @@ class SentryCliPlugin {
 
     // By default we want that rewrite is true
     this.options = Object.assign({ rewrite: true }, options);
-    this.options.include = toArray(options.include);
-    this.options.ignore = toArray(options.ignore);
+
+    if (options.include) this.options.include = toArray(options.include);
+    if (options.ignore) this.options.ignore = toArray(options.ignore);
 
     this.cli = this.getSentryCli();
     this.release = this.getReleasePromise();
@@ -75,18 +109,35 @@ class SentryCliPlugin {
 
   /** Creates a new Sentry CLI instance. */
   getSentryCli() {
+    const cli = new SentryCli(this.options.configFile);
+
     if (this.isDryRun()) {
+      outputDebug('DRY Run Mode');
+
       return {
         releases: {
-          proposeVersion: () => Promise.resolve('1.0.0-dev'),
-          new: () => Promise.resolve(),
-          uploadSourceMaps: () => Promise.resolve(),
-          finalize: () => Promise.resolve(),
+          proposeVersion: () =>
+            cli.releases.proposeVersion().then(version => {
+              outputDebug('Proposed version:\n', version);
+              return version;
+            }),
+          new: release => {
+            outputDebug('Creating new release:\n', release);
+            return Promise.resolve(release);
+          },
+          uploadSourceMaps: (release, config) => {
+            outputDebug('Calling upload-sourcemaps with:\n', config);
+            return Promise.resolve(release, config);
+          },
+          finalize: release => {
+            outputDebug('Finalizing release:\n', release);
+            return Promise.resolve(release);
+          },
         },
       };
     }
 
-    return new SentryCli(this.options.configFile);
+    return cli;
   }
 
   /**
@@ -165,7 +216,7 @@ class SentryCliPlugin {
       },
     };
 
-    return loaders.concat([loader]);
+    return (loaders || []).concat([loader]);
   }
 
   /** Webpack 3+: Injects a new rule for the release module. */
@@ -182,7 +233,7 @@ class SentryCliPlugin {
       ],
     };
 
-    return rules.concat([rule]);
+    return (rules || []).concat([rule]);
   }
 
   /** Injects the release entry points and rules into the given options. */
@@ -193,8 +244,38 @@ class SentryCliPlugin {
       // Handle old `options.module.loaders` syntax
       options.module.loaders = this.injectLoader(options.module.loaders);
     } else {
-      options.module.rules = this.injectRule(options.module.rules || []);
+      options.module.rules = this.injectRule(options.module.rules);
     }
+  }
+
+  /** injectRelease with printable debug info */
+  injectReleaseWithDebug(compilerOptions) {
+    const input = {
+      loaders: sillyClone(
+        compilerOptions.module.loaders || compilerOptions.module.rules
+      ).map(x => x.loader || x.use[0].loader),
+      entry: sillyClone(compilerOptions.entry),
+    };
+
+    this.injectRelease(compilerOptions);
+
+    const output = {
+      loaders: sillyClone(
+        compilerOptions.module.loaders || compilerOptions.module.rules
+      ).map(x => x.loader || x.use[0].loader),
+      entry: sillyClone(compilerOptions.entry),
+    };
+
+    const loaders = diffArray(input.loaders, output.loaders);
+    const entry = diffArray(input.entry, output.entry);
+
+    outputDebug('DEBUG: Injecting release code');
+    outputDebug('DEBUG: Loaders:\n', output.loaders);
+    outputDebug('DEBUG: Added loaders:\n', loaders.added);
+    outputDebug('DEBUG: Removed loaders:\n', loaders.removed);
+    outputDebug('DEBUG: Entry:\n', output.entry);
+    outputDebug('DEBUG: Added entry:\n', entry.added);
+    outputDebug('DEBUG: Removed entry:\n', entry.removed);
   }
 
   /** Creates and finalizes a release on Sentry. */
@@ -223,21 +304,9 @@ class SentryCliPlugin {
     ensure(compilerOptions, 'module', Object);
 
     if (this.debug) {
-      outputDebug(
-        'Pre-Loaders',
-        compilerOptions.module.loaders || compilerOptions.module.rules
-      );
-      outputDebug('Pre-Entry', compilerOptions.entry);
-    }
-
-    this.injectRelease(compilerOptions);
-
-    if (this.debug) {
-      outputDebug(
-        'Post-Loaders',
-        compilerOptions.module.loaders || compilerOptions.module.rules
-      );
-      outputDebug('Post-Entry', compilerOptions.entry);
+      this.injectReleaseWithDebug(compilerOptions);
+    } else {
+      this.injectRelease(compilerOptions);
     }
 
     attachAfterEmitHook(compiler, (compilation, cb) => {
