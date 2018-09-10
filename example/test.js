@@ -7,7 +7,11 @@ console.log('--------------------');
 console.log();
 
 const content = fs.readFileSync('./dist/main.bundle.js');
-if (content.toString().match('global.SENTRY_RELEASE.id = "1.0.0-dev"')) {
+if (
+  content.toString().match(`(window || global || self).SENTRY_RELEASE = {
+  id: "foo"
+}`)
+) {
   console.log('Saul Goodman, found SENTRY_RELEASE in bundle');
   process.exit(0);
 } else {

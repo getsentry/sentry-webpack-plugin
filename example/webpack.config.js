@@ -28,6 +28,7 @@ module.exports = {
       ignore: ['node_modules', 'webpack.config.js'],
       configFile: 'sentry.properties',
       dryRun: true,
+      release: 'foo',
     }),
   ],
 };
