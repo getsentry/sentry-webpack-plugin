@@ -8,7 +8,7 @@
     "source-map"
   ],
   "author": "Sentry",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "license": "MIT",
   "repository": "git@github.com:getsentry/sentry-webpack-plugin.git",
   "homepage": "https://github.com/getsentry/sentry-webpack-plugin",
@@ -17,7 +17,7 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "@sentry/cli": "^1.30.2"
+    "@sentry/cli": "^1.35.5"
   },
   "devDependencies": {
     "codecov": "^3.0.0",
