@@ -1,6 +1,7 @@
-var Raven = require('raven-js');
+var bar = require('./bar');
 
-Raven.config('__DSN__').install();
-Raven.captureMessage('test');
+function foo() {
+  bar('test');
+}
 
-let div = <div />;
+foo();
