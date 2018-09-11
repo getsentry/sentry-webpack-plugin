@@ -290,7 +290,7 @@ class SentryCliPlugin {
     let release;
     return this.release
       .then(proposedVersion => {
-        release = proposedVersion.replace('[hash]', compilation.hash);
+        release = proposedVersion;
         return this.cli.releases.new(release);
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
