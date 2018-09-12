@@ -8,9 +8,10 @@ console.log();
 
 const content = fs.readFileSync('./dist/main.bundle.js');
 if (
-  content.toString().match(`(window || global || self).SENTRY_RELEASE = {
+  content.toString()
+    .indexOf(`(typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {}).SENTRY_RELEASE = {
   id: "foo"
-}`)
+}`) !== -1
 ) {
   console.log('Saul Goodman, found SENTRY_RELEASE in bundle');
   process.exit(0);
