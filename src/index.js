@@ -41,6 +41,15 @@ function diffArray(prev, next) {
   };
 }
 
+/** Extracts loader's name independently of Webpack's version */
+function getLoaderName(entry) {
+  return (
+    entry.loader ||
+    (entry.use && entry.use[0] && entry.use[0].loader) ||
+    '<unknown loader>'
+  );
+}
+
 /**
  * Ensures that the passed value is in an array or an array itself.
  *
@@ -253,7 +262,7 @@ class SentryCliPlugin {
     const input = {
       loaders: sillyClone(
         compilerOptions.module.loaders || compilerOptions.module.rules
-      ).map(x => x.loader || x.use[0].loader),
+      ).map(getLoaderName),
       entry: sillyClone(compilerOptions.entry),
     };
 
@@ -262,7 +271,7 @@ class SentryCliPlugin {
     const output = {
       loaders: sillyClone(
         compilerOptions.module.loaders || compilerOptions.module.rules
-      ).map(x => x.loader || x.use[0].loader),
+      ).map(getLoaderName),
       entry: sillyClone(compilerOptions.entry),
     };
 
