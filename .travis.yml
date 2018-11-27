@@ -12,6 +12,12 @@ cache:
 
 matrix:
   include:
+    - name: 'deploy'
+      node_js: '10'
+      script: npm pack
+      after_success:
+        - npm install -g @zeus-ci/cli
+        - zeus upload -t "application/tar+npm" *.tgz
     - name: 'lint and codecov'
       node_js: '10'
       script:
@@ -35,11 +41,6 @@ matrix:
     - name: 'integration tests [node v6]'
       node_js: '6'
       script: yarn test:integration
-    - name: 'deploy'
-      script: npm pack
-      after_success:
-        - npm install -g @zeus-ci/cli
-        - zeus upload -t "application/tar+npm" *.tgz
 
 notifications:
   webhooks:
