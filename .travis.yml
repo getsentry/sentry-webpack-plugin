@@ -3,11 +3,7 @@ branches:
     - master
     - /^release\/.+$/
 
-install: true
-sudo: required
-
 language: node_js
-dist: trusty
 
 cache:
   yarn: true
