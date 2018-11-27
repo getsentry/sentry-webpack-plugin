@@ -1,51 +1,46 @@
 branches:
   only:
     - master
+    - /^release\/.+$/
 
-sudo: false
 language: node_js
-node_js: "8"
 
-if: tag IS blank
-
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH="$HOME/.yarn/bin:$PATH"
+cache:
+  yarn: true
+  directories:
+    - node_modules
 
 matrix:
   include:
-    - env: NAME="lint"
-      script:
-        - yarn lint
-
-    - env: NAME="test"
-      script:
-        - yarn test
-        - yarn run codecov
-
-    - env: NAME="integration test"
-      script:
-        - yarn test:integration
-
-    # NODE 6
-    - env: NAME="test"
-      node_js: "6"
-      script:
-        - yarn test
-        - yarn run codecov
-
-    - env: NAME="integration"
-      node_js: "6"
-      script:
-        - yarn test:integration
-
-    # DEPLOY
-    - env: NAME="deploy"
-      script:
-        - npm pack
+    - name: 'deploy'
+      node_js: '10'
+      script: npm pack
       after_success:
         - npm install -g @zeus-ci/cli
         - zeus upload -t "application/tar+npm" *.tgz
+    - name: 'lint and codecov'
+      node_js: '10'
+      script:
+        - yarn lint
+        - yarn codecov
+    - name: 'unit tests [node v10]'
+      node_js: '10'
+      script: yarn test
+    - name: 'unit tests [node v8]'
+      node_js: '8'
+      script: yarn test
+    - name: 'unit tests [node v6]'
+      node_js: '6'
+      script: yarn test
+    - name: 'integration tests [node v10]'
+      node_js: '10'
+      script: yarn test:integration
+    - name: 'integration tests [node v8]'
+      node_js: '8'
+      script: yarn test:integration
+    - name: 'integration tests [node v6]'
+      node_js: '6'
+      script: yarn test:integration
 
 notifications:
   webhooks:
