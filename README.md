@@ -108,4 +108,4 @@ Also, check the [example](example) directory.
 * `debug [optional]` - `boolean`, print some useful debug information
 
 You can find more information about these options in our official docs:
-https://docs.sentry.io/learn/cli/releases/#upload-source-maps
+https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
