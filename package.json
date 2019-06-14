@@ -17,17 +17,17 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "@sentry/cli": "^1.35.5"
+    "@sentry/cli": "^1.44.4"
   },
   "devDependencies": {
-    "codecov": "^3.0.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.10.0",
-    "jest": "^22.4.3",
-    "npm-run-all": "^4.1.2",
-    "prettier": "^1.11.1",
+    "codecov": "^3.5.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.17.3",
+    "jest": "^24.8.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
     "prettier-check": "^2.0.0"
   },
   "scripts": {
