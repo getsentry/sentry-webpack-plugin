@@ -106,7 +106,7 @@ Also, check the [example](example) directory.
 * `dryRun [optional]` - `boolean`, attempts a dry run (useful for dev
   environments)
 * `debug [optional]` - `boolean`, print some useful debug information
-* `silent [optional]` - `boolean`, If true, all logs are suppressed (Usefull for --json option)
+* `silent [optional]` - `boolean`, if `true`, all logs are suppressed (useful for `--json` option)
 
 You can find more information about these options in our official docs:
 https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
