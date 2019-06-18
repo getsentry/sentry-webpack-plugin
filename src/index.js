@@ -74,29 +74,6 @@ function addCompilationError(compilation, message) {
   compilation.errors.push(`Sentry CLI Plugin: ${message}`);
 }
 
-/**
- * Pretty-prints debug information
- *
- * @param {string} label Label to be printed as a prefix for the data
- * @param {any} data Input to be pretty-printed
- */
-function outputDebug(label, data) {
-  if (data !== undefined) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[Sentry Webpack Plugin] ${label} ${util.inspect(
-        data,
-        false,
-        null,
-        true
-      )}`
-    );
-  } else {
-    // eslint-disable-next-line no-console
-    console.log(`[Sentry Webpack Plugin] ${label}`);
-  }
-}
-
 class SentryCliPlugin {
   constructor(options = {}) {
     this.debug = options.debug || false;
@@ -111,6 +88,36 @@ class SentryCliPlugin {
     this.release = this.getReleasePromise();
   }
 
+  /**
+   * Pretty-prints debug information
+   *
+   * @param {string} label Label to be printed as a prefix for the data
+   * @param {any} data Input to be pretty-printed
+   */
+  outputDebug(label, data) {
+    if (this.isSilent()) {
+      return;
+    }
+    if (data !== undefined) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `[Sentry Webpack Plugin] ${label} ${util.inspect(
+          data,
+          false,
+          null,
+          true
+        )}`
+      );
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(`[Sentry Webpack Plugin] ${label}`);
+    }
+  }
+
+  isSilent() {
+    return this.options.silent === true;
+  }
+
   /** Returns whether this plugin is in dryRun mode. */
   isDryRun() {
     return this.options.dryRun === true;
@@ -118,28 +125,30 @@ class SentryCliPlugin {
 
   /** Creates a new Sentry CLI instance. */
   getSentryCli() {
-    const cli = new SentryCli(this.options.configFile);
+    const cli = new SentryCli(this.options.configFile, {
+      silent: this.isSilent(),
+    });
 
     if (this.isDryRun()) {
-      outputDebug('DRY Run Mode');
+      this.outputDebug('DRY Run Mode');
 
       return {
         releases: {
           proposeVersion: () =>
             cli.releases.proposeVersion().then(version => {
-              outputDebug('Proposed version:\n', version);
+              this.outputDebug('Proposed version:\n', version);
               return version;
             }),
           new: release => {
-            outputDebug('Creating new release:\n', release);
+            this.outputDebug('Creating new release:\n', release);
             return Promise.resolve(release);
           },
           uploadSourceMaps: (release, config) => {
-            outputDebug('Calling upload-sourcemaps with:\n', config);
+            this.outputDebug('Calling upload-sourcemaps with:\n', config);
             return Promise.resolve(release, config);
           },
           finalize: release => {
-            outputDebug('Finalizing release:\n', release);
+            this.outputDebug('Finalizing release:\n', release);
             return Promise.resolve(release);
           },
         },
@@ -278,13 +287,13 @@ class SentryCliPlugin {
     const loaders = diffArray(input.loaders, output.loaders);
     const entry = diffArray(input.entry, output.entry);
 
-    outputDebug('DEBUG: Injecting release code');
-    outputDebug('DEBUG: Loaders:\n', output.loaders);
-    outputDebug('DEBUG: Added loaders:\n', loaders.added);
-    outputDebug('DEBUG: Removed loaders:\n', loaders.removed);
-    outputDebug('DEBUG: Entry:\n', output.entry);
-    outputDebug('DEBUG: Added entry:\n', entry.added);
-    outputDebug('DEBUG: Removed entry:\n', entry.removed);
+    this.outputDebug('DEBUG: Injecting release code');
+    this.outputDebug('DEBUG: Loaders:\n', output.loaders);
+    this.outputDebug('DEBUG: Added loaders:\n', loaders.added);
+    this.outputDebug('DEBUG: Removed loaders:\n', loaders.removed);
+    this.outputDebug('DEBUG: Entry:\n', output.entry);
+    this.outputDebug('DEBUG: Added entry:\n', entry.added);
+    this.outputDebug('DEBUG: Removed entry:\n', entry.removed);
   }
 
   /** Creates and finalizes a release on Sentry. */
