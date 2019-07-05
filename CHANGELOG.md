@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.7.0
+
+* feat: Add silent option to disable all output to stdout (#127)
+
 ## v1.6.2
 
 * fix: Extract loader name in more reliable way
