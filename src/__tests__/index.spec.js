@@ -202,6 +202,30 @@ describe('afterEmitHook', () => {
       done();
     });
   });
+
+  test('handles errors with errorHandler option', done => {
+    expect.assertions(3);
+    mockCli.releases.new.mockImplementationOnce(() =>
+      Promise.reject(new Error('Pickle Rick'))
+    );
+    let e;
+
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
+      errorHandler: err => {
+        e = err;
+      },
+    });
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(compilation.errors).toEqual([]);
+      expect(e.message).toEqual('Pickle Rick');
+      expect(compilationDoneCallback).toBeCalled();
+      done();
+    });
+  });
 });
 
 describe('module rule overrides', () => {
