@@ -298,7 +298,12 @@ class SentryCliPlugin {
 
   /** Creates and finalizes a release on Sentry. */
   finalizeRelease(compilation) {
-    const { include } = this.options;
+    const {
+      include,
+      errorHandler = (err, invokeErr) => {
+        invokeErr();
+      },
+    } = this.options;
 
     if (!include) {
       addCompilationError(compilation, '`include` option is required');
@@ -313,7 +318,9 @@ class SentryCliPlugin {
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
       .then(() => this.cli.releases.finalize(release))
-      .catch(err => addCompilationError(compilation, err.message));
+      .catch(err =>
+        errorHandler(err, () => addCompilationError(compilation, err.message))
+      );
   }
 
   /** Webpack lifecycle hook to update compiler options. */
