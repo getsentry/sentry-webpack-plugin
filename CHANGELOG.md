@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.0
+
+* feat: Add errorHandler option (#133)
+
 ## v1.7.0
 
 * feat: Add silent option to disable all output to stdout (#127)
