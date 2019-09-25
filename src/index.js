@@ -322,13 +322,13 @@ class SentryCliPlugin {
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
       .then(() => {
-        const { commit, previousCommit, repo, auto } = this.options
+        const { commit, previousCommit, repo, auto } = this.options;
 
         if (commit || previousCommit || repo || auto) {
-          return this.cli.releases.setCommits(release, this.options)
+          return this.cli.releases.setCommits(release, this.options);
         }
 
-        return undefined
+        return undefined;
       })
       .then(() => this.cli.releases.finalize(release))
       .catch(err =>
