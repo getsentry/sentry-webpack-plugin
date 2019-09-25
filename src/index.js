@@ -151,6 +151,10 @@ class SentryCliPlugin {
             this.outputDebug('Finalizing release:\n', release);
             return Promise.resolve(release);
           },
+          setCommits: (release, config) => {
+            this.outputDebug('Calling set-commits with:\n', config);
+            return Promise.resolve(release, config);
+          },
         },
       };
     }
@@ -317,6 +321,15 @@ class SentryCliPlugin {
         return this.cli.releases.new(release);
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
+      .then(() => {
+        const { commit, previousCommit, repo, auto } = this.options
+
+        if (commit || previousCommit || repo || auto) {
+          return this.cli.releases.setCommits(release, this.options)
+        }
+
+        return undefined
+      })
       .then(() => this.cli.releases.finalize(release))
       .catch(err =>
         errorHandler(err, () => addCompilationError(compilation, err.message))

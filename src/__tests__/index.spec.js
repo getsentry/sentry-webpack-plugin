@@ -9,6 +9,7 @@ const mockCli = {
     uploadSourceMaps: jest.fn(() => Promise.resolve()),
     finalize: jest.fn(() => Promise.resolve()),
     proposeVersion: jest.fn(() => Promise.resolve()),
+    setCommits: jest.fn(() => Promise.resolve()),
   },
 };
 
