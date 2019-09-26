@@ -324,8 +324,13 @@ class SentryCliPlugin {
       .then(() => {
         const { commit, previousCommit, repo, auto } = this.options;
 
-        if (commit || previousCommit || repo || auto) {
-          return this.cli.releases.setCommits(release, this.options);
+        if (repo && ((commit && previousCommit) || auto)) {
+          return this.cli.releases.setCommits(release, {
+            commit,
+            previousCommit,
+            repo,
+            auto,
+          });
         }
 
         return undefined;
