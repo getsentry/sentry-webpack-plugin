@@ -18,7 +18,8 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "@sentry/cli": "^1.47.1"
+    "@sentry/cli": "^1.47.1",
+    "snyk": "^1.231.0"
   },
   "devDependencies": {
     "codecov": "^3.5.0",
@@ -42,6 +43,9 @@
     "test": "jest",
     "test:integration": "cd example && yarn && yarn test",
     "test:watch": "jest --watch --notify",
-    "codecov": "codecov"
-  }
+    "codecov": "codecov",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
