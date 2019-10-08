@@ -109,5 +109,11 @@ Also, check the [example](example) directory.
 * `silent [optional]` - `boolean`, if `true`, all logs are suppressed (useful for `--json` option)
 * `errorHandler [optional]` - `function(err: Error, invokeErr: function(): void): void`, when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. default `(err, invokeErr) => { invokeErr() }`
 
+set-commits options:
+* `commit [optional]` - `string`, the current (last) commit in the release
+* `previousCommit [optional]` - `string`, the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used
+* `repo [optional]` - `string`, the full repo name as defined in Sentry
+* `auto [optional]` - `boolean`, automatically choose the associated commit (uses the current commit). Overrides other options
+
 You can find more information about these options in our official docs:
 https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
