@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.9.0
+
+- feat: Add `setCommits` options (#139)
+- chore: Add `TypeScript` definition file (#137)
+- meta: Bump sentry-cli to `1.48.0`
+
 ## v1.8.1
 
 - meta: Bump sentry-cli to `1.47.1`
