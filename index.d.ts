@@ -114,4 +114,4 @@ declare class SentryCliPlugin extends Plugin {
   apply(compiler: Compiler): void;
 }
 
-export = SentryCliPlugin;
+export default SentryCliPlugin;
