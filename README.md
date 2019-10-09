@@ -59,8 +59,8 @@ Also, check the [example](example) directory.
 
 #### Options
 
-Option | Type | Required | Description |
--------|------|----------|-------------
+| Option | Type | Required | Description |
+---------|------|----------|-------------
 release | `string` | optional | unique name of a release, must be a `string`, should uniquely identify your release, defaults to `sentry-cli releases propose-version` command which should always return the correct version (**requires access to `git` CLI and root directory to be a valid repository**).
 include | `string`/`array` | required | one or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files |
 entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter for entry points that should be processed. By default, the release will be injected into all entry points. |
@@ -79,13 +79,17 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | debug | `boolean` | optional | print some useful debug information |
 | silent | `boolean` | optional | if `true`, all logs are suppressed (useful for `--json` option) |
 | errorHandler | `function(err: Error, invokeErr: function(): void): void` | optional | when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. default `(err, invokeErr) => { invokeErr()}` |
+| setCommits | `Object` | optional | Adds commits to sentry - [see own table below](#setCommits) for more details |
 
 
-##### setCommits:
-* `repo [required]` - `string`, the full git repo name as defined in Sentry
-* `commit [optional/required]` - `string`, the current (last) commit in the release
-* `previousCommit [optional]` - `string`, the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used
-* `auto [optional/required]` - `boolean`, automatically choose the associated commit (uses the current commit). Overrides other options
+#### <a name="setCommits"></a>setCommits:
+
+| Option | Type | Required | Description |
+---------|------|----------|-------------
+| repo | `string` | required | the full git repo name as defined in Sentry |
+| commit | `string` | optional/required | the current (last) commit in the release |
+| previousCommit | `string` | optional | the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used |
+| auto | `boolean` | optional/required | automatically choose the associated commit (uses the current commit). Overrides other options |
 
 You can find more information about these options in our official docs:
 https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
