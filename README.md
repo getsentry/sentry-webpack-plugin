@@ -82,7 +82,7 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | setCommits | `Object` | optional | Adds commits to sentry - [see own table below](#setCommits) for more details |
 
 
-#### <a name="setCommits"></a>setCommits:
+#### <a name="setCommits"></a>options.setCommits:
 
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
