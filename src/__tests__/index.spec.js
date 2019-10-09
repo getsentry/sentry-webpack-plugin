@@ -228,14 +228,14 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('test setCommits with commits range', done => {
+  test('test setCommits with flat options', done => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'src',
       release: '42',
       commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
       previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
       repo: 'group / repo',
-      // auto,
+      auto: false,
     });
 
     sentryCliPlugin.apply(compiler);
@@ -245,18 +245,23 @@ describe('afterEmitHook', () => {
         repo: 'group / repo',
         commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
         previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
+        auto: false,
       });
       expect(compilationDoneCallback).toBeCalled();
       done();
     });
   });
 
-  test('test setCommits with auto option', done => {
+  test('test setCommits with grouped options', done => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'src',
       release: '42',
-      repo: 'group / repo',
-      auto: true,
+      setCommits: {
+        commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
+        previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
+        repo: 'group / repo',
+        auto: false,
+      },
     });
 
     sentryCliPlugin.apply(compiler);
@@ -264,7 +269,9 @@ describe('afterEmitHook', () => {
     setImmediate(() => {
       expect(mockCli.releases.setCommits).toBeCalledWith('42', {
         repo: 'group / repo',
-        auto: true,
+        commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
+        previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
+        auto: false,
       });
       expect(compilationDoneCallback).toBeCalled();
       done();
