@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.9.1
+
+- ref: Allow for nested setCommits (#142)
+- fix: Fixed TS definitions export error (#145)
+
 ## v1.9.0
 
 - feat: Add `setCommits` options (#139)
