@@ -1,12 +1,7 @@
 {
   "name": "@sentry/webpack-plugin",
   "description": "Official webpack plugin for Sentry",
-  "keywords": [
-    "sentry",
-    "sentry-cli",
-    "webpack",
-    "source-map"
-  ],
+  "keywords": ["sentry", "sentry-cli", "webpack", "source-map"],
   "author": "Sentry",
   "version": "1.9.1",
   "license": "MIT",
@@ -18,8 +13,7 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "@sentry/cli": "^1.48.0",
-    "snyk": "^1.231.0"
+    "@sentry/cli": "^1.48.0"
   },
   "devDependencies": {
     "codecov": "^3.5.0",
@@ -43,9 +37,6 @@
     "test": "jest",
     "test:integration": "cd example && yarn && yarn test",
     "test:watch": "jest --watch --notify",
-    "codecov": "codecov",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
-  },
-  "snyk": true
+    "codecov": "codecov"
+  }
 }
