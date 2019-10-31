@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.2
+
+- chore: Resolve Snyk as dependency issues (#152)
+
 ## v1.9.1
 
 - ref: Allow for nested setCommits (#142)
