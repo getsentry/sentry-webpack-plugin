@@ -78,7 +78,7 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | dryRun | `boolean` | optional | attempts a dry run (useful for dev environments) |
 | debug | `boolean` | optional | print some useful debug information |
 | silent | `boolean` | optional | if `true`, all logs are suppressed (useful for `--json` option) |
-| errorHandler | `function(err: Error, invokeErr: function(): void): void` | optional | when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. default `(err, invokeErr) => { invokeErr()}` |
+| errorHandler | `function(err: Error, invokeErr: function(): void, compilation: Compilation): void` | optional | when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. If you don't want this plugin to prevent further compilation, you can use a compilation warning instead by setting this option to `(err, invokeErr, compilation) => { compilation.warnings.push('Sentry CLI Plugin: ' + err.message) }` instead. defaults to `(err, invokeErr) => { invokeErr() }` |
 | setCommits | `Object` | optional | Adds commits to sentry - [see own table below](#setCommits) for more details |
 
 

@@ -69,11 +69,6 @@ function attachAfterEmitHook(compiler, callback) {
   }
 }
 
-/** Convenience function to add a webpack compilation error. */
-function addCompilationError(compilation, message) {
-  compilation.errors.push(`Sentry CLI Plugin: ${message}`);
-}
-
 class SentryCliPlugin {
   constructor(options = {}) {
     this.debug = options.debug || false;
@@ -114,6 +109,7 @@ class SentryCliPlugin {
     }
   }
 
+  /** Returns whether this plugin should emit any data to stdout. */
   isSilent() {
     return this.options.silent === true;
   }
@@ -165,14 +161,17 @@ class SentryCliPlugin {
   /**
    * Returns a Promise that will solve to the configured release.
    *
-   * If no release is specified, it uses Sentry CLI to propose a version. The
-   * release string is always trimmed.
+   * If no release is specified, it uses Sentry CLI to propose a version.
+   * The release string is always trimmed.
+   * Returns undefined if proposeVersion failed.
    */
   getReleasePromise() {
     return (this.options.release
       ? Promise.resolve(this.options.release)
       : this.cli.releases.proposeVersion()
-    ).then(version => `${version}`.trim());
+    )
+      .then(version => `${version}`.trim())
+      .catch(() => undefined);
   }
 
   /** Checks if the given named entry point should be handled. */
@@ -304,20 +303,26 @@ class SentryCliPlugin {
   finalizeRelease(compilation) {
     const {
       include,
-      errorHandler = (err, invokeErr) => {
+      errorHandler = (_, invokeErr) => {
         invokeErr();
       },
     } = this.options;
-
-    if (!include) {
-      addCompilationError(compilation, '`include` option is required');
-      return Promise.resolve();
-    }
 
     let release;
     return this.release
       .then(proposedVersion => {
         release = proposedVersion;
+
+        if (!include) {
+          throw new Error(`\`include\` option is required`);
+        }
+
+        if (!release) {
+          throw new Error(
+            `Unabled to determine version. Make sure to include \`release\` option or use the environment that supports auto-detection https://docs.sentry.io/cli/releases/#creating-releases`
+          );
+        }
+
         return this.cli.releases.new(release);
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
@@ -336,7 +341,11 @@ class SentryCliPlugin {
       })
       .then(() => this.cli.releases.finalize(release))
       .catch(err =>
-        errorHandler(err, () => addCompilationError(compilation, err.message))
+        errorHandler(
+          err,
+          () => compilation.errors.push(`Sentry CLI Plugin: ${err.message}`),
+          compilation
+        )
       );
   }
 
