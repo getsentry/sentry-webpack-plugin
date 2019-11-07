@@ -21,13 +21,17 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+const defaults = {
+  debug: false,
+  finalize: true,
+  rewrite: true,
+};
+
 describe('constructor', () => {
   test('uses defaults without options', () => {
     const sentryCliPlugin = new SentryCliPlugin();
 
-    expect(sentryCliPlugin.options).toEqual({
-      rewrite: true,
-    });
+    expect(sentryCliPlugin.options).toEqual(defaults);
   });
 
   test('merges defaults with options', () => {
@@ -35,10 +39,8 @@ describe('constructor', () => {
       foo: 42,
     });
 
-    expect(sentryCliPlugin.options).toEqual({
-      rewrite: true,
-      foo: 42,
-    });
+    expect(sentryCliPlugin.options).toEqual(expect.objectContaining(defaults));
+    expect(sentryCliPlugin.options.foo).toEqual(42);
   });
 
   test('uses declared options over defaults', () => {
@@ -46,19 +48,7 @@ describe('constructor', () => {
       rewrite: false,
     });
 
-    expect(sentryCliPlugin.options).toEqual({
-      rewrite: false,
-    });
-  });
-
-  test('allows to provide debug mode', () => {
-    let sentryCliPlugin = new SentryCliPlugin();
-    expect(sentryCliPlugin.debug).toEqual(false);
-
-    sentryCliPlugin = new SentryCliPlugin({
-      debug: true,
-    });
-    expect(sentryCliPlugin.debug).toEqual(true);
+    expect(sentryCliPlugin.options.rewrite).toEqual(false);
   });
 
   test('sanitizes array options `include` and `ignore`', () => {
@@ -66,12 +56,8 @@ describe('constructor', () => {
       include: 'foo',
       ignore: 'bar',
     });
-
-    expect(sentryCliPlugin.options).toEqual({
-      rewrite: true,
-      include: ['foo'],
-      ignore: ['bar'],
-    });
+    expect(sentryCliPlugin.options.include).toEqual(['foo']);
+    expect(sentryCliPlugin.options.ignore).toEqual(['bar']);
   });
 
   test('keeps array options `include` and `ignore`', () => {
@@ -79,12 +65,8 @@ describe('constructor', () => {
       include: ['foo'],
       ignore: ['bar'],
     });
-
-    expect(sentryCliPlugin.options).toEqual({
-      rewrite: true,
-      include: ['foo'],
-      ignore: ['bar'],
-    });
+    expect(sentryCliPlugin.options.include).toEqual(['foo']);
+    expect(sentryCliPlugin.options.ignore).toEqual(['bar']);
   });
 });
 
@@ -173,13 +155,39 @@ describe('afterEmitHook', () => {
 
     setImmediate(() => {
       expect(mockCli.releases.new).toBeCalledWith('42');
-      expect(mockCli.releases.uploadSourceMaps).toBeCalledWith('42', {
-        ignore: undefined,
-        release: 42,
-        include: ['src'],
-        rewrite: true,
-      });
+      expect(mockCli.releases.uploadSourceMaps).toBeCalledWith(
+        '42',
+        expect.objectContaining({
+          release: 42,
+          include: ['src'],
+        })
+      );
       expect(mockCli.releases.finalize).toBeCalledWith('42');
+      expect(compilationDoneCallback).toBeCalled();
+      done();
+    });
+  });
+
+  test('skips finalizing release if finalize:false', done => {
+    expect.assertions(4);
+
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: 'src',
+      release: 42,
+      finalize: false,
+    });
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(mockCli.releases.new).toBeCalledWith('42');
+      expect(mockCli.releases.uploadSourceMaps).toBeCalledWith(
+        '42',
+        expect.objectContaining({
+          release: 42,
+          include: ['src'],
+        })
+      );
+      expect(mockCli.releases.finalize).not.toBeCalled();
       expect(compilationDoneCallback).toBeCalled();
       done();
     });

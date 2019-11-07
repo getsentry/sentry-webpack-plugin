@@ -71,10 +71,13 @@ function attachAfterEmitHook(compiler, callback) {
 
 class SentryCliPlugin {
   constructor(options = {}) {
-    this.debug = options.debug || false;
+    const defaults = {
+      debug: false,
+      finalize: true,
+      rewrite: true,
+    };
 
-    // By default we want that rewrite is true
-    this.options = Object.assign({ rewrite: true }, options);
+    this.options = Object.assign({}, defaults, options);
 
     if (options.include) this.options.include = toArray(options.include);
     if (options.ignore) this.options.ignore = toArray(options.ignore);
@@ -339,7 +342,12 @@ class SentryCliPlugin {
           });
         }
       })
-      .then(() => this.cli.releases.finalize(release))
+      .then(() => {
+        if (this.options.finalize) {
+          return this.cli.releases.finalize(release);
+        }
+        return undefined;
+      })
       .catch(err =>
         errorHandler(
           err,
@@ -354,7 +362,7 @@ class SentryCliPlugin {
     const compilerOptions = compiler.options || {};
     ensure(compilerOptions, 'module', Object);
 
-    if (this.debug) {
+    if (this.options.debug) {
       this.injectReleaseWithDebug(compilerOptions);
     } else {
       this.injectRelease(compilerOptions);

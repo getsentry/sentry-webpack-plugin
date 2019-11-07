@@ -75,6 +75,7 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | stripCommonPrefix | `boolean` | optional |  when paired with `rewrite` this will add `~` to the `stripPrefix` array. |
 | sourceMapReference | `boolean` | optional | this prevents the automatic detection of sourcemap references. |
 | rewrite | `boolean` | optional | enables rewriting of matching sourcemaps so that indexed maps are flattened and missing sources are inlined if possible. defaults to `true` |
+| finalize | `boolean` | optional | determines whether processed release should be automatically finalized after artifacts upload. defaults to `true` |
 | dryRun | `boolean` | optional | attempts a dry run (useful for dev environments) |
 | debug | `boolean` | optional | print some useful debug information |
 | silent | `boolean` | optional | if `true`, all logs are suppressed (useful for `--json` option) |
