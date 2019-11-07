@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.9.3
+
+- chore: Bump sentry-cli to `1.49.0`
+- fix: Dont fail compilation if there is no release available (#155)
+- fix: Update auto/repo logic for `setCommit` option (#156)
+
 ## v1.9.2
 
 - chore: Resolve Snyk as dependency issues (#152)
