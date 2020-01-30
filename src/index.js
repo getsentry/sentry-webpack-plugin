@@ -62,7 +62,7 @@ function toArray(value) {
 
 /** Backwards compatible version of `compiler.plugin.afterEmit.tapAsync()`. */
 function attachAfterEmitHook(compiler, callback) {
-  if (compiler.hooks) {
+  if (compiler.hooks && compiler.hooks.afterEmit) {
     compiler.hooks.afterEmit.tapAsync('SentryCliPlugin', callback);
   } else {
     compiler.plugin('after-emit', callback);
