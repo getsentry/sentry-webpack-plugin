@@ -1,7 +1,8 @@
 import { Plugin, Compiler } from 'webpack';
 
 export interface SentryCliPluginOptions {
-  /** Unique name of a release, must be a string, should uniquely identify your release,
+  /**
+   * Unique name of a release, must be a string, should uniquely identify your release,
    * defaults to sentry-cli releases propose-version command which should always return the correct version
    * (requires access to git CLI and root directory to be a valid repository).
    */
@@ -9,7 +10,7 @@ export interface SentryCliPluginOptions {
 
   /**
    * One or more paths that Sentry CLI should scan recursively for sources.
-   * It will upload all .map files and match associated .js files
+   * It will upload all .map files and match associated .js files.
    */
   include: string | string[];
 
@@ -21,19 +22,19 @@ export interface SentryCliPluginOptions {
 
   /**
    * Path to a file containing list of files/directories to ignore.
-   * Can point to .gitignore or anything with same format
+   * Can point to .gitignore or anything with same format.
    */
   ignoreFile?: string;
 
   /**
    * One or more paths to ignore during upload. Overrides entries in ignoreFile file.
-   * If neither ignoreFile or ignore are present, defaults to ['node_modules']
+   * If neither ignoreFile or ignore are present, defaults to ['node_modules'].
    */
   ignore?: string | string[];
 
   /**
    * Path to Sentry CLI config properties, as described in https://docs.sentry.io/learn/cli/configuration/#properties-files.
-   * By default, the config file is looked for upwards from the current path and defaults from ~/.sentryclirc are always loaded
+   * By default, the config file is looked for upwards from the current path and defaults from ~/.sentryclirc are always loaded.
    */
   configFile?: string;
 
@@ -46,7 +47,7 @@ export interface SentryCliPluginOptions {
   /**
    * This sets an URL prefix at the beginning of all files.
    * This defaults to ~/ but you might want to set this to the full URL.
-   * This is also useful if your files are stored in a sub folder. eg: url-prefix '~/static/js'
+   * This is also useful if your files are stored in a sub folder. eg: url-prefix '~/static/js'.
    */
   urlPrefix?: string;
 
@@ -81,31 +82,59 @@ export interface SentryCliPluginOptions {
 
   /**
    * Enables rewriting of matching sourcemaps so that indexed maps are flattened
-   * and missing sources are inlined if possible., defaults to true
+   * and missing sources are inlined if possible., defaults to `true`.
    */
   rewrite?: boolean;
 
   /**
-   * Attempts a dry run (useful for dev environments)
+   * Determines whether processed release should be automatically finalized after artifacts upload.
+   * Defaults to `true`.
+   */
+  finalize?: boolean;
+
+  /**
+   * Attempts a dry run (useful for dev environments).
    */
   dryRun?: boolean;
 
   /**
-   * Print some useful debug information
+   * Print some useful debug information.
    */
   debug?: boolean;
 
   /**
-   * If true, all logs are suppressed (useful for --json option)
+   * If true, all logs are suppressed (useful for --json option).
    */
   silent?: boolean;
 
   /**
    * when Cli error occurs, plugin calls this function.
    * webpack compilation failure can be chosen by calling invokeErr callback or not.
-   * default (err, invokeErr) => { invokeErr() }
+   * defaults to `(err, invokeErr) => { invokeErr() }`
    */
   errorHandler?: (err: Error, invokeErr: () => void) => void;
+
+  /**
+   * The current (last) commit in the release.
+   */
+  commit?: string;
+
+  /**
+   * The commit before the beginning of this release (in other words, the last commit of the previous release).
+   * If omitted, this will default to the last commit of the previous release in Sentry.
+   * If there was no previous release, the last 10 commits will be used.
+   */
+  previousCommit?: string;
+
+  /**
+   * The full repo name as defined in Sentry.
+   */
+  repo?: string;
+
+  /**
+   * Automatically choose the associated commit (uses the current commit). Overrides other set-commit options.
+   */
+  auto?: boolean;
 }
 
 declare class SentryCliPlugin extends Plugin {
