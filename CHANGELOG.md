@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.10.0
+
+- feat: Allow for skiping release finalization (#157)
+- fix: Ensure afterEmit hook exists (#165)
+- chore: Update TS definitions (#168)
+
 ## v1.9.3
 
 - chore: Bump sentry-cli to `1.49.0`
