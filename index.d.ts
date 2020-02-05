@@ -46,8 +46,8 @@ export interface SentryCliPluginOptions {
 
   /**
    * This sets an URL prefix at the beginning of all files.
-   * This defaults to ~/ but you might want to set this to the full URL.
-   * This is also useful if your files are stored in a sub folder. eg: url-prefix '~/static/js'.
+   * This defaults to `~/` but you might want to set this to the full URL.
+   * This is also useful if your files are stored in a sub folder. eg: url-prefix `~/static/js`.
    */
   urlPrefix?: string;
 
