@@ -322,7 +322,7 @@ class SentryCliPlugin {
 
         if (!release) {
           throw new Error(
-            `Unabled to determine version. Make sure to include \`release\` option or use the environment that supports auto-detection https://docs.sentry.io/cli/releases/#creating-releases`
+            `Unable to determine version. Make sure to include \`release\` option or use the environment that supports auto-detection https://docs.sentry.io/cli/releases/#creating-releases`
           );
         }
 
