@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.11.1
+
+- meta: Bump sentry-cli to `1.52.3` which fixes output handlers
+
 ## v1.11.0
 
 **This release sets `node.engine: >=8` which makes it incompatible with Node v6**

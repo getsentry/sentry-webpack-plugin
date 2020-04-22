@@ -18,7 +18,7 @@
     "node": ">= 8"
   },
   "dependencies": {
-    "@sentry/cli": "^1.52.2"
+    "@sentry/cli": "^1.52.3"
   },
   "devDependencies": {
     "codecov": "^3.5.0",

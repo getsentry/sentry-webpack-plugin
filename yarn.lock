@@ -286,10 +286,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@sentry/cli@^1.52.2":
-  version "1.52.2"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.52.2.tgz#e9daee32be39e9031f7cf0de68cc1101c8c6a828"
-  integrity sha512-nUa13b9YsjNnEhdJRLUIM2xEQnMXPu2kKQt77vEBC4p+gc0cG2BeIsgmmkYra+y0o9jjnUkLluRSBztqfELL1Q==
+"@sentry/cli@^1.52.3":
+  version "1.52.3"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.52.3.tgz#270ed167c7dae2f85eb4622ad3a4ec12ab67e6d2"
+  integrity sha512-QOSIg5hxAEa6v6H7oEeF6A/Rpa0wloMhbu0Qed6zHv3lyoqf0Z34Kq2jCXdqGsOE3IzkO+3CNy81F6361j5TKg==
   dependencies:
     https-proxy-agent "^5.0.0"
     mkdirp "^0.5.5"
