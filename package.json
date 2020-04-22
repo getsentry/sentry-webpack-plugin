@@ -1,12 +1,7 @@
 {
   "name": "@sentry/webpack-plugin",
   "description": "Official webpack plugin for Sentry",
-  "keywords": [
-    "sentry",
-    "sentry-cli",
-    "webpack",
-    "source-map"
-  ],
+  "keywords": ["sentry", "sentry-cli", "webpack", "source-map"],
   "author": "Sentry",
   "version": "1.10.0",
   "license": "MIT",
@@ -18,7 +13,7 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "@sentry/cli": "^1.49.0"
+    "@sentry/cli": "^1.52.2"
   },
   "devDependencies": {
     "codecov": "^3.5.0",

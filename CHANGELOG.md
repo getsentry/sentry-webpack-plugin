@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.10.1
+
+- meta: Bump sentry-cli to `1.52.2`
+
 ## v1.10.0
 
 - feat: Allow for skiping release finalization (#157)
