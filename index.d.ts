@@ -115,26 +115,31 @@ export interface SentryCliPluginOptions {
   errorHandler?: (err: Error, invokeErr: () => void) => void;
 
   /**
-   * The current (last) commit in the release.
+   * Adds commits to sentry
    */
-  commit?: string;
+  setCommits?: {
+    /**
+     * The full repo name as defined in Sentry.
+     */
+    repo: string;
 
-  /**
-   * The commit before the beginning of this release (in other words, the last commit of the previous release).
-   * If omitted, this will default to the last commit of the previous release in Sentry.
-   * If there was no previous release, the last 10 commits will be used.
-   */
-  previousCommit?: string;
+    /**
+     * The current (last) commit in the release.
+     */
+    commit?: string;
 
-  /**
-   * The full repo name as defined in Sentry.
-   */
-  repo?: string;
+    /**
+     * The commit before the beginning of this release (in other words, the last commit of the previous release).
+     * If omitted, this will default to the last commit of the previous release in Sentry.
+     * If there was no previous release, the last 10 commits will be used.
+     */
+    previousCommit?: string;
 
-  /**
-   * Automatically choose the associated commit (uses the current commit). Overrides other set-commit options.
-   */
-  auto?: boolean;
+    /**
+     * Automatically choose the associated commit (uses the current commit). Overrides other setCommit options.
+     */
+    auto?: boolean;
+  };
 }
 
 declare class SentryCliPlugin extends Plugin {
