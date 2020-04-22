@@ -13,33 +13,33 @@ cache:
 matrix:
   include:
     - name: 'deploy'
-      node_js: '10'
+      node_js: '12'
       script: npm pack
       after_success:
         - npm install -g @zeus-ci/cli
         - zeus upload -t "application/tar+npm" *.tgz
     - name: 'lint and codecov'
-      node_js: '10'
+      node_js: '12'
       script:
         - yarn lint
         - yarn codecov
+    - name: 'unit tests [node v12]'
+      node_js: '12'
+      script: yarn test
     - name: 'unit tests [node v10]'
       node_js: '10'
       script: yarn test
     - name: 'unit tests [node v8]'
       node_js: '8'
       script: yarn test
-    - name: 'unit tests [node v6]'
-      node_js: '6'
-      script: yarn test
+    - name: 'integration tests [node v12]'
+      node_js: '12'
+      script: yarn test:integration
     - name: 'integration tests [node v10]'
       node_js: '10'
       script: yarn test:integration
     - name: 'integration tests [node v8]'
       node_js: '8'
-      script: yarn test:integration
-    - name: 'integration tests [node v6]'
-      node_js: '6'
       script: yarn test:integration
 
 notifications:

@@ -10,7 +10,7 @@
   "main": "src/index.js",
   "types": "index.d.ts",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 8"
   },
   "dependencies": {
     "@sentry/cli": "^1.52.2"

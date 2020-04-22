@@ -1,8 +1,14 @@
 # Changelog
 
-## v1.10.1
+## v1.11.0
+
+**This release sets `node.engine: >=8` which makes it incompatible with Node v6**
+If you need to support Node v6, please pin your dependency to `1.10.0`
+and use selective version resolution: https://classic.yarnpkg.com/en/docs/selective-version-resolutions/
 
 - meta: Bump sentry-cli to `1.52.2`
+- meta: Drop support for `node v6` due to new `sentry-cli` requiring `node >=8`
+- chore: Fix setCommits types (#169)
 
 ## v1.10.0
 
