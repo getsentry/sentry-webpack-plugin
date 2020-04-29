@@ -374,4 +374,4 @@ class SentryCliPlugin {
   }
 }
 
-module.exports = SentryCliPlugin;
+module.exports.default = SentryCliPlugin;

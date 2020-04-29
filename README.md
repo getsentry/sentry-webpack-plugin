@@ -41,7 +41,7 @@ https://docs.sentry.io/learn/cli/configuration/
 ### Usage
 
 ```js
-const SentryCliPlugin = require('@sentry/webpack-plugin');
+const SentryCliPlugin = require('@sentry/webpack-plugin').default;
 
 const config = {
   plugins: [
