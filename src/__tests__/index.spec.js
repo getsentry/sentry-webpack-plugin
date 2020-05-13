@@ -15,7 +15,7 @@ const mockCli = {
 
 const SentryCliMock = jest.fn((configFile, options) => mockCli);
 const SentryCli = jest.mock('@sentry/cli', () => SentryCliMock);
-const SentryCliPlugin = require('..');
+const SentryCliPlugin = require('../..');
 
 afterEach(() => {
   jest.clearAllMocks();
