@@ -81,6 +81,7 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | silent | `boolean` | optional | if `true`, all logs are suppressed (useful for `--json` option) |
 | errorHandler | `function(err: Error, invokeErr: function(): void, compilation: Compilation): void` | optional | when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. If you don't want this plugin to prevent further compilation, you can use a compilation warning instead by setting this option to `(err, invokeErr, compilation) => { compilation.warnings.push('Sentry CLI Plugin: ' + err.message) }` instead. defaults to `(err, invokeErr) => { invokeErr() }` |
 | setCommits | `Object` | optional | Adds commits to sentry - [see own table below](#setCommits) for more details |
+| deploy | `Object` | optional | Creates a new release deployment - [see own table below](#deploy) for more details |
 
 
 #### <a name="setCommits"></a>options.setCommits:
@@ -91,6 +92,17 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 | commit | `string` | optional/required | the current (last) commit in the release |
 | previousCommit | `string` | optional | the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used |
 | auto | `boolean` | optional/required | automatically choose the associated commit (uses the current commit). Overrides other options |
+
+#### <a name="deploy"></a>options.deploy:
+
+| Option | Type | Required | Description |
+---------|------|----------|-------------
+| env | `string` | required | environment for this release. Values that make sense here would be `production` or `staging` |
+| started | `number` | optional | unix timestamp when the deployment started |
+| finished | `number` | optional | unix timestamp when the deployment finished |
+| time | `number` | optional | deployment duration in seconds. This can be specified alternatively to `started` and `finished` |
+| name | `string` | optional | human readable name for this deployment |
+| url | `string` | optional | URL that points to the deployment |
 
 You can find more information about these options in our official docs:
 https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
