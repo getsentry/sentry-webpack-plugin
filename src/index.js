@@ -154,6 +154,10 @@ class SentryCliPlugin {
             this.outputDebug('Calling set-commits with:\n', config);
             return Promise.resolve(release, config);
           },
+          deploy: (release, config) => {
+            this.outputDebug('Calling deploy with:\n', config);
+            return Promise.resolve(release, config);
+          },
         },
       };
     }
@@ -334,17 +338,35 @@ class SentryCliPlugin {
           this.options.setCommits || this.options;
 
         if (auto || (repo && commit)) {
-          this.cli.releases.setCommits(release, {
+          return this.cli.releases.setCommits(release, {
             commit,
             previousCommit,
             repo,
             auto,
           });
         }
+
+        return undefined;
       })
       .then(() => {
         if (this.options.finalize) {
           return this.cli.releases.finalize(release);
+        }
+        return undefined;
+      })
+      .then(() => {
+        const { env, started, finished, time, name, url } =
+          this.options.deploy || {};
+
+        if (env) {
+          return this.cli.releases.newDeploy(release, {
+            env,
+            started,
+            finished,
+            time,
+            name,
+            url,
+          });
         }
         return undefined;
       })
