@@ -88,10 +88,10 @@ entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter f
 
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
-| repo | `string` | required | the full git repo name as defined in Sentry |
-| commit | `string` | optional/required | the current (last) commit in the release |
+| repo | `string` | optional/required | the full git repo name as defined in Sentry. Required if `auto` option is not `true`. |
+| commit | `string` | optional/required | the current (last) commit in the release. Required if `auto` option is not `true`. |
 | previousCommit | `string` | optional | the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used |
-| auto | `boolean` | optional/required | automatically choose the associated commit (uses the current commit). Overrides other options |
+| auto | `boolean` | optional | automatically choose the associated commit (uses the current commit). Overrides other options |
 
 #### <a name="deploy"></a>options.deploy:
 
