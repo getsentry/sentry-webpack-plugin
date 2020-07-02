@@ -120,11 +120,13 @@ export interface SentryCliPluginOptions {
   setCommits?: {
     /**
      * The full repo name as defined in Sentry.
+     * Required if auto option is not true.
      */
-    repo: string;
+    repo?: string;
 
     /**
      * The current (last) commit in the release.
+     * Required if auto option is not true.
      */
     commit?: string;
 
