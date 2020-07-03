@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.12.0
+
+- feat: Allow to perform release deploys (#192)
+- fix: CJS/TS Exports Interop (#190)
+- fix: make setCommits.repo type optional (#200)
+- deps: Bump sentry-cli to `1.55.0`
+
 ## v1.11.1
 
 - meta: Bump sentry-cli to `1.52.3` which fixes output handlers
