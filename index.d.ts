@@ -142,6 +142,41 @@ export interface SentryCliPluginOptions {
      */
     auto?: boolean;
   };
+
+  /**
+   * Creates a new release deployment
+   */
+  deploy?: {
+    /**
+     * Environment for this release. Values that make sense here would be `production` or `staging`
+     */
+    env: string;
+
+    /**
+     * Unix timestamp when the deployment started
+     */
+    started?: number;
+
+    /**
+     * Unix timestamp when the deployment finished
+     */
+    finished?: number;
+
+    /**
+     * Deployment duration in seconds. This can be specified alternatively to `started` and `finished`
+     */
+    time?: number;
+
+    /**
+     * Human readable name for this deployment
+     */
+    name?: string;
+
+    /**
+     * URL that points to the deployment
+     */
+    url?: string;
+  };
 }
 
 declare class SentryCliPlugin extends Plugin {
