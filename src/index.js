@@ -36,8 +36,8 @@ function diffArray(prev, next) {
   next = Array.isArray(next) ? next : [next];
 
   return {
-    removed: prev.filter((x) => !next.includes(x)),
-    added: next.filter((x) => !prev.includes(x)),
+    removed: prev.filter(x => !next.includes(x)),
+    added: next.filter(x => !prev.includes(x)),
   };
 }
 
@@ -134,11 +134,11 @@ class SentryCliPlugin {
       return {
         releases: {
           proposeVersion: () =>
-            cli.releases.proposeVersion().then((version) => {
+            cli.releases.proposeVersion().then(version => {
               this.outputDebug('Proposed version:\n', version);
               return version;
             }),
-          new: (release) => {
+          new: release => {
             this.outputDebug('Creating new release:\n', release);
             return Promise.resolve(release);
           },
@@ -146,7 +146,7 @@ class SentryCliPlugin {
             this.outputDebug('Calling upload-sourcemaps with:\n', config);
             return Promise.resolve(release, config);
           },
-          finalize: (release) => {
+          finalize: release => {
             this.outputDebug('Finalizing release:\n', release);
             return Promise.resolve(release);
           },
@@ -177,7 +177,7 @@ class SentryCliPlugin {
       ? Promise.resolve(this.options.release)
       : this.cli.releases.proposeVersion()
     )
-      .then((version) => `${version}`.trim())
+      .then(version => `${version}`.trim())
       .catch(() => undefined);
   }
 
@@ -226,7 +226,7 @@ class SentryCliPlugin {
 
     if (typeof originalEntry === 'function') {
       return () =>
-        Promise.resolve(originalEntry()).then((entry) =>
+        Promise.resolve(originalEntry()).then(entry =>
           this.injectEntry(entry, newEntry)
         );
     }
@@ -317,7 +317,7 @@ class SentryCliPlugin {
 
     let release;
     return this.release
-      .then((proposedVersion) => {
+      .then(proposedVersion => {
         release = proposedVersion;
 
         if (!include) {
@@ -370,7 +370,7 @@ class SentryCliPlugin {
         }
         return undefined;
       })
-      .catch((err) =>
+      .catch(err =>
         errorHandler(
           err,
           () => compilation.errors.push(`Sentry CLI Plugin: ${err.message}`),

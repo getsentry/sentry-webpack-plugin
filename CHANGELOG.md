@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.12.1
+
+- fix(deploy): change deploy to newDeploy in mocked CLI object (#206)
+- fix(types): add deploy configuration to type definitions (#208)
+
 ## v1.12.0
 
 - feat: Allow to perform release deploys (#192)
