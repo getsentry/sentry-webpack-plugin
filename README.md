@@ -36,7 +36,7 @@ $ yarn add @sentry/webpack-plugin --dev
 ### CLI Configuration
 
 You can use either `.sentryclirc` file or ENV variables described here
-https://docs.sentry.io/learn/cli/configuration/
+https://docs.sentry.io/cli/configuration.
 
 ### Usage
 
