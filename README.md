@@ -24,7 +24,7 @@ A webpack plugin acting as an interface to
 Using npm:
 
 ```
-$ npm install @sentry/webpack-plugin --only=dev
+$ npm install @sentry/webpack-plugin --save-dev
 ```
 
 Using yarn:
