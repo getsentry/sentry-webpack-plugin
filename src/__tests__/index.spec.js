@@ -138,7 +138,7 @@ describe('afterEmitHook', () => {
     setImmediate(() => {
       expect(compilationDoneCallback).toBeCalled();
       expect(compilation.errors).toEqual([
-        'Sentry CLI Plugin: `include` option is required',
+        new Error('Sentry CLI Plugin: `include` option is required'),
       ]);
       done();
     });
@@ -206,7 +206,9 @@ describe('afterEmitHook', () => {
     sentryCliPlugin.apply(compiler);
 
     setImmediate(() => {
-      expect(compilation.errors).toEqual(['Sentry CLI Plugin: Pickle Rick']);
+      expect(compilation.errors).toEqual([
+        new Error('Sentry CLI Plugin: Pickle Rick'),
+      ]);
       expect(compilationDoneCallback).toBeCalled();
       done();
     });

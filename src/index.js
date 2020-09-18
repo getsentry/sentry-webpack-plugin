@@ -370,13 +370,16 @@ class SentryCliPlugin {
         }
         return undefined;
       })
-      .catch(err =>
+      .catch(err => {
         errorHandler(
           err,
-          () => compilation.errors.push(`Sentry CLI Plugin: ${err.message}`),
+          () =>
+            compilation.errors.push(
+              new Error(`Sentry CLI Plugin: ${err.message}`)
+            ),
           compilation
-        )
-      );
+        );
+      });
   }
 
   /** Webpack lifecycle hook to update compiler options. */
