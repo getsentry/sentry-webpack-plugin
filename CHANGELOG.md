@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me."
+
+## v1.13.0
+
+- feat: Support minimal CLI options (#225)
+- fix: Return an actual error for propagation (#224)
+- deps: Bump sentry-cli to `1.58.0`
+
 ## v1.12.1
 
 - fix(deploy): change deploy to newDeploy in mocked CLI object (#206)
