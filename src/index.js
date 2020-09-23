@@ -130,6 +130,7 @@ class SentryCliPlugin {
       project: this.options.project,
       authToken: this.options.authToken,
       url: this.options.url,
+      vcsRemote: this.options.vcsRemote,
     });
 
     if (this.isDryRun()) {
