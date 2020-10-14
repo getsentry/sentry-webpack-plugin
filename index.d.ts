@@ -1,4 +1,4 @@
-import { Plugin, Compiler } from 'webpack';
+import { WebpackPluginInstance, Compiler } from 'webpack';
 
 export interface SentryCliPluginOptions {
   // general configuration for sentry-cli
@@ -192,7 +192,7 @@ export interface SentryCliPluginOptions {
   };
 }
 
-declare class SentryCliPlugin extends Plugin {
+declare class SentryCliPlugin implements WebpackPluginInstance {
   constructor(options: SentryCliPluginOptions);
 
   apply(compiler: Compiler): void;
