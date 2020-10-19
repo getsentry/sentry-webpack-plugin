@@ -29,6 +29,7 @@ module.exports = {
       configFile: 'sentry.properties',
       dryRun: true,
       release: 'foo',
+      dist: '123',
     }),
   ],
 };

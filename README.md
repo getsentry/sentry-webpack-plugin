@@ -62,6 +62,7 @@ Also, check the [example](example) directory.
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
 release | `string` | optional | unique name of a release, must be a `string`, should uniquely identify your release, defaults to `sentry-cli releases propose-version` command which should always return the correct version (**requires access to `git` CLI and root directory to be a valid repository**).
+dist | `string` | optional | unique name of a distribution, must be a `string`, is used to further segment your release into sub distributions. Usually your build number.
 include | `string`/`array` | required | one or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files |
 entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter for entry points that should be processed. By default, the release will be injected into all entry points. |
 | ignoreFile | `string` | optional | path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with same format |
