@@ -70,45 +70,45 @@ Also, check the [example](example) directory.
 | release | `string` | optional | Unique identifier for the release. Defaults to the output of the `sentry-cli releases propose-version` command, which automatically detects values for Cordova, Heroku, AWS CodeBuild, CircleCI, Xcode, and Gradle, and otherwise uses `HEAD`'s commit SHA. (**For `HEAD` option, requires access to `git` CLI and for the root directory to be a valid repository**). |
 | dist | `string` | optional | Unique identifier for the distribution, used to further segment your release. Usually your build number. |
 | entries | `array`/`RegExp`/`function(key: string): bool` | optional | Filter for entry points that should be processed. By default, the release will be injected into all entry points. |
-| ignoreFile | `string` | optional | path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with same format |
-| ignore | `string`/`array` | optional | one or more paths to ignore during upload. Overrides entries in `ignoreFile` file. If neither `ignoreFile` or `ignore` are present, defaults to `['node_modules']` |
-| configFile | `string` | optional | path to Sentry CLI config properties, as described in https://docs.sentry.io/learn/cli/configuration/#properties-files. By default, the config file is looked for upwards from the current path and defaults from `~/.sentryclirc` are always loaded |
-| ext | `array` | optional | this sets the file extensions to be considered. By default the following file extensions are processed: js, map, jsbundle and bundle. |
-| urlPrefix | `string` | optional | this sets an URL prefix at the beginning of all files. This defaults to `~/` but you might want to set this to the full URL. This is also useful if your files are stored in a sub folder. eg: `url-prefix '~/static/js'` |
-| urlSuffix | `string` | optional | this sets an URL suffix at the end of all files. Useful for appending query parameters. |
-| validate | `boolean` | optional | this attempts sourcemap validation before upload when rewriting is not enabled. It will spot a variety of issues with source maps and cancel the upload if any are found. This is not the default as this can cause false positives. |
-| stripPrefix | `array` | optional | when paired with `rewrite` this will chop-off a prefix from uploaded files. For instance you can use this to remove a path that is build machine specific. |
-| stripCommonPrefix | `boolean` | optional |  when paired with `rewrite` this will add `~` to the `stripPrefix` array. |
-| sourceMapReference | `boolean` | optional | this prevents the automatic detection of sourcemap references. |
-| rewrite | `boolean` | optional | enables rewriting of matching sourcemaps so that indexed maps are flattened and missing sources are inlined if possible. defaults to `true` |
-| finalize | `boolean` | optional | determines whether processed release should be automatically finalized after artifacts upload. defaults to `true` |
-| dryRun | `boolean` | optional | attempts a dry run (useful for dev environments) |
-| debug | `boolean` | optional | print some useful debug information |
-| silent | `boolean` | optional | if `true`, all logs are suppressed (useful for `--json` option) |
-| errorHandler | `function(err: Error, invokeErr: function(): void, compilation: Compilation): void` | optional | when Cli error occurs, plugin calls this function. webpack compilation failure can be chosen by calling `invokeErr` callback or not. If you don't want this plugin to prevent further compilation, you can use a compilation warning instead by setting this option to `(err, invokeErr, compilation) => { compilation.warnings.push('Sentry CLI Plugin: ' + err.message) }` instead. defaults to `(err, invokeErr) => { invokeErr() }` |
-| setCommits | `Object` | optional | Adds commits to sentry - [see own table below](#setCommits) for more details |
-| deploy | `Object` | optional | Creates a new release deployment - [see own table below](#deploy) for more details |
+| ignoreFile | `string` | optional | Path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with the same format. |
+| ignore | `string`/`array` | optional | One or more paths to ignore during upload. Overrides entries in `ignoreFile` file. If neither `ignoreFile` nor `ignore` is present, defaults to `['node_modules']`. |
+| configFile | `string` | optional | Path to Sentry CLI config properties, as described in https://docs.sentry.io/product/cli/configuration/#configuration-file. By default, the config file is looked for upwards from the current path, and defaults from `~/.sentryclirc` are always loaded |
+| ext | `array` | optional | The file extensions to be considered. By default the following file extensions are processed: `js`, `map`, `jsbundle`, and `bundle`. |
+| urlPrefix | `string` | optional | URL prefix to add to the beginning of all filenames. Defaults to `~/` but you might want to set this to the full URL. This is also useful if your files are stored in a sub folder. eg: `url-prefix '~/static/js'`. |
+| urlSuffix | `string` | optional | URL suffix to add to the end of all filenamess. Useful for appending query parameters. |
+| validate | `boolean` | optional | When `true`, attempts source map validation before upload if rewriting is not enabled. It will spot a variety of issues with source maps and cancel the upload if any are found. Defaults to `false` to prevent false positives canceling upload. |
+| stripPrefix | `array` | optional | When paired with `rewrite`, will remove a prefix from uploaded filenames. Useful for removing a path that is build-machine-specific. |
+| stripCommonPrefix | `boolean` | optional |  When paired with `rewrite`, will add `~` to the `stripPrefix` array. Defaults to `false`.|
+| sourceMapReference | `boolean` | optional | Prevents the automatic detection of sourcemap references. Defaults to `false`.|
+| rewrite | `boolean` | optional | Enables rewriting of matching source maps so that indexed maps are flattened and missing sources are inlined if possible. Defaults to `true` |
+| finalize | `boolean` | optional | Determines whether Sentry release record should be automatically finalized (`date_released` timestamp added) after artifact upload. Defaults to `true` |
+| dryRun | `boolean` | optional | Attempts a dry run (useful for dev environments). Defaults to `false`. |
+| debug | `boolean` | optional | Print useful debug information. Defaults to `false`.|
+| silent | `boolean` | optional | Suppresses all logs (useful for `--json` option). Defaults to `false`. |
+| errorHandler | `function(err: Error, invokeErr: function(): void, compilation: Compilation): void` | optional | Function to call a when CLI error occurs. Webpack compilation failure can be triggered by calling `invokeErr` callback. Can emit a warning rather than an error (allowing compilation to continue) by setting this to `(err, invokeErr, compilation) => { compilation.warnings.push('Sentry CLI Plugin: ' + err.message) }`. Defaults to `(err, invokeErr) => { invokeErr() }`. |
+| setCommits | `Object` | optional | Adds commits to Sentry. See [table below](#setCommits) for details. |
+| deploy | `Object` | optional | Creates a new release deployment in Sentry. See [table below](#deploy) for details. |
 
 
 #### <a name="setCommits"></a>options.setCommits:
 
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
-| repo | `string` | optional/required | the full git repo name as defined in Sentry. Required if `auto` option is not `true`. |
-| commit | `string` | optional/required | the current (last) commit in the release. Required if `auto` option is not `true`. |
-| previousCommit | `string` | optional | the commit before the beginning of this release (in other words, the last commit of the previous release). If omitted, this will default to the last commit of the previous release in Sentry. If there was no previous release, the last 10 commits will be used |
-| auto | `boolean` | optional | automatically choose the associated commit (uses the current commit). Overrides other options |
+| repo | `string` | see notes | The full git repo name as defined in Sentry. Required if `auto` option is not `true`, otherwise optional. |
+| commit | `string` | see notes | The current (most recent) commit in the release. Required if `auto` option is not `true`, otherwise optional. |
+| previousCommit | `string` | optional | The last commit of the previous release. Defaults to the most recent commit of the previous release in Sentry, or if no previous release is found, 10 commits back from `commit`. |
+| auto | `boolean` | optional | Automatically set `commit` and `previousCommit`. Defaults `commit` to `HEAD` and `previousCommit` as described above. Overrides other options |
 
 #### <a name="deploy"></a>options.deploy:
 
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
-| env | `string` | required | environment for this release. Values that make sense here would be `production` or `staging` |
-| started | `number` | optional | unix timestamp when the deployment started |
-| finished | `number` | optional | unix timestamp when the deployment finished |
-| time | `number` | optional | deployment duration in seconds. This can be specified alternatively to `started` and `finished` |
-| name | `string` | optional | human readable name for this deployment |
-| url | `string` | optional | URL that points to the deployment |
+| env | `string` | required | Environment value for the release, for example `production` or `staging`. |
+| started | `number` | optional | UNIX timestamp for deployment start. |
+| finished | `number` | optional | UNIX timestamp for deployment finish. |
+| time | `number` | optional | Deployment duration in seconds. Can be used instead of `started` and `finished`. |
+| name | `string` | optional | Human-readable name for this deployment. |
+| url | `string` | optional | URL that points to the deployment. |
 
 You can find more information about these options in our official docs:
-https://docs.sentry.io/cli/releases/#sentry-cli-sourcemaps
+https://docs.sentry.io/product/cli/releases/#sentry-cli-sourcemaps.
