@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me."
+- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
 ## v1.13.0
 

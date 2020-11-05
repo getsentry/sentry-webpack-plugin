@@ -61,10 +61,15 @@ Also, check the [example](example) directory.
 
 | Option | Type | Required | Description |
 ---------|------|----------|-------------
-release | `string` | optional | unique name of a release, must be a `string`, should uniquely identify your release, defaults to `sentry-cli releases propose-version` command which should always return the correct version (**requires access to `git` CLI and root directory to be a valid repository**).
-dist | `string` | optional | unique name of a distribution, must be a `string`, is used to further segment your release into sub distributions. Usually your build number.
-include | `string`/`array` | required | one or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files |
-entries | `array`/`RegExp`/`function(key: string): bool` | optional | a filter for entry points that should be processed. By default, the release will be injected into all entry points. |
+| include | `string`/`array` | required | One or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files. |
+| org | `string` | optional | The slug of the Sentry organization associated with the app. |
+| project | `string` | optional | The slug of the Sentry project associated with the app. |
+| authToken | `string` | optional | The authentication token to use for all communication with Sentry. Can be obtained from https://sentry.io/settings/account/api/auth-tokens/. |
+| url | `string` | optional | The base URL of your Sentry instance. Defaults to https://sentry.io/, which is the correct value for SAAS customers. |
+| vcsRemote | `string` | optional | The name of the remote in the version control system. Defaults to `origin`. |
+| release | `string` | optional | Unique identifier for the release. Defaults to the output of the `sentry-cli releases propose-version` command, which automatically detects values for Cordova, Heroku, AWS CodeBuild, CircleCI, Xcode, and Gradle, and otherwise uses `HEAD`'s commit SHA. (**For `HEAD` option, requires access to `git` CLI and for the root directory to be a valid repository**). |
+| dist | `string` | optional | Unique identifier for the distribution, used to further segment your release. Usually your build number. |
+| entries | `array`/`RegExp`/`function(key: string): bool` | optional | Filter for entry points that should be processed. By default, the release will be injected into all entry points. |
 | ignoreFile | `string` | optional | path to a file containing list of files/directories to ignore. Can point to `.gitignore` or anything with same format |
 | ignore | `string`/`array` | optional | one or more paths to ignore during upload. Overrides entries in `ignoreFile` file. If neither `ignoreFile` or `ignore` are present, defaults to `['node_modules']` |
 | configFile | `string` | optional | path to Sentry CLI config properties, as described in https://docs.sentry.io/learn/cli/configuration/#properties-files. By default, the config file is looked for upwards from the current path and defaults from `~/.sentryclirc` are always loaded |
