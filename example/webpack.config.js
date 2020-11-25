@@ -2,7 +2,9 @@ const SentryCliPlugin = require('@sentry/webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: ['./index.js'],
+  entry: {
+    index: { import: './index.js' },
+  },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
