@@ -301,62 +301,50 @@ describe('module rule overrides', () => {
     };
   });
 
-  test('injects a `rule` for our mock module', done => {
+  test('injects a `rule` for our mock module', () => {
     expect.assertions(1);
 
     compiler.options.module.rules = [];
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.module.rules[0]).toEqual({
-        test: /sentry-webpack\.module\.js$/,
-        use: [
-          {
-            loader: expect.stringMatching(SENTRY_LOADER_RE),
-            options: { releasePromise: expect.any(Promise) },
-          },
-        ],
-      });
-      done();
+    expect(compiler.options.module.rules[0]).toEqual({
+      test: /sentry-webpack\.module\.js$/,
+      use: [
+        {
+          loader: expect.stringMatching(SENTRY_LOADER_RE),
+          options: { releasePromise: expect.any(Promise) },
+        },
+      ],
     });
   });
 
-  test('injects a `loader` for our mock module', done => {
+  test('injects a `loader` for our mock module', () => {
     expect.assertions(1);
 
     compiler.options.module.loaders = [];
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.module.loaders[0]).toEqual({
-        test: /sentry-webpack\.module\.js$/,
-        loader: expect.stringMatching(SENTRY_LOADER_RE),
-        options: { releasePromise: expect.any(Promise) },
-      });
-      done();
+    expect(compiler.options.module.loaders[0]).toEqual({
+      test: /sentry-webpack\.module\.js$/,
+      loader: expect.stringMatching(SENTRY_LOADER_RE),
+      options: { releasePromise: expect.any(Promise) },
     });
   });
 
-  test('defaults to `rules` when nothing is specified', done => {
+  test('defaults to `rules` when nothing is specified', () => {
     expect.assertions(1);
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.module.rules).toBeInstanceOf(Array);
-      done();
-    });
+    expect(compiler.options.module.rules).toBeInstanceOf(Array);
   });
 
-  test('creates the `module` option if missing', done => {
+  test('creates the `module` option if missing', () => {
     expect.assertions(1);
 
     delete compiler.options.module;
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.module).not.toBeUndefined();
-      done();
-    });
+    expect(compiler.options.module).not.toBeUndefined();
   });
 });
 
@@ -372,48 +360,39 @@ describe('entry point overrides', () => {
     };
   });
 
-  test('creates an entry if none is specified', done => {
+  test('creates an entry if none is specified', () => {
     expect.assertions(1);
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toMatch(SENTRY_MODULE_RE);
-      done();
-    });
+    expect(compiler.options.entry).toMatch(SENTRY_MODULE_RE);
   });
 
-  test('injects into a single entry', done => {
+  test('injects into a single entry', () => {
     expect.assertions(1);
 
     compiler.options.entry = './src/index.js';
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual([
-        expect.stringMatching(SENTRY_MODULE_RE),
-        './src/index.js',
-      ]);
-      done();
-    });
+    expect(compiler.options.entry).toEqual([
+      expect.stringMatching(SENTRY_MODULE_RE),
+      './src/index.js',
+    ]);
   });
 
-  test('injects into an array entry', done => {
+  test('injects into an array entry', () => {
     expect.assertions(1);
 
     compiler.options.entry = ['./src/preload.js', './src/index.js'];
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual([
-        expect.stringMatching(SENTRY_MODULE_RE),
-        './src/preload.js',
-        './src/index.js',
-      ]);
-      done();
-    });
+    expect(compiler.options.entry).toEqual([
+      expect.stringMatching(SENTRY_MODULE_RE),
+      './src/preload.js',
+      './src/index.js',
+    ]);
   });
 
-  test('injects into multiple entries', done => {
+  test('injects into multiple entries', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
@@ -422,16 +401,13 @@ describe('entry point overrides', () => {
     };
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual({
-        main: [expect.stringMatching(SENTRY_MODULE_RE), './src/index.js'],
-        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
-      });
-      done();
+    expect(compiler.options.entry).toEqual({
+      main: [expect.stringMatching(SENTRY_MODULE_RE), './src/index.js'],
+      admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
     });
   });
 
-  test('injects into multiple entries with array chunks', done => {
+  test('injects into multiple entries with array chunks', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
@@ -440,83 +416,156 @@ describe('entry point overrides', () => {
     };
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual({
-        main: [
-          expect.stringMatching(SENTRY_MODULE_RE),
-          './src/index.js',
-          './src/common.js',
-        ],
-        admin: [
-          expect.stringMatching(SENTRY_MODULE_RE),
-          './src/admin.js',
-          './src/common.js',
-        ],
-      });
-      done();
+    expect(compiler.options.entry).toEqual({
+      main: [
+        expect.stringMatching(SENTRY_MODULE_RE),
+        './src/index.js',
+        './src/common.js',
+      ],
+      admin: [
+        expect.stringMatching(SENTRY_MODULE_RE),
+        './src/admin.js',
+        './src/common.js',
+      ],
     });
   });
 
-  test('injects into entries specified by a function', done => {
+  test('injects into entries specified by a function', () => {
     expect.assertions(1);
 
     compiler.options.entry = () => Promise.resolve('./src/index.js');
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      compiler.options.entry().then(entry => {
-        expect(entry).toEqual([
-          expect.stringMatching(SENTRY_MODULE_RE),
-          './src/index.js',
-        ]);
-        done();
-      });
+    expect(compiler.options.entry()).resolves.toEqual([
+      expect.stringMatching(SENTRY_MODULE_RE),
+      './src/index.js',
+    ]);
+  });
+
+  test('injects into entries specified by entry descriptor with single import', () => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: {
+        import: './src/index.js',
+        out: '[name].bundle.js',
+      },
+    };
+    sentryCliPlugin.apply(compiler);
+
+    expect(compiler.options.entry).toEqual({
+      main: {
+        import: [expect.stringMatching(SENTRY_MODULE_RE), './src/index.js'],
+        out: '[name].bundle.js',
+      },
     });
   });
 
-  test('filters entry points by name', done => {
+  test('injects into entries specified by entry descriptor with multiple imports', () => {
+    expect.assertions(1);
+
+    compiler.options.entry = {
+      main: {
+        import: ['./src/index.js', './src/common.js'],
+        out: '[name].bundle.js',
+      },
+    };
+    sentryCliPlugin.apply(compiler);
+
+    expect(compiler.options.entry).toEqual({
+      main: {
+        import: [
+          expect.stringMatching(SENTRY_MODULE_RE),
+          './src/index.js',
+          './src/common.js',
+        ],
+        out: '[name].bundle.js',
+      },
+    });
+  });
+
+  test('injects into entries specified by all possible methods at the same time', () => {
+    expect.assertions(2);
+
+    compiler.options.entry = {
+      home: './home.js',
+      about: ['./about.js'],
+      contact: () => './contact.js',
+      login: {
+        import: './login.js',
+      },
+      logout: {
+        import: ['./logout.js'],
+      },
+    };
+    sentryCliPlugin.apply(compiler);
+
+    expect(compiler.options.entry).toEqual({
+      home: [expect.stringMatching(SENTRY_MODULE_RE), './home.js'],
+      about: [expect.stringMatching(SENTRY_MODULE_RE), './about.js'],
+      contact: expect.any(Function),
+      login: {
+        import: [expect.stringMatching(SENTRY_MODULE_RE), './login.js'],
+      },
+      logout: {
+        import: [expect.stringMatching(SENTRY_MODULE_RE), './logout.js'],
+      },
+    });
+    expect(compiler.options.entry.contact()).resolves.toEqual([
+      expect.stringMatching(SENTRY_MODULE_RE),
+      './contact.js',
+    ]);
+  });
+
+  test('filters entry points by name', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
       main: './src/index.js',
       admin: './src/admin.js',
+      login: {
+        import: './src/login.js',
+      },
     };
     sentryCliPlugin.options.entries = ['admin'];
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual({
-        main: './src/index.js',
-        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
-      });
-      done();
+    expect(compiler.options.entry).toEqual({
+      main: './src/index.js',
+      admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+      login: {
+        import: './src/login.js',
+      },
     });
   });
 
-  test('filters entry points by RegExp', done => {
+  test('filters entry points by RegExp', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
       main: './src/index.js',
       admin: ['./src/admin.js', './src/common.js'],
+      adminButBetter: {
+        import: './src/admin.js',
+      },
     };
     sentryCliPlugin.options.entries = /^ad/;
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual({
-        main: './src/index.js',
-        admin: [
-          expect.stringMatching(SENTRY_MODULE_RE),
-          './src/admin.js',
-          './src/common.js',
-        ],
-      });
-      done();
+    expect(compiler.options.entry).toEqual({
+      main: './src/index.js',
+      admin: [
+        expect.stringMatching(SENTRY_MODULE_RE),
+        './src/admin.js',
+        './src/common.js',
+      ],
+      adminButBetter: {
+        import: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
+      },
     });
   });
 
-  test('filters entry points by function', done => {
+  test('filters entry points by function', () => {
     expect.assertions(1);
 
     compiler.options.entry = {
@@ -526,12 +575,9 @@ describe('entry point overrides', () => {
     sentryCliPlugin.options.entries = key => key == 'admin';
     sentryCliPlugin.apply(compiler);
 
-    setImmediate(() => {
-      expect(compiler.options.entry).toEqual({
-        main: ['./src/index.js', './src/common.js'],
-        admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
-      });
-      done();
+    expect(compiler.options.entry).toEqual({
+      main: ['./src/index.js', './src/common.js'],
+      admin: [expect.stringMatching(SENTRY_MODULE_RE), './src/admin.js'],
     });
   });
 
