@@ -4,6 +4,10 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.14.0
+
+- feat: Add support for Webpack 5 entry descriptors (#241)
+
 ## v1.13.0
 
 - feat: Support minimal CLI options (#225)
