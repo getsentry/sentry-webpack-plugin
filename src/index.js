@@ -246,8 +246,8 @@ class SentryCliPlugin {
      */
     if (typeof entry === 'function') {
       return () =>
-        Promise.resolve(entry()).then(entry =>
-          this.injectEntry(entry, sentryModule)
+        Promise.resolve(entry()).then(resolvedEntry =>
+          this.injectEntry(resolvedEntry, sentryModule)
         );
     }
 
@@ -277,17 +277,20 @@ class SentryCliPlugin {
      *     }
      *   }
      */
-    for (let key in entry) {
-      if (this.shouldInjectEntry(key)) {
+    const modifiedEntry = { ...entry };
+    Object.keys(modifiedEntry)
+      .filter(key => this.shouldInjectEntry(key))
+      .forEach(key => {
         if (entry[key] && entry[key].import) {
-          entry[key].import = this.injectEntry(entry[key].import, sentryModule);
+          modifiedEntry[key].import = this.injectEntry(
+            entry[key].import,
+            sentryModule
+          );
         } else {
-          entry[key] = this.injectEntry(entry[key], sentryModule);
+          modifiedEntry[key] = this.injectEntry(entry[key], sentryModule);
         }
-      }
-    }
-
-    return entry;
+      });
+    return modifiedEntry;
   }
 
   /** Webpack 2: Adds a new loader for the release module. */
