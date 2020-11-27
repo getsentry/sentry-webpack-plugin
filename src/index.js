@@ -187,7 +187,7 @@ class SentryCliPlugin {
   }
 
   /** Checks if the given named entry point should be handled. */
-  checkEntry(key) {
+  shouldInjectEntry(key) {
     const { entries } = this.options;
     if (entries == null) {
       return true;
@@ -211,32 +211,86 @@ class SentryCliPlugin {
   }
 
   /** Injects the release string into the given entry point. */
-  injectEntry(originalEntry, newEntry) {
-    if (Array.isArray(originalEntry)) {
-      return [newEntry].concat(originalEntry);
+  injectEntry(entry, sentryModule) {
+    if (!entry) {
+      return sentryModule;
     }
 
-    if (originalEntry !== null && typeof originalEntry === 'object') {
-      return Object.keys(originalEntry).reduce((acc, key) => {
-        acc[key] = this.checkEntry(key)
-          ? this.injectEntry(originalEntry[key], newEntry)
-          : originalEntry[key];
-        return acc;
-      }, {});
+    /**
+     * in:
+     *   entry: 'index.js'
+     * out:
+     *   entry: ['sentry-webpack.module.js', 'index.js']
+     */
+    if (typeof entry === 'string') {
+      return [sentryModule, entry];
     }
 
-    if (typeof originalEntry === 'string') {
-      return [newEntry, originalEntry];
+    /**
+     * in:
+     *   entry: ['index.js', 'header.js', 'footer.js']
+     * out:
+     *   entry: ['sentry-webpack.module.js', 'index.js', 'header.js', 'footer.js']
+     */
+    if (Array.isArray(entry)) {
+      return [sentryModule].concat(entry);
     }
 
-    if (typeof originalEntry === 'function') {
+    /**
+     * in:
+     *   entry: () => 'index.js'
+     *   entry: () => ['index.js']
+     * out:
+     *   entry: ['sentry-webpack.module.js', 'index.js']
+     *   entry: ['sentry-webpack.module.js', 'index.js']
+     */
+    if (typeof entry === 'function') {
       return () =>
-        Promise.resolve(originalEntry()).then(entry =>
-          this.injectEntry(entry, newEntry)
+        Promise.resolve(entry()).then(resolvedEntry =>
+          this.injectEntry(resolvedEntry, sentryModule)
         );
     }
 
-    return newEntry;
+    /**
+     * in:
+     *   entry: {
+     *     home: './home.js',
+     *     about: ['./about.js'],
+     *     contact: () => './contact.js',
+     *     login: {
+     *       import: './login.js',
+     *     },
+     *     logout: {
+     *       import: ['./logout.js']
+     *     }
+     *   }
+     * out:
+     *   entry: {
+     *     home: ['sentry-webpack.module.js', './home.js'],
+     *     about: ['sentry-webpack.module.js', './about.js'],
+     *     contact: ['sentry-webpack.module.js', './contact.js'],
+     *     login: {
+     *       import: ['sentry-webpack.module.js', './login.js']
+     *     },
+     *     logout: {
+     *       import: ['sentry-webpack.module.js', './logout.js']
+     *     }
+     *   }
+     */
+    const modifiedEntry = { ...entry };
+    Object.keys(modifiedEntry)
+      .filter(key => this.shouldInjectEntry(key))
+      .forEach(key => {
+        if (entry[key] && entry[key].import) {
+          modifiedEntry[key].import = this.injectEntry(
+            entry[key].import,
+            sentryModule
+          );
+        } else {
+          modifiedEntry[key] = this.injectEntry(entry[key], sentryModule);
+        }
+      });
+    return modifiedEntry;
   }
 
   /** Webpack 2: Adds a new loader for the release module. */
