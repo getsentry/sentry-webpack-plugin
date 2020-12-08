@@ -64,7 +64,7 @@ Also, check the [example](example) directory.
 | include | `string`/`array` | required | One or more paths that Sentry CLI should scan recursively for sources. It will upload all `.map` files and match associated `.js` files. |
 | org | `string` | optional | The slug of the Sentry organization associated with the app. |
 | project | `string` | optional | The slug of the Sentry project associated with the app. |
-| authToken | `string` | optional | The authentication token to use for all communication with Sentry. Can be obtained from https://sentry.io/settings/account/api/auth-tokens/. |
+| authToken | `string` | optional | The authentication token to use for all communication with Sentry. Can be obtained from https://sentry.io/settings/account/api/auth-tokens/. Required scopes: `project:releases` (and `org:read` if `setCommits` option is used). |
 | url | `string` | optional | The base URL of your Sentry instance. Defaults to https://sentry.io/, which is the correct value for SAAS customers. |
 | vcsRemote | `string` | optional | The name of the remote in the version control system. Defaults to `origin`. |
 | release | `string` | optional | Unique identifier for the release. Defaults to the output of the `sentry-cli releases propose-version` command, which automatically detects values for Cordova, Heroku, AWS CodeBuild, CircleCI, Xcode, and Gradle, and otherwise uses `HEAD`'s commit SHA. (**For `HEAD` option, requires access to `git` CLI and for the root directory to be a valid repository**). |
