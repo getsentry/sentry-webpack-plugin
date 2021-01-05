@@ -17,10 +17,11 @@ jobs:
 
       - uses: actions/setup-node@v1
 
-      - name: lint
-        run: |
-          yarn lint
-          yarn codecov
+      - run: yarn install
+
+      - run: yarn lint
+
+      - run: yarn codecov
 
   test:
     name: test
@@ -37,5 +38,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - run: |
-          yarn ${{ matrix.test-command }}
+      - run: yarn install
+
+      - run: yarn ${{ matrix.test-command }}
