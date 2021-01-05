@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  lint:
     name: lint and codecov
     runs-on: ubuntu-latest
 
