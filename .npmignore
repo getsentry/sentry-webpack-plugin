@@ -4,3 +4,7 @@ coverage
 .idea
 .travis
 example
+
+# ignore JS tests
+__mocks__
+__tests__
