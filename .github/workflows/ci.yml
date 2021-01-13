@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - master
+      - release/**
+  pull_request:
+
+jobs:
+  lint:
+    name: lint and codecov
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+
+      - run: yarn install
+
+      - run: yarn lint
+
+      - run: yarn codecov
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [8, 10, 12]
+        test-command: ['test', 'test:integration']
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: yarn install
+
+      - run: yarn ${{ matrix.test-command }}
