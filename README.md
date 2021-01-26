@@ -75,7 +75,7 @@ Also, check the [example](example) directory.
 | configFile | `string` | optional | Path to Sentry CLI config properties, as described in https://docs.sentry.io/product/cli/configuration/#configuration-file. By default, the config file is looked for upwards from the current path, and defaults from `~/.sentryclirc` are always loaded |
 | ext | `array` | optional | The file extensions to be considered. By default the following file extensions are processed: `js`, `map`, `jsbundle`, and `bundle`. |
 | urlPrefix | `string` | optional | URL prefix to add to the beginning of all filenames. Defaults to `~/` but you might want to set this to the full URL. This is also useful if your files are stored in a sub folder. eg: `url-prefix '~/static/js'`. |
-| urlSuffix | `string` | optional | URL suffix to add to the end of all filenamess. Useful for appending query parameters. |
+| urlSuffix | `string` | optional | URL suffix to add to the end of all filenames. Useful for appending query parameters. |
 | validate | `boolean` | optional | When `true`, attempts source map validation before upload if rewriting is not enabled. It will spot a variety of issues with source maps and cancel the upload if any are found. Defaults to `false` to prevent false positives canceling upload. |
 | stripPrefix | `array` | optional | When paired with `rewrite`, will remove a prefix from uploaded filenames. Useful for removing a path that is build-machine-specific. |
 | stripCommonPrefix | `boolean` | optional |  When paired with `rewrite`, will add `~` to the `stripPrefix` array. Defaults to `false`.|
