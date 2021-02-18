@@ -4,6 +4,10 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.14.1
+
+- fix: Use `WebpackPluginInstance` type for Webpack v4 and v5 compatibility (#259)
+
 ## v1.14.0
 
 - feat: Add support for Webpack 5 entry descriptors (#241)
