@@ -391,6 +391,15 @@ class SentryCliPlugin {
 
         return this.cli.releases.new(release);
       })
+      .then(() => {
+        if (this.options.cleanArtifacts) {
+          return this.cli.releases.execute(
+            ['releases', 'files', release, 'delete', '--all'],
+            true
+          );
+        }
+        return undefined;
+      })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
       .then(() => {
         const { commit, previousCommit, repo, auto } =
