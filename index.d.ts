@@ -106,6 +106,13 @@ export interface SentryCliPluginOptions {
   finalize?: boolean;
 
   /**
+   * Determines whether plugin should be applied not more than once during whole webpack run.
+   * Useful when the process is performing multiple builds using the same config.
+   * Defaults to `false`.
+   */
+  runOnce?: boolean;
+
+  /**
    * Attempts a dry run (useful for dev environments).
    */
   dryRun?: boolean;

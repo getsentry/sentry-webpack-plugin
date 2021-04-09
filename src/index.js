@@ -72,7 +72,6 @@ function attachAfterEmitHook(compiler, callback) {
 class SentryCliPlugin {
   constructor(options = {}) {
     const defaults = {
-      debug: false,
       finalize: true,
       rewrite: true,
     };
@@ -452,6 +451,21 @@ class SentryCliPlugin {
 
   /** Webpack lifecycle hook to update compiler options. */
   apply(compiler) {
+    /**
+     * Determines whether plugin should be applied not more than once during whole webpack run.
+     * Useful when the process is performing multiple builds using the same config.
+     * It cannot be stored on the instance, as every run is creating a new one.
+     */
+    if (this.options.runOnce && module.alreadyRun) {
+      if (this.options.debug) {
+        this.outputDebug(
+          '`runOnce` option set and plugin already ran. Skipping release.'
+        );
+      }
+      return;
+    }
+    module.alreadyRun = true;
+
     const compilerOptions = compiler.options || {};
     ensure(compilerOptions, 'module', Object);
 
