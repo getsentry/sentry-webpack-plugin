@@ -121,6 +121,11 @@ export interface SentryCliPluginOptions {
   silent?: boolean;
 
   /**
+   * If true, will remove all previously uploaded artifacts from the configured release.
+   */
+  cleanArtifacts?: boolean;
+
+  /**
    * when Cli error occurs, plugin calls this function.
    * webpack compilation failure can be chosen by calling invokeErr callback or not.
    * defaults to `(err, invokeErr) => { invokeErr() }`
