@@ -121,7 +121,7 @@ export interface SentryCliPluginOptions {
   silent?: boolean;
 
   /**
-   * If true, before uploading the Artifacts, clean all the Artifacts in the release.
+   * If true, will remove all previously uploaded artifacts from the configured release.
    */
   cleanArtifacts?: boolean;
 
