@@ -85,7 +85,7 @@ Also, check the [example](example) directory.
 | dryRun | `boolean` | optional | Attempts a dry run (useful for dev environments). Defaults to `false`. |
 | debug | `boolean` | optional | Print useful debug information. Defaults to `false`.|
 | silent | `boolean` | optional | Suppresses all logs (useful for `--json` option). Defaults to `false`. |
-| cleanArtifacts | `boolean` | optional | Before uploading the Artifacts, remove all the Artifacts in the release. Defaults to `false`. |
+| cleanArtifacts | `boolean` | optional | Remove all the artifacts in the release before the upload. Defaults to `false`. |
 | errorHandler | `function(err: Error, invokeErr: function(): void, compilation: Compilation): void` | optional | Function to call a when CLI error occurs. Webpack compilation failure can be triggered by calling `invokeErr` callback. Can emit a warning rather than an error (allowing compilation to continue) by setting this to `(err, invokeErr, compilation) => { compilation.warnings.push('Sentry CLI Plugin: ' + err.message) }`. Defaults to `(err, invokeErr) => { invokeErr() }`. |
 | setCommits | `Object` | optional | Adds commits to Sentry. See [table below](#setCommits) for details. |
 | deploy | `Object` | optional | Creates a new release deployment in Sentry. See [table below](#deploy) for details. |
