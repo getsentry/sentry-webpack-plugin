@@ -15,17 +15,16 @@ const mockCli = {
 
 const SentryCliMock = jest.fn((configFile, options) => mockCli);
 const SentryCli = jest.mock('@sentry/cli', () => SentryCliMock);
-const SentryCliPlugin = require('../..');
-
-afterEach(() => {
-  jest.clearAllMocks();
-});
+let SentryCliPlugin = require('../..');
 
 const defaults = {
-  debug: false,
   finalize: true,
   rewrite: true,
 };
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('constructor', () => {
   test('uses defaults without options', () => {
@@ -286,6 +285,27 @@ describe('afterEmitHook', () => {
       expect(compilationDoneCallback).toBeCalled();
       done();
     });
+  });
+
+  test('does not skip the release if `runOnce` option is not set and its called more than once', () => {
+    const sentryCliPlugin = new SentryCliPlugin();
+    sentryCliPlugin.apply(compiler);
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledTimes(1);
+    sentryCliPlugin.apply(compiler);
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledTimes(2);
+  });
+
+  test('skips the release if `runOnce` option is set and its called more than once', () => {
+    // Reset the state of a module to verify `runOnce` behavior
+    jest.resetModules();
+    SentryCliPlugin = require('../..');
+    const sentryCliPlugin = new SentryCliPlugin({
+      runOnce: true,
+    });
+    sentryCliPlugin.apply(compiler);
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledTimes(1);
+    sentryCliPlugin.apply(compiler);
+    expect(compiler.hooks.afterEmit.tapAsync).toHaveBeenCalledTimes(1);
   });
 });
 
