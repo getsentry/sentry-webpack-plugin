@@ -4,6 +4,11 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.15.0
+
+- feat: Add `cleanAftifacts` option to remove all previously uploaded files in a release (#264)
+- feat: Add `runOnce` option to allow for skipping multiple uploads with the same config (#270)
+
 ## v1.14.2
 
 - deps: Update sentry-cli to v1.63 for ARM support
