@@ -21,6 +21,7 @@
     "@sentry/cli": "^1.64.1"
   },
   "devDependencies": {
+    "@types/webpack": "^4.39.3",
     "codecov": "^3.5.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
