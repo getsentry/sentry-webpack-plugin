@@ -401,7 +401,7 @@ class SentryCliPlugin {
       })
       .then(() => this.cli.releases.uploadSourceMaps(release, this.options))
       .then(() => {
-        const { commit, previousCommit, repo, auto } =
+        const { commit, previousCommit, repo, auto, ignoreMissing } =
           this.options.setCommits || this.options;
 
         if (auto || (repo && commit)) {
@@ -410,9 +410,9 @@ class SentryCliPlugin {
             previousCommit,
             repo,
             auto,
+            ignoreMissing
           });
         }
-
         return undefined;
       })
       .then(() => {

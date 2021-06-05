@@ -245,6 +245,7 @@ describe('afterEmitHook', () => {
       previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
       repo: 'group / repo',
       auto: false,
+      ignoreMissing: false
     });
 
     sentryCliPlugin.apply(compiler);
@@ -255,6 +256,7 @@ describe('afterEmitHook', () => {
         commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
         previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
         auto: false,
+        ignoreMissing: false
       });
       expect(compilationDoneCallback).toBeCalled();
       done();
@@ -270,6 +272,7 @@ describe('afterEmitHook', () => {
         previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
         repo: 'group / repo',
         auto: false,
+        ignoreMissing: false
       },
     });
 
@@ -281,6 +284,7 @@ describe('afterEmitHook', () => {
         commit: '4d8656426ca13eab19581499da93408e30fdd9ef',
         previousCommit: 'b6b0e11e74fd55836d3299cef88531b2a34c2514',
         auto: false,
+        ignoreMissing: false
       });
       expect(compilationDoneCallback).toBeCalled();
       done();

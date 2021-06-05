@@ -99,6 +99,7 @@ Also, check the [example](example) directory.
 | commit | `string` | see notes | The current (most recent) commit in the release. Required if `auto` option is not `true`, otherwise optional. |
 | previousCommit | `string` | optional | The last commit of the previous release. Defaults to the most recent commit of the previous release in Sentry, or if no previous release is found, 10 commits back from `commit`. |
 | auto | `boolean` | optional | Automatically set `commit` and `previousCommit`. Defaults `commit` to `HEAD` and `previousCommit` as described above. Overrides other options |
+| ignoreMissing | `boolean` | optional |  When the flag is set and the previous release commit was not found in the repository, will create a release with the default commits count (or the one specified with `--initial-depth`) instead of failing the command. |
 
 #### <a name="deploy"></a>options.deploy:
 
