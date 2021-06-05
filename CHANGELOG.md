@@ -4,6 +4,11 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.16.0
+
+- feat: Add `setCommits` option `ignoreMissing` (#281)
+- deps: Update sentry-cli to v1.65
+
 ## v1.15.1
 
 - deps: Update sentry-cli to v1.64

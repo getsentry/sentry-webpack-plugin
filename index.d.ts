@@ -166,6 +166,11 @@ export interface SentryCliPluginOptions {
      * Automatically choose the associated commit (uses the current commit). Overrides other setCommit options.
      */
     auto?: boolean;
+
+    /**
+     * Allow for ignoring missing commits in set-commit.
+     */
+    ignoreMissing?: boolean;
   };
 
   /**
