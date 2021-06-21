@@ -20,6 +20,12 @@ export interface SentryCliPluginOptions {
    * (requires access to git CLI and root directory to be a valid repository).
    */
   release?: string;
+  
+  /**
+   * Unique identifier for the distribution, used to further segment your release.
+   * Usually your build number.
+   */
+  dist?: string;
 
   /**
    * One or more paths that Sentry CLI should scan recursively for sources.
