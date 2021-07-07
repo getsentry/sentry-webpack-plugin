@@ -410,7 +410,7 @@ class SentryCliPlugin {
             previousCommit,
             repo,
             auto,
-            ignoreMissing
+            ignoreMissing,
           });
         }
         return undefined;
