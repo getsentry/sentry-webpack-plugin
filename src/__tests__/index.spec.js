@@ -167,6 +167,29 @@ describe('afterEmitHook', () => {
     });
   });
 
+  test('uses `output.path` from webpack config as default `include` path', done => {
+    compiler.options = {
+      output: {
+        path: './build',
+      },
+    };
+
+    const sentryCliPlugin = new SentryCliPlugin({
+      release: '42',
+    });
+    sentryCliPlugin.apply(compiler);
+
+    setImmediate(() => {
+      expect(mockCli.releases.uploadSourceMaps).toBeCalledWith(
+        '42',
+        expect.objectContaining({
+          include: ['./build'],
+        })
+      );
+      done();
+    });
+  });
+
   test('skips finalizing release if finalize:false', done => {
     expect.assertions(4);
 
