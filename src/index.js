@@ -299,6 +299,8 @@ class SentryCliPlugin {
       loader: SENTRY_LOADER,
       options: {
         releasePromise: this.release,
+        org: this.options.org || process.env.SENTRY_ORG,
+        project: this.options.project || process.env.SENTRY_PROJECT,
       },
     };
 
@@ -314,6 +316,8 @@ class SentryCliPlugin {
           loader: SENTRY_LOADER,
           options: {
             releasePromise: this.release,
+            org: this.options.org || process.env.SENTRY_ORG,
+            project: this.options.project || process.env.SENTRY_PROJECT,
           },
         },
       ],
