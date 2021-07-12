@@ -86,7 +86,7 @@ function attachAfterCodeGenerationHook(compiler, options) {
       compilation.hooks.afterCodeGeneration.tap('SentryCliPlugin', () => {
         compilation.modules.forEach(module => {
           // eslint-disable-next-line no-underscore-dangle
-          if (module._name !== options.remoteModuleName) return;
+          if (module._name !== moduleFederationPlugin._options.name) return;
           const sourceMap = compilation.codeGenerationResults.get(module)
             .sources;
           const rawSource = sourceMap.get('javascript');
