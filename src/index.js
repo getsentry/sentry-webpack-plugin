@@ -483,6 +483,12 @@ class SentryCliPlugin {
     }
 
     attachAfterEmitHook(compiler, (compilation, cb) => {
+      if (!this.options.include || !this.options.include.length) {
+        ensure(compilerOptions, 'output', Object);
+        if (compilerOptions.output.path) {
+          this.options.include = [compilerOptions.output.path];
+        }
+      }
       this.finalizeRelease(compilation).then(() => cb());
     });
   }
