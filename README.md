@@ -77,7 +77,7 @@ Also, check the [example](example) directory.
 | urlPrefix | `string` | optional | URL prefix to add to the beginning of all filenames. Defaults to `~/` but you might want to set this to the full URL. This is also useful if your files are stored in a sub folder. eg: `url-prefix '~/static/js'`. |
 | urlSuffix | `string` | optional | URL suffix to add to the end of all filenames. Useful for appending query parameters. |
 | validate | `boolean` | optional | When `true`, attempts source map validation before upload if rewriting is not enabled. It will spot a variety of issues with source maps and cancel the upload if any are found. Defaults to `false` to prevent false positives canceling upload. |
-| stripPrefix | `array` | optional | When paired with `rewrite`, will remove a prefix from uploaded filenames. Useful for removing a path that is build-machine-specific. |
+| stripPrefix | `array` | optional | When paired with `rewrite`, will remove a prefix from filename references inside of sourcemaps. Useful for removing a path that is build-machine-specific. Note that this will NOT change the names of uploaded files.|
 | stripCommonPrefix | `boolean` | optional |  When paired with `rewrite`, will add `~` to the `stripPrefix` array. Defaults to `false`.|
 | sourceMapReference | `boolean` | optional | Prevents the automatic detection of sourcemap references. Defaults to `false`.|
 | rewrite | `boolean` | optional | Enables rewriting of matching source maps so that indexed maps are flattened and missing sources are inlined if possible. Defaults to `true` |
