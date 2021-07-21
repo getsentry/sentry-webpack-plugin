@@ -82,7 +82,15 @@ describe('CLI configuration', () => {
 
   test('only creates a single CLI instance', () => {
     const sentryCliPlugin = new SentryCliPlugin({});
-    sentryCliPlugin.apply({ hooks: { afterEmit: { tapAsync: jest.fn() } } });
+    sentryCliPlugin.apply({
+      hooks: {
+        afterEmit: { tapAsync: jest.fn() },
+        make: { tapAsync: jest.fn() },
+      },
+      options: {
+        plugins: [],
+      },
+    });
     expect(SentryCliMock.mock.instances.length).toBe(1);
   });
 });
@@ -91,20 +99,36 @@ describe('afterEmitHook', () => {
   let compiler;
   let compilation;
   let compilationDoneCallback;
+  let makeCallback;
 
   beforeEach(() => {
     compiler = {
+      options: {
+        plugins: [],
+      },
       hooks: {
         afterEmit: {
           tapAsync: jest.fn((name, callback) =>
             callback(compilation, compilationDoneCallback)
           ),
         },
+        make: {
+          tapAsync: jest.fn((name, callback) =>
+            callback(compilation, makeCallback)
+          ),
+        },
       },
     };
 
-    compilation = { errors: [], hash: 'someHash' };
+    compilation = {
+      errors: [],
+      hash: 'someHash',
+      hooks: {
+        afterCodeGeneration: { tap: jest.fn() },
+      },
+    };
     compilationDoneCallback = jest.fn();
+    makeCallback = jest.fn();
   });
 
   test('calls `hooks.afterEmit.tapAsync()`', () => {
@@ -121,7 +145,7 @@ describe('afterEmitHook', () => {
     const sentryCliPlugin = new SentryCliPlugin();
 
     // Simulate Webpack <= 2
-    compiler = { plugin: jest.fn() };
+    compiler = { plugin: jest.fn(), options: { plugins: [] } };
     sentryCliPlugin.apply(compiler);
 
     expect(compiler.plugin).toHaveBeenCalledWith(
@@ -343,7 +367,10 @@ describe('module rule overrides', () => {
   beforeEach(() => {
     sentryCliPlugin = new SentryCliPlugin({ release: '42', include: 'src' });
     compiler = {
-      hooks: { afterEmit: { tapAsync: jest.fn() } },
+      hooks: {
+        afterEmit: { tapAsync: jest.fn() },
+        make: { tapAsync: jest.fn() },
+      },
       options: { module: {} },
     };
   });
@@ -402,7 +429,10 @@ describe('entry point overrides', () => {
   beforeEach(() => {
     sentryCliPlugin = new SentryCliPlugin({ release: '42', include: 'src' });
     compiler = {
-      hooks: { afterEmit: { tapAsync: jest.fn() } },
+      hooks: {
+        afterEmit: { tapAsync: jest.fn() },
+        make: { tapAsync: jest.fn() },
+      },
       options: { module: { rules: [] } },
     };
   });
