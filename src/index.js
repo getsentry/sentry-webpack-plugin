@@ -71,7 +71,11 @@ function attachAfterEmitHook(compiler, callback) {
 }
 
 function attachAfterCodeGenerationHook(compiler, options) {
+  if (!compiler.hooks || !compiler.hooks.make) {
+    return;
+  }
   const moduleFederationPlugin =
+    compiler.options &&
     compiler.options.plugins &&
     compiler.options.plugins.find(
       x => x.constructor.name === 'ModuleFederationPlugin'
