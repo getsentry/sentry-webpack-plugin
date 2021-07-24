@@ -1,7 +1,6 @@
 const SentryCli = require('@sentry/cli');
 const path = require('path');
 const util = require('util');
-const { RawSource } = require('webpack-sources');
 
 const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
@@ -84,6 +83,8 @@ function attachAfterCodeGenerationHook(compiler, options) {
   if (!moduleFederationPlugin) {
     return;
   }
+
+  const { RawSource } = require('webpack-sources');
 
   compiler.hooks.make.tapAsync('SentryCliPlugin', (compilation, cb) => {
     options.releasePromise.then(version => {
