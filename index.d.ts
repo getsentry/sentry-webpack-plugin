@@ -3,6 +3,7 @@ import {
   SentryCliCommitsOptions,
   SentryCliNewDeployOptions,
   SentryCliOptions,
+  SentryCliUploadSourceMapsOptions,
 } from '@sentry/cli';
 
 export interface SentryCliPluginOptions
