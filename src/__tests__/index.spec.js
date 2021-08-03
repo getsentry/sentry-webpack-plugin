@@ -67,6 +67,26 @@ describe('constructor', () => {
     expect(sentryCliPlugin.options.include).toEqual(['foo']);
     expect(sentryCliPlugin.options.ignore).toEqual(['bar']);
   });
+
+  test('keeps object `ignore` option', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: { paths: ['foo'], urlPrefix: '~/bar/' },
+    });
+    expect(sentryCliPlugin.options.include).toEqual({
+      paths: ['foo'],
+      urlPrefix: '~/bar/',
+    });
+  });
+
+  test('sanitizes `ignore` array option in object `ignore` option', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: { paths: ['foo'], ignore: 'bar' },
+    });
+    expect(sentryCliPlugin.options.include).toEqual({
+      paths: ['foo'],
+      ignore: ['bar'],
+    });
+  });
 });
 
 describe('CLI configuration', () => {

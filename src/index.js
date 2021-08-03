@@ -51,13 +51,18 @@ function getLoaderName(entry) {
 }
 
 /**
- * Ensures that the passed value is in an array or an array itself.
+ * Wraps the given value in an array if it is not already an array itself.
+ * Ignores `undefined` and `null`, returning them as is.
  *
- * @param {any} value Either an array or a value that should be wrapped
- * @returns {array} The array
+ * @param {any} value Either an array or a value that should be wrapped in an array
+ * @returns {array} The resulting array, or the original value if it's null/undefined
  */
 function toArray(value) {
-  return !value || Array.isArray(value) ? value : [value];
+  if (Array.isArray(value) || value === null || value === undefined) {
+    return value;
+  }
+
+  return [value];
 }
 
 /** Backwards compatible version of `compiler.plugin.afterEmit.tapAsync()`. */
@@ -78,7 +83,16 @@ class SentryCliPlugin {
 
     this.options = Object.assign({}, defaults, options);
 
-    if (options.include) this.options.include = toArray(options.include);
+    // the webpack plugin has looser type requirements than `@sentry/cli` -
+    // ensure `include` and `ignore` options are in the right format
+    if (options.include) {
+      if (typeof options.include === 'string') {
+        this.options.include = toArray(options.include);
+      }
+      if (typeof options.include === 'object') {
+        this.options.include.ignore = toArray(options.include.ignore);
+      }
+    }
     if (options.ignore) this.options.ignore = toArray(options.ignore);
 
     this.cli = this.getSentryCli();
