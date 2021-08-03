@@ -4,6 +4,11 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.17.0
+
+- feat: Allow `include` option to be an object (#299)
+- deps: Update sentry-cli to v1.68 (#297)
+
 ## v1.16.0
 
 - feat: Add `ignoreMissing` sub-option to `setCommits` option (#281)
