@@ -4,6 +4,8 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+- fix: Fix types and array normalization for `include` option (#FIXME!!)
+
 ## v1.17.0
 
 - feat: Allow `include` option to be an object (#299)
