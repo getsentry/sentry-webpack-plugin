@@ -86,13 +86,18 @@ class SentryCliPlugin {
     // the webpack plugin has looser type requirements than `@sentry/cli` -
     // ensure `include` and `ignore` options are in the right format
     if (options.include) {
-      if (typeof options.include === 'string') {
-        this.options.include = toArray(options.include);
-      }
-      if (typeof options.include === 'object') {
-        this.options.include.ignore = toArray(options.include.ignore);
-      }
+      this.options.include = toArray(options.include);
+      this.options.include.forEach(includeEntry => {
+        if (
+          typeof includeEntry === 'object' &&
+          includeEntry.ignore !== undefined
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          includeEntry.ignore = toArray(includeEntry.ignore);
+        }
+      });
     }
+
     if (options.ignore) this.options.ignore = toArray(options.ignore);
 
     this.cli = this.getSentryCli();

@@ -50,42 +50,72 @@ describe('constructor', () => {
     expect(sentryCliPlugin.options.rewrite).toEqual(false);
   });
 
-  test('sanitizes array options `include` and `ignore`', () => {
-    const sentryCliPlugin = new SentryCliPlugin({
+  test('sanitizes non-array options `include` and `ignore`', () => {
+    const pluginWithStringInclude = new SentryCliPlugin({
       include: 'foo',
       ignore: 'bar',
     });
-    expect(sentryCliPlugin.options.include).toEqual(['foo']);
-    expect(sentryCliPlugin.options.ignore).toEqual(['bar']);
+    expect(pluginWithStringInclude.options.include).toEqual(['foo']);
+    expect(pluginWithStringInclude.options.ignore).toEqual(['bar']);
+
+    const pluginWithObjectInclude = new SentryCliPlugin({
+      include: { paths: ['foo'], urlPrefix: '~/bar/' },
+    });
+    expect(pluginWithObjectInclude.options.include).toEqual([
+      { paths: ['foo'], urlPrefix: '~/bar/' },
+    ]);
   });
 
   test('keeps array options `include` and `ignore`', () => {
-    const sentryCliPlugin = new SentryCliPlugin({
+    const pluginWithStringArrayInclude = new SentryCliPlugin({
       include: ['foo'],
       ignore: ['bar'],
     });
-    expect(sentryCliPlugin.options.include).toEqual(['foo']);
-    expect(sentryCliPlugin.options.ignore).toEqual(['bar']);
-  });
+    expect(pluginWithStringArrayInclude.options.include).toEqual(['foo']);
+    expect(pluginWithStringArrayInclude.options.ignore).toEqual(['bar']);
 
-  test('keeps object `ignore` option', () => {
-    const sentryCliPlugin = new SentryCliPlugin({
+    const pluginWithObjectArrayInclude = new SentryCliPlugin({
       include: { paths: ['foo'], urlPrefix: '~/bar/' },
     });
-    expect(sentryCliPlugin.options.include).toEqual({
-      paths: ['foo'],
-      urlPrefix: '~/bar/',
-    });
+    expect(pluginWithObjectArrayInclude.options.include).toEqual([
+      { paths: ['foo'], urlPrefix: '~/bar/' },
+    ]);
   });
 
-  test('sanitizes `ignore` array option in object `ignore` option', () => {
+  test('sanitizes non-array `ignore` in object `include` option', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: [{ paths: ['foo'], ignore: 'bar' }],
+    });
+    expect(sentryCliPlugin.options.include).toEqual([
+      {
+        paths: ['foo'],
+        ignore: ['bar'],
+      },
+    ]);
+  });
+
+  test('keeps array `ignore` in object `include` option', () => {
+    const sentryCliPlugin = new SentryCliPlugin({
+      include: [{ paths: ['foo'], ignore: ['bar'] }],
+    });
+    expect(sentryCliPlugin.options.include).toEqual([
+      {
+        paths: ['foo'],
+        ignore: ['bar'],
+      },
+    ]);
+  });
+
+  test('sanitizes non-array `ignore` in non-array object `include` option', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: { paths: ['foo'], ignore: 'bar' },
     });
-    expect(sentryCliPlugin.options.include).toEqual({
-      paths: ['foo'],
-      ignore: ['bar'],
-    });
+    expect(sentryCliPlugin.options.include).toEqual([
+      {
+        paths: ['foo'],
+        ignore: ['bar'],
+      },
+    ]);
   });
 });
 
