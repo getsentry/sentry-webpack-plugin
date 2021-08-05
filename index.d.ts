@@ -4,6 +4,7 @@ import {
   SentryCliNewDeployOptions,
   SentryCliOptions,
   SentryCliUploadSourceMapsOptions,
+  SourceMapsPathDescriptor,
 } from '@sentry/cli';
 
 export interface SentryCliPluginOptions
@@ -13,8 +14,6 @@ export interface SentryCliPluginOptions
     >,
     Pick<
       SentryCliUploadSourceMapsOptions,
-      | 'include'
-      | 'ignore'
       | 'ignoreFile'
       | 'rewrite'
       | 'sourceMapReference'
@@ -25,6 +24,19 @@ export interface SentryCliPluginOptions
       | 'urlSuffix'
       | 'ext'
     > {
+  /**
+   * Filepaths to scan recursively for source and source map files
+   */
+  include:
+    | string
+    | SourceMapsPathDescriptor
+    | Array<string | SourceMapsPathDescriptor>;
+
+  /**
+   * Filepaths to ignore when scanning for sources and source maps
+   */
+  ignore?: string | Array<string>;
+
   /**
    * Unique name of a release, must be a string, should uniquely identify your release,
    * defaults to sentry-cli releases propose-version command which should always return the correct version
