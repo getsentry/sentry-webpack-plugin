@@ -1,4 +1,4 @@
-import { Compiler, WebpackPluginInstance } from 'webpack';
+import { Compiler, WebpackPluginInstance, Compilation } from 'webpack';
 import {
   SentryCliCommitsOptions,
   SentryCliNewDeployOptions,
@@ -89,7 +89,7 @@ export interface SentryCliPluginOptions
    * webpack compilation failure can be chosen by calling invokeErr callback or not.
    * defaults to `(err, invokeErr) => { invokeErr() }`
    */
-  errorHandler?: (err: Error, invokeErr: () => void) => void;
+  errorHandler?: (err: Error, invokeErr: () => void, compilation: Compilation) => void;
 
   /**
    * Adds commits to sentry
