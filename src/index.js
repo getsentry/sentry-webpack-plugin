@@ -79,9 +79,11 @@ function attachAfterCodeGenerationHook(compiler, options) {
     return;
   }
 
-  // eslint-disable-next-line global-require
-  const webpackSources = require(// eslint-disable-next-line import/no-extraneous-dependencies
-  'webpack-sources');
+  let webpackSources;
+  try {
+    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+    webpackSources = require('webpack-sources');
+  } catch(_e) {}
 
   if (!webpackSources) return;
 
