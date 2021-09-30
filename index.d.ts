@@ -103,6 +103,7 @@ export interface SentryCliPluginOptions
 }
 
 declare class SentryCliPlugin implements WebpackPluginInstance {
+  options: SentryCliPluginOptions;
   constructor(options: SentryCliPluginOptions);
   apply(compiler: Compiler): void;
 }
