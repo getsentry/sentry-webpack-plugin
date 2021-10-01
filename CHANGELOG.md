@@ -7,6 +7,7 @@
 ## v1.17.2
 
 - docs: Fix description and default value for sourceMapReferences (#318)
+- fix: Increase stack size of errors in CI (#319)
 - fix: Enable plugin to be imported under ES6 (#316)
 - fix: Add `options` to main plugin type (#314)
 - fix: Update types of SentryCliPluginOptions.errorHandler (#308)
