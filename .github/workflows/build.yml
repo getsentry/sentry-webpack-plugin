@@ -6,6 +6,9 @@ on:
       - master
       - release/**
 
+env:
+  NODE_OPTIONS: '--stack-trace-limit=10000'
+
 jobs:
   build:
     name: build

@@ -8,6 +8,10 @@ on:
       force:
         description: Force a release even when there are release-blockers (optional)
         required: false
+
+env:
+  NODE_OPTIONS: '--stack-trace-limit=10000'
+
 jobs:
   release:
     runs-on: ubuntu-latest
