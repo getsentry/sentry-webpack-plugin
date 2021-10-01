@@ -4,6 +4,13 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## v1.17.2
+
+- docs: Fix description and default value for sourceMapReferences (#318)
+- fix: Enable plugin to be imported under ES6 (#316)
+- fix: Add `options` to main plugin type (#314)
+- fix: Update types of SentryCliPluginOptions.errorHandler (#308)
+
 ## v1.17.1
 
 - fix: Fix types and array normalization for `include` option (#302)
