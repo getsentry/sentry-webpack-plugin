@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Release a new version'
     steps:
+      - run: env
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_RELEASE_PAT }}
