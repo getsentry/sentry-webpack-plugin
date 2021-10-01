@@ -7,6 +7,9 @@ on:
       - release/**
   pull_request:
 
+env:
+  NODE_OPTIONS: '--stack-trace-limit=10000'
+
 jobs:
   lint:
     name: lint and codecov
