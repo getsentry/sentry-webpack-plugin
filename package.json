@@ -21,6 +21,7 @@
     "@sentry/cli": "^1.68.0"
   },
   "devDependencies": {
+    "@types/webpack": "^4.0.0 || ^5.0.0",
     "codecov": "^3.5.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -31,6 +32,9 @@
     "prettier": "^1.18.2",
     "prettier-check": "^2.0.0",
     "webpack": "^4.39.3"
+  },
+  "peerDependencies": {
+    "@types/webpack": "^4.0.0 || ^5.0.0"
   },
   "scripts": {
     "lint": "run-s lint:prettier lint:eslint",
