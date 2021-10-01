@@ -33,9 +33,6 @@
     "prettier-check": "^2.0.0",
     "webpack": "^4.39.3"
   },
-  "peerDependencies": {
-    "@types/webpack": "^4.0.0 || ^5.0.0"
-  },
   "scripts": {
     "lint": "run-s lint:prettier lint:eslint",
     "lint:prettier": "prettier-check 'src/**/*.js'",
