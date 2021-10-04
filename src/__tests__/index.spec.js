@@ -26,6 +26,17 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+it('prints more than 10 frames in stacktrace', () => {
+  const MAX_FRAMES = 15;
+  const foo = (i) => {
+    if (i === MAX_FRAMES) {
+      throw new Error();
+    }
+    foo(i+1);
+  }
+  foo(0);
+});
+
 describe('constructor', () => {
   test('uses defaults without options', () => {
     const sentryCliPlugin = new SentryCliPlugin();
