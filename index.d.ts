@@ -1,4 +1,4 @@
-import { Compiler, WebpackPluginInstance, Compilation } from 'webpack';
+import { Compiler, WebpackPluginInstance } from 'webpack';
 import {
   SentryCliCommitsOptions,
   SentryCliNewDeployOptions,
@@ -92,14 +92,24 @@ declare namespace SentryCliPlugin {
     cleanArtifacts?: boolean;
 
     /**
-     * when Cli error occurs, plugin calls this function.
-     * webpack compilation failure can be chosen by calling invokeErr callback or not.
-     * defaults to `(err, invokeErr) => { invokeErr() }`
+     * When a CLI error occurs, the plugin will call this function.
+     *
+     * By default, it will call `invokeErr()`, thereby stopping Webpack
+     * compilation. To allow compilation to continue and log a warning instead,
+     * set this to
+     *   (err, invokeErr, compilation) => {
+     *     compilation.warnings.push('Sentry CLI Plugin: ' + err.message)
+     *   }
+     *
+     * Note: `compilation` is typed as `unknown` in order to preserve
+     * compatibility with both Webpack 4 and Webpack 5 types, If you need the
+     * correct type, in Webpack 4 use `compilation.Compilation` and in Webpack 5
+     * use `Compilation`.
      */
     errorHandler?: (
       err: Error,
       invokeErr: () => void,
-      compilation: Compilation
+      compilation: unknown
     ) => void;
 
     /**
