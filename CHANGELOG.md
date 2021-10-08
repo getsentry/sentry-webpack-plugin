@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
+- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
+  how much they love me." — Michael Scott
+
+## v1.17.3
+
+- fix: Switch compilation type in error handler to `unknown` (#322)
 
 ## v1.17.2
 
@@ -33,8 +38,10 @@
 
 ## v1.15.0
 
-- feat: Add `cleanAftifacts` option to remove all previously uploaded files in a release (#264)
-- feat: Add `runOnce` option to allow for skipping multiple uploads with the same config (#270)
+- feat: Add `cleanAftifacts` option to remove all previously uploaded files in a
+  release (#264)
+- feat: Add `runOnce` option to allow for skipping multiple uploads with the
+  same config (#270)
 
 ## v1.14.2
 
@@ -42,7 +49,8 @@
 
 ## v1.14.1
 
-- fix: Use `WebpackPluginInstance` type for Webpack v4 and v5 compatibility (#259)
+- fix: Use `WebpackPluginInstance` type for Webpack v4 and v5 compatibility
+  (#259)
 
 ## v1.14.0
 
@@ -72,9 +80,10 @@
 
 ## v1.11.0
 
-**This release sets `node.engine: >=8` which makes it incompatible with Node v6**
-If you need to support Node v6, please pin your dependency to `1.10.0`
-and use selective version resolution: https://classic.yarnpkg.com/en/docs/selective-version-resolutions/
+**This release sets `node.engine: >=8` which makes it incompatible with Node
+v6** If you need to support Node v6, please pin your dependency to `1.10.0` and
+use selective version resolution:
+https://classic.yarnpkg.com/en/docs/selective-version-resolutions/
 
 - meta: Bump sentry-cli to `1.52.2`
 - meta: Drop support for `node v6` due to new `sentry-cli` requiring `node >=8`
