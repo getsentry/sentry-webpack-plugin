@@ -8,7 +8,7 @@
     "source-map"
   ],
   "author": "Sentry",
-  "version": "1.17.2",
+  "version": "1.17.3",
   "license": "MIT",
   "repository": "git@github.com:getsentry/sentry-webpack-plugin.git",
   "homepage": "https://github.com/getsentry/sentry-webpack-plugin",
