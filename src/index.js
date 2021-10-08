@@ -83,9 +83,12 @@ function attachAfterCodeGenerationHook(compiler, options) {
   try {
     // eslint-disable-next-line global-require, import/no-extraneous-dependencies
     webpackSources = require('webpack-sources');
-  } catch(_e) {}
-
-  if (!webpackSources) return;
+  } catch (_e) {
+    console.warn(
+      'Coud not resolve package: webpack-sources. Skipping injection for the remote entry file.'
+    );
+    return;
+  }
 
   const { RawSource } = webpackSources;
   const moduleFederationPlugin =
@@ -104,7 +107,7 @@ function attachAfterCodeGenerationHook(compiler, options) {
       compilation.hooks.afterCodeGeneration.tap('SentryCliPlugin', () => {
         compilation.modules.forEach(module => {
           // eslint-disable-next-line no-underscore-dangle
-          if (module._name !== options.remoteModuleName) return;
+          if (module._name !== moduleFederationPlugin._options.name) return;
           const sourceMap = compilation.codeGenerationResults.get(module)
             .sources;
           const rawSource = sourceMap.get('javascript');
