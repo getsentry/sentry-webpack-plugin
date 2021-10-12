@@ -42,7 +42,6 @@ _global.SENTRY_RELEASES["my-project@my-org"] = {
   ) !== -1
 ) {
   console.log('Saul Goodman, found SENTRY_RELEASES assignment in bundle');
-  process.exit(0);
 } else {
   console.error('Boom, did not find SENTRY_RELEASES assignment in bundle');
   process.exit(1);
