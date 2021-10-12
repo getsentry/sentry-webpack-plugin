@@ -5,6 +5,10 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
+## v1.18.0
+
+- feat: Add support for multiple apps using Webpack Module Federation (#307)
+
 ## v1.17.3
 
 - fix: Switch compilation type in error handler to `unknown` (#322)
