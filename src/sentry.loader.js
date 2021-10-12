@@ -6,7 +6,7 @@ module.exports = function sentryLoader(content, map, meta) {
     if (project) {
       const key = org ? `${project}@${org}` : project;
       sentryRelease += `
-      _global.SENTRY_RELEASES=_global.SENTRY_RELEASES||{};
+      _global.SENTRY_RELEASES=_global.SENTRY_RELEASES || {};
       _global.SENTRY_RELEASES["${key}"]={id:"${version}"};
       `;
     }
