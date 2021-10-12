@@ -29,6 +29,8 @@ module.exports = {
       configFile: 'sentry.properties',
       dryRun: true,
       release: 'foo',
+      project: 'my-project',
+      org: 'my-org',
       dist: '123',
     }),
   ],
