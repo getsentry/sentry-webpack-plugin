@@ -84,6 +84,7 @@ function attachAfterCodeGenerationHook(compiler, options) {
     // eslint-disable-next-line global-require, import/no-extraneous-dependencies
     webpackSources = require('webpack-sources');
   } catch (_e) {
+    // eslint-disable-next-line no-console
     console.warn(
       'Coud not resolve package: webpack-sources. Skipping injection for the remote entry file.'
     );
