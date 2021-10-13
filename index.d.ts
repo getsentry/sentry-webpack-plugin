@@ -122,6 +122,8 @@ declare namespace SentryCliPlugin {
      */
     deploy?: SentryCliNewDeployOptions;
   }
+
+  export { SourceMapsPathDescriptor };
 }
 
 declare class SentryCliPlugin implements WebpackPluginInstance {
