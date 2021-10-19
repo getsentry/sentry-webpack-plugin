@@ -5,6 +5,10 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
+## v1.18.2
+
+- deps: Update sentry-cli to v1.70
+
 ## v1.18.1
 
 - fix: Reexport `SourceMapsPathDescriptor` type (#323)
