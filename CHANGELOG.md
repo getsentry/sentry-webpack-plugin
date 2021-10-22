@@ -5,6 +5,11 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
+## v1.18.3
+
+- types: Fix typo in vcsRemote config option (#327)
+- deps: Bump sentry-cli to 1.70.1 (#327)
+
 ## v1.18.2
 
 - deps: Update sentry-cli to v1.70
