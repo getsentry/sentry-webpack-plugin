@@ -15,7 +15,7 @@ declare namespace SentryCliPlugin {
         | 'authToken'
         | 'org'
         | 'project'
-        | 'vscRemote'
+        | 'vcsRemote'
         | 'dist'
         | 'silent'
       >,
