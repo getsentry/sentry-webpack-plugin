@@ -18,6 +18,7 @@ declare namespace SentryCliPlugin {
         | 'vcsRemote'
         | 'dist'
         | 'silent'
+        | 'customHeader'
       >,
       Pick<
         SentryCliUploadSourceMapsOptions,
