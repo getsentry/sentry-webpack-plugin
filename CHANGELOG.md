@@ -5,6 +5,11 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
+## v1.18.4
+
+- deps: Bump sentry-cli to 1.72.0
+- ref: Use `var` instead of `const` for module loader for ES5-compat (#338)
+
 ## v1.18.3
 
 - types: Fix typo in vcsRemote config option (#327)
