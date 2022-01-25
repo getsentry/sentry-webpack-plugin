@@ -20,6 +20,9 @@
   "dependencies": {
     "@sentry/cli": "^1.72.0"
   },
+  "peerDependencies": {
+    "webpack": "^4.41.31 || ^5.0.0"
+  },
   "devDependencies": {
     "@types/webpack": "^4.41.31 || ^5.0.0",
     "codecov": "^3.5.0",
