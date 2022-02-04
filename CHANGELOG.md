@@ -5,6 +5,11 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
+## v1.18.5
+
+- fix: Check if `rawSource` is available before use (#347)
+- deps: Add Webpack as a peerDependency (#343)
+
 ## v1.18.4
 
 - deps: Bump sentry-cli to 1.72.0
