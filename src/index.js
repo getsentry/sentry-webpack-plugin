@@ -108,23 +108,29 @@ function attachAfterCodeGenerationHook(compiler, options) {
       compilation.hooks.afterCodeGeneration.tap('SentryCliPlugin', () => {
         compilation.modules.forEach(module => {
           // eslint-disable-next-line no-underscore-dangle
-          if (module._name !== moduleFederationPlugin._options.name) return;
+          if (module._name !== moduleFederationPlugin._options.name) {
+            return;
+          }
+
           const sourceMap = compilation.codeGenerationResults.get(module)
             .sources;
           const rawSource = sourceMap.get('javascript');
-          sourceMap.set(
-            'javascript',
-            new RawSource(
-              `${rawSource.source()} 
-(function (){
-var globalThis = (typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {});
-globalThis.SENTRY_RELEASES = globalThis.SENTRY_RELEASES || {};
-globalThis.SENTRY_RELEASES["${options.project}@${
-                options.org
-              }"] = {"id":"${version}"};
-})();`
-            )
-          );
+
+          if (rawSource) {
+            sourceMap.set(
+              'javascript',
+              new RawSource(
+                `${rawSource.source()} 
+  (function (){
+  var globalThis = (typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {});
+  globalThis.SENTRY_RELEASES = globalThis.SENTRY_RELEASES || {};
+  globalThis.SENTRY_RELEASES["${options.project}@${
+                  options.org
+                }"] = {"id":"${version}"};
+  })();`
+              )
+            );
+          }
         });
       });
       cb();
