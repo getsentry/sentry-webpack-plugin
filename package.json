@@ -23,6 +23,11 @@
   "peerDependencies": {
     "webpack": "^4.41.31 || ^5.0.0"
   },
+  "peerDependenciesMeta": {
+    "webpack": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/webpack": "^4.41.31 || ^5.0.0",
     "codecov": "^3.5.0",
