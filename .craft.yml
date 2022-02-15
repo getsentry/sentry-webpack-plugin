@@ -1,7 +1,7 @@
 github:
   owner: getsentry
   repo: sentry-webpack-plugin
-changelogPolicy: simple
+changelogPolicy: auto
 preReleaseCommand: bash scripts/craft-pre-release.sh
 statusProvider:
   name: github
