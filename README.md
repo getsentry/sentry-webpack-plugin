@@ -20,6 +20,8 @@ A webpack plugin acting as an interface to
 
 ### Installation
 
+`@sentry/webpack-plugin` requires at least `webpack@4.41.31` or any `webpack@5` version to be installed.
+
 Using npm:
 
 ```bash
