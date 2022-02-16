@@ -1,9 +1,11 @@
 # Changelog
 
-## 1.18.6
+- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
-- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
-  how much they love me." — Michael Scott
+## 1.18.6
+  
+- ci: Change changelogPolicy to auto for Craft releases (#351)
+- deps: Mark Webpack as optional peerDependency via peerDependenciesMeta ( #350)
 
 ## v1.18.5
 
