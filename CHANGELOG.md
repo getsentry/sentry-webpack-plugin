@@ -2,6 +2,13 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## 1.18.7
+
+### Various fixes & improvements
+
+- deps: Remove webpack from peerDep and move info about ver to readme (#354) by @kamilogorek
+- misc: Correct 1.18.6 changelog (#353) by @kamilogorek
+
 ## 1.18.6
   
 - ci: Change changelogPolicy to auto for Craft releases (#351)
