@@ -2,6 +2,12 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## 1.18.8
+
+### Various fixes & improvements
+
+- deps: Bump sentry-cli to 1.73.0 (#356) by @kamilogorek
+
 ## 1.18.7
 
 ### Various fixes & improvements
