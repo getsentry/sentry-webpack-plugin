@@ -260,11 +260,16 @@ class SentryCliPlugin {
    * Returns undefined if proposeVersion failed.
    */
   getReleasePromise() {
-    return (this.options.release
-      ? Promise.resolve(this.options.release)
+    const { release } = this.options;
+
+    return (typeof release === 'string'
+      ? Promise.resolve(release)
       : this.cli.releases.proposeVersion()
     )
       .then(version => `${version}`.trim())
+      .then(trimmedVersion =>
+        typeof release === 'function' ? release(trimmedVersion) : trimmedVersion
+      )
       .catch(() => undefined);
   }
 

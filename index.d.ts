@@ -46,11 +46,13 @@ declare namespace SentryCliPlugin {
     ignore?: string | Array<string>;
 
     /**
-     * Unique name of a release, must be a string, should uniquely identify your release,
+     * Controls the name of a release. Should uniquely identify your release.
+     * If a string, will set the value of your release. 
+     * If a function, will be passed the result of `sentry-cli releases propose-version` and use returned string value as release.
      * defaults to sentry-cli releases propose-version command which should always return the correct version
      * (requires access to git CLI and root directory to be a valid repository).
      */
-    release?: string;
+    release?: string | ((proposedVersion: string) => string);
 
     /**
      * A filter for entry points that should be processed.
