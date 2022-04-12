@@ -46,7 +46,7 @@ declare namespace SentryCliPlugin {
     ignore?: string | Array<string>;
 
     /**
-     * Controls the name of a release. Should uniquely identify your release.
+     * Controls the name of a release, should uniquely identify your release.
      * If a string, will set the value of your release. 
      * If a function, will be passed the result of `sentry-cli releases propose-version` and use returned string value as release.
      * defaults to sentry-cli releases propose-version command which should always return the correct version
