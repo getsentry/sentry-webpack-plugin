@@ -15,7 +15,7 @@
   "main": "src/cjs.js",
   "types": "index.d.ts",
   "engines": {
-    "node": ">= 8"
+    "node": ">= 12"
   },
   "dependencies": {
     "@sentry/cli": "^2.0.2"
