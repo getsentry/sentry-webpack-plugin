@@ -2,6 +2,14 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## 1.18.9
+
+### Various fixes & improvements
+
+- ref: Update sentry-cli and refresh GH actions (#368) by @kamilogorek
+- docs: Update dryRun documentation to reflect auto-configuration. (#366) by @fiveable-jferg
+- chore: update @sentry/cli to latest major version (#363) by @sawilde
+
 ## 1.18.8
 
 ### Various fixes & improvements
