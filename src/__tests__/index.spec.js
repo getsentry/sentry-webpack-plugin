@@ -180,7 +180,7 @@ describe('afterEmitHook', () => {
     );
   });
 
-  test('errors without `include` option', done => {
+  test('errors without `include` option', (done) => {
     const sentryCliPlugin = new SentryCliPlugin({ release: 42 });
     sentryCliPlugin.apply(compiler);
 
@@ -193,7 +193,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('creates a release on Sentry', done => {
+  test('creates a release on Sentry', (done) => {
     expect.assertions(4);
 
     const sentryCliPlugin = new SentryCliPlugin({
@@ -217,7 +217,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('uses `output.path` from webpack config as default `include` path', done => {
+  test('uses `output.path` from webpack config as default `include` path', (done) => {
     compiler.options = {
       output: {
         path: './build',
@@ -240,7 +240,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('skips finalizing release if finalize:false', done => {
+  test('skips finalizing release if finalize:false', (done) => {
     expect.assertions(4);
 
     const sentryCliPlugin = new SentryCliPlugin({
@@ -265,7 +265,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('handles errors during releasing', done => {
+  test('handles errors during releasing', (done) => {
     expect.assertions(2);
     mockCli.releases.new.mockImplementationOnce(() =>
       Promise.reject(new Error('Pickle Rick'))
@@ -286,7 +286,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('handles errors with errorHandler option', done => {
+  test('handles errors with errorHandler option', (done) => {
     expect.assertions(3);
     mockCli.releases.new.mockImplementationOnce(() =>
       Promise.reject(new Error('Pickle Rick'))
@@ -296,7 +296,7 @@ describe('afterEmitHook', () => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'src',
       release: 42,
-      errorHandler: err => {
+      errorHandler: (err) => {
         e = err;
       },
     });
@@ -310,7 +310,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('test setCommits with flat options', done => {
+  test('test setCommits with flat options', (done) => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'src',
       release: '42',
@@ -336,7 +336,7 @@ describe('afterEmitHook', () => {
     });
   });
 
-  test('test setCommits with grouped options', done => {
+  test('test setCommits with grouped options', (done) => {
     const sentryCliPlugin = new SentryCliPlugin({
       include: 'src',
       release: '42',
@@ -669,7 +669,7 @@ describe('entry point overrides', () => {
       main: ['./src/index.js', './src/common.js'],
       admin: './src/admin.js',
     };
-    sentryCliPlugin.options.entries = key => key == 'admin';
+    sentryCliPlugin.options.entries = (key) => key == 'admin';
     sentryCliPlugin.apply(compiler);
 
     expect(compiler.options.entry).toEqual({

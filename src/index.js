@@ -36,8 +36,8 @@ function diffArray(prev, next) {
   next = Array.isArray(next) ? next : [next];
 
   return {
-    removed: prev.filter(x => !next.includes(x)),
-    added: next.filter(x => !prev.includes(x)),
+    removed: prev.filter((x) => !next.includes(x)),
+    added: next.filter((x) => !prev.includes(x)),
   };
 }
 
@@ -96,7 +96,7 @@ function attachAfterCodeGenerationHook(compiler, options) {
     compiler.options &&
     compiler.options.plugins &&
     compiler.options.plugins.find(
-      x => x.constructor.name === 'ModuleFederationPlugin'
+      (x) => x.constructor.name === 'ModuleFederationPlugin'
     );
 
   if (!moduleFederationPlugin) {
@@ -104,16 +104,16 @@ function attachAfterCodeGenerationHook(compiler, options) {
   }
 
   compiler.hooks.make.tapAsync('SentryCliPlugin', (compilation, cb) => {
-    options.releasePromise.then(version => {
+    options.releasePromise.then((version) => {
       compilation.hooks.afterCodeGeneration.tap('SentryCliPlugin', () => {
-        compilation.modules.forEach(module => {
+        compilation.modules.forEach((module) => {
           // eslint-disable-next-line no-underscore-dangle
           if (module._name !== moduleFederationPlugin._options.name) {
             return;
           }
 
-          const sourceMap = compilation.codeGenerationResults.get(module)
-            .sources;
+          const sourceMap =
+            compilation.codeGenerationResults.get(module).sources;
           const rawSource = sourceMap.get('javascript');
 
           if (rawSource) {
@@ -145,13 +145,13 @@ class SentryCliPlugin {
       rewrite: true,
     };
 
-    this.options = Object.assign({}, defaults, options);
+    this.options = { ...defaults, ...options };
 
     // the webpack plugin has looser type requirements than `@sentry/cli` -
     // ensure `include` and `ignore` options are in the right format
     if (options.include) {
       this.options.include = toArray(options.include);
-      this.options.include.forEach(includeEntry => {
+      this.options.include.forEach((includeEntry) => {
         if (
           typeof includeEntry === 'object' &&
           includeEntry.ignore !== undefined
@@ -221,11 +221,11 @@ class SentryCliPlugin {
       return {
         releases: {
           proposeVersion: () =>
-            cli.releases.proposeVersion().then(version => {
+            cli.releases.proposeVersion().then((version) => {
               this.outputDebug('Proposed version:\n', version);
               return version;
             }),
-          new: release => {
+          new: (release) => {
             this.outputDebug('Creating new release:\n', release);
             return Promise.resolve(release);
           },
@@ -233,7 +233,7 @@ class SentryCliPlugin {
             this.outputDebug('Calling upload-sourcemaps with:\n', config);
             return Promise.resolve(release, config);
           },
-          finalize: release => {
+          finalize: (release) => {
             this.outputDebug('Finalizing release:\n', release);
             return Promise.resolve(release);
           },
@@ -260,11 +260,12 @@ class SentryCliPlugin {
    * Returns undefined if proposeVersion failed.
    */
   getReleasePromise() {
-    return (this.options.release
-      ? Promise.resolve(this.options.release)
-      : this.cli.releases.proposeVersion()
+    return (
+      this.options.release
+        ? Promise.resolve(this.options.release)
+        : this.cli.releases.proposeVersion()
     )
-      .then(version => `${version}`.trim())
+      .then((version) => `${version}`.trim())
       .catch(() => undefined);
   }
 
@@ -328,7 +329,7 @@ class SentryCliPlugin {
      */
     if (typeof entry === 'function') {
       return () =>
-        Promise.resolve(entry()).then(resolvedEntry =>
+        Promise.resolve(entry()).then((resolvedEntry) =>
           this.injectEntry(resolvedEntry, sentryModule)
         );
     }
@@ -361,8 +362,8 @@ class SentryCliPlugin {
      */
     const modifiedEntry = { ...entry };
     Object.keys(modifiedEntry)
-      .filter(key => this.shouldInjectEntry(key))
-      .forEach(key => {
+      .filter((key) => this.shouldInjectEntry(key))
+      .forEach((key) => {
         if (entry[key] && entry[key].import) {
           modifiedEntry[key].import = this.injectEntry(
             entry[key].import,
@@ -462,7 +463,7 @@ class SentryCliPlugin {
 
     let release;
     return this.release
-      .then(proposedVersion => {
+      .then((proposedVersion) => {
         release = proposedVersion;
 
         if (!include) {
@@ -531,7 +532,7 @@ class SentryCliPlugin {
         }
         return undefined;
       })
-      .catch(err => {
+      .catch((err) => {
         errorHandler(
           err,
           () =>
