@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1>Sentry Webpack Plugin</h1>
+# Sentry Webpack Plugin
 
 [![codecov](https://codecov.io/gh/getsentry/sentry-webpack-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/getsentry/sentry-webpack-plugin)
 [![npm version](https://img.shields.io/npm/v/@sentry/webpack-plugin.svg)](https://www.npmjs.com/package/@sentry/webpack-plugin)
