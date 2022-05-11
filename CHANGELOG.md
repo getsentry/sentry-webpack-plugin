@@ -6,9 +6,8 @@
 
 ### Various fixes & improvements
 
-- ref: Update sentry-cli and refresh GH actions (#368) by @kamilogorek
+- ref: Update sentry-cli to latest v1 version and refresh GH actions (#368) by @kamilogorek
 - docs: Update dryRun documentation to reflect auto-configuration. (#366) by @fiveable-jferg
-- chore: update @sentry/cli to latest major version (#363) by @sawilde
 
 ## 1.18.8
 
