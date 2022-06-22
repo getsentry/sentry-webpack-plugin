@@ -107,6 +107,32 @@ Also, check the [example](example) directory.
 | sourceMapReference | `boolean`        | optional | See above.                                     |
 | rewrite            | `boolean`        | optional | See above.                                     |
 
+Example:
+
+```
+const SentryCliPlugin = require('@sentry/webpack-plugin');
+
+const config = {
+  plugins: [
+    new SentryCliPlugin({
+      include: [
+        {
+          paths: ['./packages'],
+          urlPrefix: '~/path/to/packages',
+        },
+        {
+          paths: ['./client'],
+          urlPrefix: '~/path/to/client',
+        },
+      ],
+      ignoreFile: '.sentrycliignore',
+      ignore: ['node_modules', 'webpack.config.js'],
+      configFile: 'sentry.properties',
+    }),
+  ],
+};
+```
+
 #### <a name="setCommits"></a>options.setCommits:
 
 | Option         | Type      | Required  | Description                                                                                                                                                                                                              |
