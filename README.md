@@ -109,7 +109,7 @@ Also, check the [example](example) directory.
 
 Example:
 
-```
+```js
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 
 const config = {
