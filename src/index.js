@@ -120,7 +120,7 @@ function attachAfterCodeGenerationHook(compiler, options) {
             sourceMap.set(
               'javascript',
               new RawSource(
-                `${rawSource.source()} 
+                `${rawSource.source()}
   (function (){
   var globalThis = (typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {});
   globalThis.SENTRY_RELEASES = globalThis.SENTRY_RELEASES || {};
@@ -260,8 +260,10 @@ class SentryCliPlugin {
    * Returns undefined if proposeVersion failed.
    */
   getReleasePromise() {
-    return (this.options.release
-      ? Promise.resolve(this.options.release)
+    const userSpecifiedRelease =
+      this.options.release || process.env.SENTRY_RELEASE;
+    return (userSpecifiedRelease
+      ? Promise.resolve(userSpecifiedRelease)
       : this.cli.releases.proposeVersion()
     )
       .then(version => `${version}`.trim())
@@ -398,6 +400,9 @@ class SentryCliPlugin {
         {
           loader: SENTRY_LOADER,
           options: {
+            // We check for `process.env.SENTRY_RELEASE` earlier, which is why
+            // it's not used here the way `process.env.SENTRY_ORG` and
+            // `process.env.SENTRY_PROJECT` are
             releasePromise: this.release,
             org: this.options.org || process.env.SENTRY_ORG,
             project: this.options.project || process.env.SENTRY_PROJECT,
@@ -570,6 +575,9 @@ class SentryCliPlugin {
     }
 
     attachAfterCodeGenerationHook(compiler, {
+      // We check for `process.env.SENTRY_RELEASE` earlier, which is why it's
+      // not used here the way `process.env.SENTRY_ORG` and
+      // `process.env.SENTRY_PROJECT` are
       releasePromise: this.release,
       org: this.options.org || process.env.SENTRY_ORG,
       project: this.options.project || process.env.SENTRY_PROJECT,
