@@ -2,28 +2,27 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
-## 1.18.9
+## 1.19.0
 
-### Various fixes & improvements
+- feat(config): Support reading release from environment (#389)
+- docs: Add example to `options.include` (#384)
+
+## 1.18.9
 
 - ref: Update sentry-cli to latest v1 version and refresh GH actions (#368) by @kamilogorek
 - docs: Update dryRun documentation to reflect auto-configuration. (#366) by @fiveable-jferg
 
 ## 1.18.8
 
-### Various fixes & improvements
-
 - deps: Bump sentry-cli to 1.73.0 (#356) by @kamilogorek
 
 ## 1.18.7
-
-### Various fixes & improvements
 
 - deps: Remove webpack from peerDep and move info about ver to readme (#354) by @kamilogorek
 - misc: Correct 1.18.6 changelog (#353) by @kamilogorek
 
 ## 1.18.6
-  
+
 - ci: Change changelogPolicy to auto for Craft releases (#351)
 - deps: Mark Webpack as optional peerDependency via peerDependenciesMeta ( #350)
 
