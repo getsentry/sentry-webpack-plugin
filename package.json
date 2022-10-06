@@ -42,7 +42,7 @@
     "fix:prettier": "prettier --write 'src/**/*.js'",
     "fix:eslint": "eslint --fix src",
     "test": "jest",
-    "test:integration": "cd example && yarn && yarn test",
+    "test:integration": "cd example && yarn --ignore-engines && yarn test",
     "test:watch": "jest --watch --notify",
     "codecov": "codecov"
   }
