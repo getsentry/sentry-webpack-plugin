@@ -1,6 +1,7 @@
 const SentryCli = require('@sentry/cli');
 const path = require('path');
 const util = require('util');
+const { RawSource } = require('webpack-sources');
 
 const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
@@ -75,23 +76,11 @@ function attachAfterEmitHook(compiler, callback) {
 }
 
 function attachAfterCodeGenerationHook(compiler, options) {
+  // This is only a problem for folks on webpack 3 and below
   if (!compiler.hooks || !compiler.hooks.make) {
     return;
   }
 
-  let webpackSources;
-  try {
-    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
-    webpackSources = require('webpack-sources');
-  } catch (_e) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      'Coud not resolve package: webpack-sources. Skipping injection for the remote entry file.'
-    );
-    return;
-  }
-
-  const { RawSource } = webpackSources;
   const moduleFederationPlugin =
     compiler.options &&
     compiler.options.plugins &&
