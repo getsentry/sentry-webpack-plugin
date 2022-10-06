@@ -16,6 +16,6 @@
     "prebuild":
       "cd ..  && yarn link || true && cd example && yarn link @sentry/webpack-plugin",
     "build": "webpack",
-    "test": "yarn build && node test.js"
+    "test": "node test.js"
   }
 }

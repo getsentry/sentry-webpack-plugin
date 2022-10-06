@@ -36,4 +36,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn install --ignore-engines # Webpack 5 does not support Node v8, but we still do for Webpack 4
-      - run: yarn ${{ matrix.test-command }}
+      - env:
+          NODE_VERSION: ${{ matrix.node }}
+        run: yarn ${{ matrix.test-command }}
