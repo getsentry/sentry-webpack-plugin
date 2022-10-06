@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Set up local @sentry/webpack-plugin for linking",
+			"type": "shell",
+			"command": "yarn link > /dev/null 2>&1",
+			"options": {"cwd": "${workspaceFolder}"},
+		},
+		{
+			"label": "Install Integration Test Dependencies",
+			"type": "shell",
+			"command": "yarn && yarn link @sentry/webpack-plugin",
+			"options": {"cwd": "${workspaceFolder}/example"},
+			"dependsOn": "Set up local @sentry/webpack-plugin for linking"
+		},
+		{
+			"label": "Build Integration Test Example App",
+			"type": "shell",
+			"command": "yarn webpack",
+			"options": {"cwd": "${workspaceFolder}/example"},
+			"dependsOn": "Install Integration Test Dependencies"
+		}
+	]
+}

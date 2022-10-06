@@ -1,0 +1,36 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Debug integration test build",
+      "type": "node",
+      "cwd": "${workspaceFolder}/example",
+      "request": "launch",
+      "preLaunchTask": "Install Integration Test Dependencies",
+      "runtimeExecutable": "${workspaceFolder}/example/node_modules/.bin/webpack",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "outputCapture": "std",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Debug integration test script",
+      "type": "node",
+      "cwd": "${workspaceFolder}/example",
+      "request": "launch",
+      "preLaunchTask": "Build Integration Test Example App",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["test.js"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "outputCapture": "std",
+      "internalConsoleOptions": "openOnSessionStart"
+    }
+  ]
+}
