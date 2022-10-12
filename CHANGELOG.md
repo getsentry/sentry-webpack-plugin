@@ -2,6 +2,10 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## 1.19.1
+
+- fix(deps): Add `webpack-sources` dependency (#397)
+
 ## 1.19.0
 
 - feat(config): Support reading release from environment (#389)
