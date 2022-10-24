@@ -155,6 +155,8 @@ class SentryCliPlugin {
 
     this.cli = this.getSentryCli();
     this.release = this.getReleasePromise();
+    // Set the User-Agent string.
+    process.env['SENTRY_PIPELINE'] = `webpack-plugin/${this.release}`;
   }
 
   /**
