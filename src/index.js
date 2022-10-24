@@ -2,9 +2,13 @@ const SentryCli = require('@sentry/cli');
 const path = require('path');
 const util = require('util');
 const { RawSource } = require('webpack-sources');
+const pjson = require('../package.json');
 
 const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
+
+// Set the User-Agent string.
+process.env['SENTRY_PIPELINE'] = `webpack-plugin/${pjson.version}`;
 
 /**
  * Helper function that ensures an object key is defined. This mutates target!
@@ -155,8 +159,6 @@ class SentryCliPlugin {
 
     this.cli = this.getSentryCli();
     this.release = this.getReleasePromise();
-    // Set the User-Agent string.
-    process.env['SENTRY_PIPELINE'] = `webpack-plugin/${this.release}`;
   }
 
   /**
