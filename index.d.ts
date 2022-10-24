@@ -130,6 +130,7 @@ declare namespace SentryCliPlugin {
 declare class SentryCliPlugin implements WebpackPluginInstance {
   options: SentryCliPlugin.SentryCliPluginOptions;
   constructor(options: SentryCliPlugin.SentryCliPluginOptions);
+  static cliBinaryExists(): string;
   apply(compiler: Compiler): void;
 }
 
