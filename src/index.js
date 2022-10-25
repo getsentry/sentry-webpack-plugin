@@ -8,7 +8,7 @@ const SENTRY_LOADER = path.resolve(__dirname, 'sentry.loader.js');
 const SENTRY_MODULE = path.resolve(__dirname, 'sentry-webpack.module.js');
 
 // Set the User-Agent string.
-process.env['SENTRY_PIPELINE'] = `webpack-plugin/${pjson.version}`;
+process.env.SENTRY_PIPELINE = `webpack-plugin/${pjson.version}`;
 
 /**
  * Helper function that ensures an object key is defined. This mutates target!
