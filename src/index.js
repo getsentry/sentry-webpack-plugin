@@ -1,4 +1,5 @@
 const SentryCli = require('@sentry/cli');
+const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const { RawSource } = require('webpack-sources');
@@ -195,6 +196,10 @@ class SentryCliPlugin {
   /** Returns whether this plugin is in dryRun mode. */
   isDryRun() {
     return this.options.dryRun === true;
+  }
+
+  static cliBinaryExists() {
+    return fs.existsSync(SentryCli.getPath());
   }
 
   /** Creates a new Sentry CLI instance. */
