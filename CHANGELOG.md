@@ -4,6 +4,7 @@
 
 ## 1.20.0
 
+- build: Bump `@sentry/cli` version to `1.74.6` (#406)
 - feat: Add a means to detect if the CLI binary exists (#402)
 - feat: Add pipeline argument (#403)
 
