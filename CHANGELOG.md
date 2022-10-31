@@ -2,6 +2,12 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
+## 1.20.0
+
+- build: Bump `@sentry/cli` version to `1.74.6` (#406)
+- feat: Add a means to detect if the CLI binary exists (#402)
+- feat: Add pipeline argument (#403)
+
 ## 1.19.1
 
 - fix(deps): Add `webpack-sources` dependency (#397)
