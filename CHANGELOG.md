@@ -4,6 +4,11 @@
 
 ## 1.19.1
 
+- feat: Add a means to detect if the CLI binary exists (#402)
+- feat: Add pipeline argument (#403)
+
+## 1.19.1
+
 - fix(deps): Add `webpack-sources` dependency (#397)
 
 ## 1.19.0
