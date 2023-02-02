@@ -42,11 +42,11 @@ https://docs.sentry.io/cli/configuration.
 ### Usage
 
 ```js
-const SentryCliPlugin = require('@sentry/webpack-plugin');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 const config = {
   plugins: [
-    new SentryCliPlugin({
+    new SentryWebpackPlugin({
       include: '.',
       ignoreFile: '.sentrycliignore',
       ignore: ['node_modules', 'webpack.config.js'],
