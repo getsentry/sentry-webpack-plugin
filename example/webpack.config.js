@@ -1,4 +1,4 @@
-const SentryCliPlugin = require('@sentry/webpack-plugin');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new SentryCliPlugin({
+    new SentryWebpackPlugin({
       include: '.',
       ignoreFile: '.sentrycliignore',
       ignore: ['node_modules', 'webpack.config.js'],
