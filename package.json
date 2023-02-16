@@ -45,5 +45,9 @@
     "test:integration": "cd example && yarn && yarn test",
     "test:watch": "jest --watch --notify",
     "codecov": "codecov"
+  },
+  "volta": {
+    "node": "10.24.1",
+    "yarn": "1.22.19"
   }
 }

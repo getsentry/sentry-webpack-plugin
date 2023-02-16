@@ -16,5 +16,9 @@
       "cd ..  && yarn link || true && cd example && yarn link @sentry/webpack-plugin",
     "build": "webpack",
     "test": "yarn build && node test.js"
+  },
+  "volta": {
+    "node": "10.24.1",
+    "yarn": "1.22.19"
   }
 }
