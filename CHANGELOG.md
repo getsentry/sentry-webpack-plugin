@@ -2,7 +2,7 @@
 
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
 
-## Unreleased
+## 1.20.1
 
 - fix: Update Webpack plugin to 1.75.1 to fix bug in Angular source maps (#439)
 - fix: Update @sentry/cli to 1.75.0 to fix ansi-regex security warning (#427)
