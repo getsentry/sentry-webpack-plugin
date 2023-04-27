@@ -4,7 +4,7 @@
 
 ## Unreleased
 
-- fix: Update Webpack plugin to 1.75.1 (#439)
+- fix: Update Webpack plugin to 1.75.1 to fix bug in Angular source maps (#439)
 - fix: Update @sentry/cli to 1.75.0 to fix ansi-regex security warning (#427)
 - build(deps): bump loader-utils from 1.1.0 to 1.4.1 in /example
 
