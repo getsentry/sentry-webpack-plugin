@@ -131,6 +131,7 @@ declare class SentryCliPlugin implements WebpackPluginInstance {
   options: SentryCliPlugin.SentryCliPluginOptions;
   constructor(options: SentryCliPlugin.SentryCliPluginOptions);
   static cliBinaryExists(): string;
+  static downloadCliBinary(logger: { log(...args: unknown[]) }): Promise<void>;
   apply(compiler: Compiler): void;
 }
 
