@@ -1,6 +1,11 @@
 # Changelog
 
-- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me." — Michael Scott
+- "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
+  how much they love me." — Michael Scott
+
+## Unreleased
+
+- feat: Add function to download CLI binary (#456)
 
 ## 1.20.1
 
@@ -25,8 +30,10 @@
 
 ## 1.18.9
 
-- ref: Update sentry-cli to latest v1 version and refresh GH actions (#368) by @kamilogorek
-- docs: Update dryRun documentation to reflect auto-configuration. (#366) by @fiveable-jferg
+- ref: Update sentry-cli to latest v1 version and refresh GH actions (#368) by
+  @kamilogorek
+- docs: Update dryRun documentation to reflect auto-configuration. (#366) by
+  @fiveable-jferg
 
 ## 1.18.8
 
@@ -34,7 +41,8 @@
 
 ## 1.18.7
 
-- deps: Remove webpack from peerDep and move info about ver to readme (#354) by @kamilogorek
+- deps: Remove webpack from peerDep and move info about ver to readme (#354) by
+  @kamilogorek
 - misc: Correct 1.18.6 changelog (#353) by @kamilogorek
 
 ## 1.18.6

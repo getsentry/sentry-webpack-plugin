@@ -202,6 +202,10 @@ class SentryCliPlugin {
     return fs.existsSync(SentryCli.getPath());
   }
 
+  static downloadCliBinary(logger) {
+    return SentryCli.downloadBinary(logger);
+  }
+
   /** Creates a new Sentry CLI instance. */
   getSentryCli() {
     const cli = new SentryCli(this.options.configFile, {
