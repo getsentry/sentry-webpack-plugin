@@ -3,7 +3,7 @@
 - "Would I rather be feared or loved? Easy. Both. I want people to be afraid of
   how much they love me." — Michael Scott
 
-## Unreleased
+## 1.21.0
 
 - feat: Add function to download CLI binary (#456)
 
